@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 public class RecommendForUserController {
@@ -43,9 +44,8 @@ public class RecommendForUserController {
     }
 
     @GetMapping("/recommend/user/redirect/plan/{target}")
-    public ResponseEntity<Void> redirectToPlanning(@PathVariable String target) {
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, REDIRECT_END_POINT_TO_PLANNING_SERVICE + target)
-                .build();
+    public String redirectToPlanning(@PathVariable String target, @RequestParam long placeId, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addAttribute("placeId", placeId);
+        return "redirect:/" + REDIRECT_END_POINT_TO_PLANNING_SERVICE + target;
     }
 }
