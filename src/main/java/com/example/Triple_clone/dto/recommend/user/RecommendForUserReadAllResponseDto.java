@@ -6,8 +6,5 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Getter
-@AllArgsConstructor
-public class RecommendForUserReadAllResponseDto {
-    private final List<Place> places;
+public record RecommendForUserReadAllResponseDto(List<Place> places) {
 }

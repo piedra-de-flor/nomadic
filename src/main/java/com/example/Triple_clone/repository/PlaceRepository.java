@@ -24,15 +24,4 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             likes.add(userId);
         }
     }
-
-    default void saveReview(Review review) {
-        Optional<Place> place = findById(review.getUser().getId());
-
-        if (place.isEmpty()) {
-            throw new RuntimeException("no entity place");
-        }
-
-        Place exsitPlace = place.get();
-        exsitPlace.getReviews().add(review);
-    }
 }

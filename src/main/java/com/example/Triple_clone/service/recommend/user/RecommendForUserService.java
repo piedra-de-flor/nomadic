@@ -16,18 +16,18 @@ import java.util.Optional;
 
 @Service
 public class RecommendForUserService {
-    private final PlaceRepository recommendRepository;
+    private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
 
-    public RecommendForUserService(PlaceRepository recommendRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
-        this.recommendRepository = recommendRepository;
+    public RecommendForUserService(PlaceRepository placeRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
+        this.placeRepository = placeRepository;
         this.userRepository = userRepository;
         this.reviewRepository = reviewRepository;
     }
 
     public RecommendForUserReadResponseDto findById(long placeId, long userId) {
-        Optional<Place> place = recommendRepository.findById(placeId);
+        Optional<Place> place = placeRepository.findById(placeId);
 
         if (place.isEmpty()) {
             throw new RuntimeException("no entity place");
@@ -40,7 +40,7 @@ public class RecommendForUserService {
     }
 
     public RecommendForUserReadAllResponseDto findAll(String orderType) {
-        List<Place> places = recommendRepository.findAll();
+        List<Place> places = placeRepository.findAll();
         List<Place> sortedPlaces;
 
         switch (orderType) {
@@ -59,11 +59,11 @@ public class RecommendForUserService {
     }
 
     public void like(long placeId, Long userId) {
-        recommendRepository.saveLike(userId, placeId);
+        placeRepository.saveLike(userId, placeId);
     }
 
     public void writeReview(RecommendForUserWriteReviewRequestDto writeReviewRequestDto) {
-        Optional<Place> place = recommendRepository.findById(writeReviewRequestDto.placeId());
+        Optional<Place> place = placeRepository.findById(writeReviewRequestDto.placeId());
         Optional<User> user = userRepository.findById(writeReviewRequestDto.userId());
 
         if (place.isEmpty() || user.isEmpty()) {
@@ -74,6 +74,5 @@ public class RecommendForUserService {
         User writer = user.get();
 
         reviewRepository.save(writeReviewRequestDto.toEntity(writer, exsitPlace));
-        recommendRepository.saveReview(writeReviewRequestDto.toEntity(writer, exsitPlace));
     }
 }

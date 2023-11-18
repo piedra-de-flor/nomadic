@@ -50,10 +50,10 @@ public class LikeTest {
         userRepository.save(testUser);
         placeRepository.save(testPlace);
 
-        service.like(1, (long)1);
-        assertThat(placeRepository.findById((long)1).get().getLikes().size()).isEqualTo(1);
+        service.like(2, (long)1);
+        assertThat(placeRepository.findById((long)2).get().getLikes().size()).isEqualTo(1);
 
-        service.like(1, (long)1);
-        assertThat(placeRepository.findById((long)1).get().getLikes().size()).isEqualTo(0);
+        service.like(2, (long)1);
+        assertThat(placeRepository.findById((long)2).get().getLikes().size()).isEqualTo(0);
     }
 }

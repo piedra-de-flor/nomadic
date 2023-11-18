@@ -44,7 +44,7 @@ public class ReadTest {
         repository.save(place2);
         repository.save(place1);
 
-        List<Place> testList = service.findAll("date").getPlaces();
+        List<Place> testList = service.findAll("date").places();
         assertThat(testList.get(0)).isEqualTo(place1);
         assertThat(testList.get(1)).isEqualTo(place2);
         assertThat(testList.get(2)).isEqualTo(place3);
@@ -62,7 +62,7 @@ public class ReadTest {
         repository.save(place2);
         repository.save(place1);
 
-        List<Place> testList = service.findAll("name").getPlaces();
+        List<Place> testList = service.findAll("name").places();
         assertThat(testList.get(0)).isEqualTo(place1);
         assertThat(testList.get(1)).isEqualTo(place2);
         assertThat(testList.get(2)).isEqualTo(place3);
