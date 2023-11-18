@@ -1,7 +1,6 @@
-package com.example.Triple_clone.dto;
+package com.example.Triple_clone.dto.recommend.user;
 
 import com.example.Triple_clone.entity.Place;
-import com.example.Triple_clone.vo.entity.Photo;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -13,8 +12,8 @@ public class RecommendForUserReadResponseDto {
     private final String notionUrl;
     private final String subTitle;
     private final String location;
-    private final Photo mainPhoto;
-    private final String date;
+    private final String mainImage;
+    private final LocalDateTime date;
     private final Boolean like;
 
     public RecommendForUserReadResponseDto(Place place, boolean like) {
@@ -23,7 +22,7 @@ public class RecommendForUserReadResponseDto {
         this.notionUrl = place.getNotionUrl();
         this.subTitle = place.getSubTitle();
         this.location = place.getLocation();
-        this.mainPhoto = place.getMainPhoto();
+        this.mainImage = place.getMainImage();
         this.date = place.getDate();
         this.like = like;
     }

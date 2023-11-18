@@ -1,6 +1,5 @@
 package com.example.Triple_clone.entity;
 
-import com.example.Triple_clone.vo.entity.Photo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,31 +35,34 @@ public class Place {
     private String location;
 
     @Column(name = "main_photo")
-    @Embedded
-    private Photo mainPhoto;
+    private String mainImage;
 
     @Column(name = "regist_date")
-    private String date;
+    private LocalDateTime date;
 
-    @Column(name = "likes")
     @ElementCollection
+    @CollectionTable(name = "place_like", joinColumns = @JoinColumn(name = "place_id"))
     private List<Long> likes;
 
-    @Builder
-    public Place(String title, String notionUrl, String subTitle, String location, String mainPhoto) {
-        Place.builder()
-                .title(title)
-                .notionUrl(notionUrl)
-                .subTitle(subTitle)
-                .location(location)
-                .mainPhoto(mainPhoto)
-                .build();
+    @OneToMany(mappedBy = "place")
+    private List<Review> reviews;
 
-        this.date = LocalDateTime.now().toString();
+    public Place(String title, String notionUrl, String subTitle, String location, String mainImage) {
+        this.title = title;
+        this.notionUrl = notionUrl;
+        this.subTitle = subTitle;
+        this.location = location;
+        this.mainImage = mainImage;
+        this.date = LocalDateTime.now();
         this.likes = new ArrayList<>();
+        this.reviews = new ArrayList<>();
     }
 
     public int getLikesNumber() {
         return likes.size();
+    }
+
+    public int getReviewsNumber() {
+        return reviews.size();
     }
 }

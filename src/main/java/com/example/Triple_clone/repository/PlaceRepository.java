@@ -1,12 +1,13 @@
 package com.example.Triple_clone.repository;
 
 import com.example.Triple_clone.entity.Place;
+import com.example.Triple_clone.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface RecommendForUserRepository extends JpaRepository<Place, Long> {
+public interface PlaceRepository extends JpaRepository<Place, Long> {
     default void saveLike(long userId, long placeId) {
         Optional<Place> place = findById(placeId);
 
@@ -22,5 +23,16 @@ public interface RecommendForUserRepository extends JpaRepository<Place, Long> {
         } else {
             likes.add(userId);
         }
+    }
+
+    default void saveReview(Review review) {
+        Optional<Place> place = findById(review.getUser().getId());
+
+        if (place.isEmpty()) {
+            throw new RuntimeException("no entity place");
+        }
+
+        Place exsitPlace = place.get();
+        exsitPlace.getReviews().add(review);
     }
 }
