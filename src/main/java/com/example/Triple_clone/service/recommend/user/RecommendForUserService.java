@@ -29,11 +29,7 @@ public class RecommendForUserService {
     public RecommendForUserReadResponseDto findById(long placeId, long userId) {
         Optional<Place> place = placeRepository.findById(placeId);
 
-        if (place.isEmpty()) {
-            throw new RuntimeException("no entity place");
-        }
-
-        Place exsitPlace = place.get();
+        Place exsitPlace = place.orElseThrow(() -> new IllegalArgumentException("no place entity"));
         boolean likeOrNot = exsitPlace.getLikes().contains(userId);
 
         return new RecommendForUserReadResponseDto(exsitPlace, likeOrNot);
@@ -66,12 +62,8 @@ public class RecommendForUserService {
         Optional<Place> place = placeRepository.findById(writeReviewRequestDto.placeId());
         Optional<User> user = userRepository.findById(writeReviewRequestDto.userId());
 
-        if (place.isEmpty() || user.isEmpty()) {
-            throw new RuntimeException("no entity place");
-        }
-
-        Place exsitPlace = place.get();
-        User writer = user.get();
+        Place exsitPlace = place.orElseThrow(() -> new IllegalArgumentException("no place entity"));
+        User writer = user.orElseThrow(() -> new IllegalArgumentException("no user entity"));
 
         reviewRepository.save(writeReviewRequestDto.toEntity(writer, exsitPlace));
     }

@@ -1,7 +1,6 @@
 package com.example.Triple_clone.repository;
 
 import com.example.Triple_clone.entity.Place;
-import com.example.Triple_clone.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

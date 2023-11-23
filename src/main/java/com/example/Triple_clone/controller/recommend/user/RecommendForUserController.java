@@ -5,6 +5,7 @@ import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadAllRespon
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
 import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,21 +13,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
+@RequiredArgsConstructor
 public class RecommendForUserController {
     private static final String REDIRECT_END_POINT_TO_PLANNING_SERVICE = "";
     private final RecommendForUserService service;
 
-    public RecommendForUserController(RecommendForUserService service) {
-        this.service = service;
-    }
-
-    @GetMapping("/recommend/user/all/{orderType}")
-    public ResponseEntity<RecommendForUserReadAllResponseDto> readAllOrderBy(@PathVariable String orderType) {
+    @GetMapping("/recommend/user/all")
+    public ResponseEntity<RecommendForUserReadAllResponseDto> readAllOrderBy(@RequestParam String orderType) {
         return ResponseEntity.ok(service.findAll(orderType));
     }
 
-    @GetMapping("/recommend/user/{placeId}")
-    public ResponseEntity<RecommendForUserReadResponseDto> read(@PathVariable long placeId, @RequestParam long userId) {
+    @GetMapping("/recommend/user")
+    public ResponseEntity<RecommendForUserReadResponseDto> read(@RequestParam long placeId, @RequestParam long userId) {
         RecommendForUserReadResponseDto recommendForUserReadResponseDto = service.findById(placeId, userId);
         return ResponseEntity.ok(recommendForUserReadResponseDto);
     }
@@ -43,8 +41,8 @@ public class RecommendForUserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/recommend/user/redirect/plan/{target}")
-    public String redirectToPlanning(@PathVariable String target, @RequestParam long placeId, RedirectAttributes redirectAttributes) {
+    @GetMapping("/recommend/user/redirect/plan")
+    public String redirectToPlanning(@RequestParam String target, @RequestParam long placeId, RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("placeId", placeId);
         return "redirect:/" + REDIRECT_END_POINT_TO_PLANNING_SERVICE + target;
     }
