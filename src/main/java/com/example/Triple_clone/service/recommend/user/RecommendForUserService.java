@@ -8,24 +8,17 @@ import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class RecommendForUserService {
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
-
-    public RecommendForUserService(PlaceRepository placeRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
-        this.placeRepository = placeRepository;
-        this.userRepository = userRepository;
-        this.reviewRepository = reviewRepository;
-    }
-
     public RecommendForUserReadResponseDto findById(long placeId, long userId) {
         Optional<Place> place = placeRepository.findById(placeId);
 
@@ -47,7 +40,7 @@ public class RecommendForUserService {
                 break;
             default:
                 sortedPlaces = places.stream()
-                        .sorted(Comparator.comparing(Place::getDate))
+                        .sorted(Comparator.comparing(Place::getDate).reversed())
                         .toList();
         }
 

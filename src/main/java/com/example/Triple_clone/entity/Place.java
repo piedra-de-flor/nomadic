@@ -18,25 +18,12 @@ public class Place {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "place_id")
     private Long id;
-
-    @Column(name = "title")
     private String title;
-
-    @Column(name = "notion_url")
     private String notionUrl;
-
-    @Column(name = "sub_title")
     private String subTitle;
-
-    @Column(name = "location")
     private String location;
-
-    @Column(name = "main_photo")
     private String mainImage;
-
-    @Column(name = "regist_date")
     private LocalDateTime date;
 
     @ElementCollection

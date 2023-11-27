@@ -22,5 +22,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
         } else {
             likes.add(userId);
         }
+
+        exsitPlace.setLikes(likes);
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
-public class ReadTest {
+public class RecommendForUserReadTest {
     @Autowired
     PlaceRepository repository;
 
@@ -74,7 +74,7 @@ public class ReadTest {
         repository.save(place1);
 
         RecommendForUserReadResponseDto dto = service.findById(1,0);
-        assertThat(dto.getTitle()).isEqualTo(place1.getTitle());
-        assertThat(dto.getId()).isEqualTo(place1.getId());
+        assertThat(dto.title()).isEqualTo(place1.getTitle());
+        assertThat(dto.id()).isEqualTo(place1.getId());
     }
 }

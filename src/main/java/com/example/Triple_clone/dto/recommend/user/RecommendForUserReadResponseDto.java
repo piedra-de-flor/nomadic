@@ -1,11 +1,9 @@
 package com.example.Triple_clone.dto.recommend.user;
 
 import com.example.Triple_clone.entity.Place;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
 public record RecommendForUserReadResponseDto (
     long id,
     String title,
