@@ -1,7 +1,6 @@
 package com.example.Triple_clone.controller.recommend.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserLikeRequestDto;
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadAllResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
 import com.example.Triple_clone.service.recommend.user.RecommendForUserService;

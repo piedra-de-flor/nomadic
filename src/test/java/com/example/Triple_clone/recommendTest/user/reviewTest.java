@@ -7,7 +7,6 @@ import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
 import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,7 @@ public class reviewTest {
         userRepository.deleteAll();
         placeRepository.deleteAll();
     }
+
     @Test
     void 리뷰_작성_테스트() {
         User testUser = new User();
@@ -41,7 +41,7 @@ public class reviewTest {
         userRepository.save(testUser);
         placeRepository.save(testPlace);
 
-        RecommendForUserWriteReviewRequestDto dto = new RecommendForUserWriteReviewRequestDto(testUser.getId(), testPlace.getId(), "test","test");
+        RecommendForUserWriteReviewRequestDto dto = new RecommendForUserWriteReviewRequestDto(testUser.getId(), testPlace.getId(), "test", "test");
 
 
         service.writeReview(dto);

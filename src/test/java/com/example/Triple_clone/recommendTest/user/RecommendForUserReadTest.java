@@ -78,7 +78,7 @@ public class RecommendForUserReadTest {
         Place place1 = new Place("test0", "test0", "test0", "test0", "test0");
         repository.save(place1);
 
-        RecommendForUserReadResponseDto dto = service.findById(1,0);
+        RecommendForUserReadResponseDto dto = service.findById(1, 0);
         assertThat(dto.title()).isEqualTo(place1.getTitle());
         assertThat(dto.id()).isEqualTo(place1.getId());
     }

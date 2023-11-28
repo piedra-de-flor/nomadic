@@ -1,6 +1,5 @@
 package com.example.Triple_clone.service.recommend.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadAllResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
 import com.example.Triple_clone.entity.Place;
@@ -23,6 +22,7 @@ public class RecommendForUserService {
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+
     public RecommendForUserReadResponseDto findById(long placeId, long userId) {
         Optional<Place> place = placeRepository.findById(placeId);
 
@@ -51,7 +51,6 @@ public class RecommendForUserService {
                 .map(place -> new RecommendForUserReadResponseDto(place, false))
                 .toList();
 
-        System.out.println("페이징된 데이터 수: " + placesPage.getContent().size());
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
     }
 

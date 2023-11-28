@@ -1,6 +1,5 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadAllResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
 import com.example.Triple_clone.entity.Place;

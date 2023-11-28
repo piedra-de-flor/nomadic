@@ -10,7 +10,9 @@ import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
     Page<Place> findAllByOrderByTitleDesc(Pageable pageable);
+
     Page<Place> findAllByOrderByDateDesc(Pageable pageable);
+
     default void saveLike(long userId, long placeId) {
         Optional<Place> place = findById(placeId);
 
