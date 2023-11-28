@@ -19,7 +19,7 @@ public class RecommendForUserController {
     private final RecommendForUserService service;
 
     @GetMapping("/recommend/user/all")
-    public ResponseEntity<RecommendForUserReadAllResponseDto> readAllOrderBy(@RequestParam String orderType) {
+    public ResponseEntity<RecommendForUserReadAllResponseDto> readAllOrderBy(@RequestParam(required = false, defaultValue = "") String orderType) {
         return ResponseEntity.ok(service.findAll(orderType));
     }
 
