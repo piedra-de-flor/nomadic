@@ -2,7 +2,9 @@ package com.example.Triple_clone.recommendTest.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadAllResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
 import com.example.Triple_clone.entity.Place;
+import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
@@ -13,8 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,8 +44,14 @@ class RecommendForUserServiceTest {
     @Mock
     private Place place2;
 
+    @Mock
+    private User user1;
+
     @InjectMocks
     private RecommendForUserService service;
+
+    @Mock
+    Pageable pageable;
 
 
     @Test
@@ -67,43 +76,44 @@ class RecommendForUserServiceTest {
 
     @Test
     void 서비스_레이어_장소_전체_조회_날짜순_테스트() {
-        place1.setLikes(Collections.singletonList(1L));
-
         List<Place> list = new ArrayList<>();
         list.add(place1);
         list.add(place2);
+        Page<Place> page = new PageImpl<>(list, PageRequest.of(0, list.size()), list.size());
 
-        when(placeRepository.findAll()).thenReturn(list);
+        Pageable customPageable = PageRequest.of(pageable.getPageNumber(), 5, Sort.by("date").descending());
+        when(placeRepository.findAllByOrderByDateDesc(customPageable)).thenReturn(page);
 
-        when(place1.getDate()).thenReturn(LocalDate.of(2023, 11, 1).atStartOfDay());
-        when(place2.getDate()).thenReturn(LocalDate.of(2023, 10, 15).atStartOfDay());
+        when(place1.getDate()).thenReturn(LocalDateTime.of(2023, 11, 1, 0, 0));
+        when(place2.getDate()).thenReturn(LocalDateTime.of(2023, 10, 15, 0, 0));
 
-        RecommendForUserReadAllResponseDto responseDto = service.findAll("date");
+        Page<RecommendForUserReadResponseDto> responsePage = service.findAll("date", pageable);
 
-        assertThat(responseDto).isNotNull();
-        assertThat(responseDto.places().size()).isEqualTo(2);
-        assertThat(responseDto.places().get(0)).isEqualTo(place1);
+        assertThat(responsePage).isNotNull();
+        assertThat(responsePage.getContent().size()).isEqualTo(2);
+        assertThat(responsePage.getContent().get(0).date()).isEqualTo(place1.getDate());
     }
 
     @Test
     void 서비스_레이어_장소_전체_조회_이름순_테스트() {
-        place1.setLikes(Collections.singletonList(1L));
-
         List<Place> list = new ArrayList<>();
         list.add(place1);
         list.add(place2);
+        Page<Place> page = new PageImpl<>(list, PageRequest.of(0, list.size()), list.size());
+        Pageable customPageable = PageRequest.of(pageable.getPageNumber(), 5, Sort.by("title").descending());
 
-        when(placeRepository.findAll()).thenReturn(list);
+        when(placeRepository.findAllByOrderByTitleDesc(customPageable)).thenReturn(page);
 
         when(place1.getTitle()).thenReturn("AAA");
         when(place2.getTitle()).thenReturn("BBB");
 
-        RecommendForUserReadAllResponseDto responseDto = service.findAll("name");
+        Page<RecommendForUserReadResponseDto> responsePage = service.findAll("name", pageable);
 
-        assertThat(responseDto).isNotNull();
-        assertThat(responseDto.places().size()).isEqualTo(2);
-        assertThat(responseDto.places().get(0)).isEqualTo(place1);
+        assertThat(responsePage).isNotNull();
+        assertThat(responsePage.getContent().size()).isEqualTo(2);
+        assertThat(responsePage.getContent().get(0).title()).isEqualTo(place1.getTitle());
     }
+
 
     @Test
     void 서비스_레이어_장소_좋아요_테스트() {
@@ -115,5 +125,13 @@ class RecommendForUserServiceTest {
 
     @Test
     void 서비스_레이어_리뷰_작성_테스트() {
+        RecommendForUserWriteReviewRequestDto dto = new RecommendForUserWriteReviewRequestDto(1L, 1L, "test", "test");
+        when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+
+        service.writeReview(dto);
+        assertAll(
+                () -> verify(reviewRepository, times(1)).save(dto.toEntity(user1, place1))
+        );
     }
 }

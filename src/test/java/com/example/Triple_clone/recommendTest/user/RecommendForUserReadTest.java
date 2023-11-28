@@ -8,10 +8,11 @@ import com.example.Triple_clone.repository.UserRepository;
 import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -26,6 +27,8 @@ public class RecommendForUserReadTest {
     @Autowired
     ReviewRepository reviewrepository;
     RecommendForUserService service;
+    @Mock
+    Pageable pageable;
 
     @BeforeEach
     void setUp() {
@@ -44,10 +47,11 @@ public class RecommendForUserReadTest {
         repository.save(place2);
         repository.save(place1);
 
-        List<Place> testList = service.findAll("date").places();
-        assertThat(testList.get(0)).isEqualTo(place1);
-        assertThat(testList.get(1)).isEqualTo(place2);
-        assertThat(testList.get(2)).isEqualTo(place3);
+        Page<RecommendForUserReadResponseDto> responsePage = service.findAll("date", pageable);
+
+        assertThat(responsePage.getContent().get(2).title()).isEqualTo(place1.getTitle());
+        assertThat(responsePage.getContent().get(1).title()).isEqualTo(place2.getTitle());
+        assertThat(responsePage.getContent().get(0).title()).isEqualTo(place3.getTitle());
     }
 
     @Test
@@ -62,10 +66,11 @@ public class RecommendForUserReadTest {
         repository.save(place2);
         repository.save(place1);
 
-        List<Place> testList = service.findAll("name").places();
-        assertThat(testList.get(0)).isEqualTo(place1);
-        assertThat(testList.get(1)).isEqualTo(place2);
-        assertThat(testList.get(2)).isEqualTo(place3);
+        Page<RecommendForUserReadResponseDto> responsePage = service.findAll("name", pageable);
+
+        assertThat(responsePage.getContent().get(2).title()).isEqualTo(place1.getTitle());
+        assertThat(responsePage.getContent().get(1).title()).isEqualTo(place2.getTitle());
+        assertThat(responsePage.getContent().get(0).title()).isEqualTo(place3.getTitle());
     }
 
     @Test

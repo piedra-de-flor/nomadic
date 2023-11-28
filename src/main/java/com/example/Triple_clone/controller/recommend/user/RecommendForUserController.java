@@ -6,8 +6,8 @@ import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseD
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
 import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,8 +19,10 @@ public class RecommendForUserController {
     private final RecommendForUserService service;
 
     @GetMapping("/recommend/user/all")
-    public ResponseEntity<RecommendForUserReadAllResponseDto> readAllOrderBy(@RequestParam(required = false, defaultValue = "") String orderType) {
-        return ResponseEntity.ok(service.findAll(orderType));
+    public ResponseEntity<Page<RecommendForUserReadResponseDto>> readAllOrderBy(
+            @RequestParam(required = false, defaultValue = "") String sort,
+            Pageable pageable) {
+        return ResponseEntity.ok(service.findAll(sort, pageable));
     }
 
     @GetMapping("/recommend/user")

@@ -4,18 +4,22 @@ import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadAllRespon
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
 import com.example.Triple_clone.entity.Place;
+import com.example.Triple_clone.entity.Review;
 import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class RecommendForUserService {
+    private final static int PAGE_SIZE = 5;
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
@@ -28,23 +32,27 @@ public class RecommendForUserService {
         return new RecommendForUserReadResponseDto(exsitPlace, likeOrNot);
     }
 
-    public RecommendForUserReadAllResponseDto findAll(String orderType) {
-        List<Place> places = placeRepository.findAll();
-        List<Place> sortedPlaces;
+    public Page<RecommendForUserReadResponseDto> findAll(String orderType, Pageable pageable) {
+        Page<Place> placesPage;
+        Pageable customPageable;
 
         switch (orderType) {
-            case "name" :
-                sortedPlaces = places.stream()
-                        .sorted(Comparator.comparing(Place::getTitle))
-                        .toList();
+            case "name":
+                customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by("title").descending());
+                placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
                 break;
             default:
-                sortedPlaces = places.stream()
-                        .sorted(Comparator.comparing(Place::getDate).reversed())
-                        .toList();
+                customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by("date").descending());
+                placesPage = placeRepository.findAllByOrderByDateDesc(customPageable);
+                break;
         }
 
-        return new RecommendForUserReadAllResponseDto(sortedPlaces);
+        List<RecommendForUserReadResponseDto> dtos = placesPage.getContent().stream()
+                .map(place -> new RecommendForUserReadResponseDto(place, false))
+                .toList();
+
+        System.out.println("페이징된 데이터 수: " + placesPage.getContent().size());
+        return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
     }
 
     public void like(long placeId, Long userId) {
@@ -58,6 +66,8 @@ public class RecommendForUserService {
         Place exsitPlace = place.orElseThrow(() -> new IllegalArgumentException("no place entity"));
         User writer = user.orElseThrow(() -> new IllegalArgumentException("no user entity"));
 
-        reviewRepository.save(writeReviewRequestDto.toEntity(writer, exsitPlace));
+        Review review = writeReviewRequestDto.toEntity(writer, exsitPlace);
+        reviewRepository.save(review);
+        exsitPlace.getReviews().add(review);
     }
 }
