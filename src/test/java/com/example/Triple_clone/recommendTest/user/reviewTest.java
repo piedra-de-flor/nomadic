@@ -35,12 +35,14 @@ public class reviewTest {
     }
     @Test
     void 리뷰_작성_테스트() {
-        RecommendForUserWriteReviewRequestDto dto = new RecommendForUserWriteReviewRequestDto(1,1,"test","test");
         User testUser = new User();
         Place testPlace = new Place("test", "test", "test", "test", "test");
 
         userRepository.save(testUser);
         placeRepository.save(testPlace);
+
+        RecommendForUserWriteReviewRequestDto dto = new RecommendForUserWriteReviewRequestDto(testUser.getId(), testPlace.getId(), "test","test");
+
 
         service.writeReview(dto);
 
