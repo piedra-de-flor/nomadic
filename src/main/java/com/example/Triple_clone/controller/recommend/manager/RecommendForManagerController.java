@@ -5,10 +5,7 @@ import com.example.Triple_clone.dto.recommend.manager.RecommendForManagerUpdateP
 import com.example.Triple_clone.service.recommend.manager.RecommendForManagerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +21,12 @@ public class RecommendForManagerController {
     @PutMapping("/recommend/manager/update")
     public ResponseEntity<Void> updatePlace(@RequestBody RecommendForManagerUpdatePlaceRequestDto updatePlaceRequestDto) {
         service.updatePlace(updatePlaceRequestDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/recommend/manager/delete")
+    public ResponseEntity<Void> deletePlace(@RequestParam Long placeId) {
+        service.deletePlace(placeId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -28,4 +28,11 @@ public class RecommendForManagerService {
                 updatePlaceRequestDto.location(),
                 updatePlaceRequestDto.mainImage());
     }
+
+    public void deletePlace(Long placeId) {
+        Optional<Place> place = repository.findById(placeId);
+        Place target = place.orElseThrow(() -> new IllegalArgumentException("no place entity for delete"));
+
+        repository.delete(target);
+    }
 }
