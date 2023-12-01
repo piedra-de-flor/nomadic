@@ -1,11 +1,13 @@
 package com.example.Triple_clone.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Review {
     @Id

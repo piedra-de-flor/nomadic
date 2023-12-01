@@ -8,6 +8,7 @@ import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -54,10 +55,12 @@ public class RecommendForUserService {
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
     }
 
+    @Transactional
     public void like(long placeId, Long userId) {
         placeRepository.saveLike(userId, placeId);
     }
 
+    @Transactional
     public void writeReview(RecommendForUserWriteReviewRequestDto writeReviewRequestDto) {
         Optional<Place> place = placeRepository.findById(writeReviewRequestDto.placeId());
         Optional<User> user = userRepository.findById(writeReviewRequestDto.userId());
