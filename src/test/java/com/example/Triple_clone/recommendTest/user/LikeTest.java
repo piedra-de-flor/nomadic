@@ -8,6 +8,7 @@ import com.example.Triple_clone.repository.UserRepository;
 import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -26,7 +27,8 @@ public class LikeTest {
     RecommendForUserService service;
 
     Place testPlace = new Place("test", "test", "test", "test", "test");
-    User testUser = new User();
+    @Mock
+    User testUser;
 
     @BeforeEach
     void setUp() {

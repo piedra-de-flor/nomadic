@@ -15,9 +15,11 @@ public class Review {
     private long reviewId;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "place_id")
     private Place place;
 
     private String content;

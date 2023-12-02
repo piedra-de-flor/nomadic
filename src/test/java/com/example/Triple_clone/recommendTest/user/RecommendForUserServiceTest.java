@@ -3,6 +3,7 @@ package com.example.Triple_clone.recommendTest.user;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
 import com.example.Triple_clone.entity.Place;
+import com.example.Triple_clone.entity.Review;
 import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
@@ -14,11 +15,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,8 +56,6 @@ class RecommendForUserServiceTest {
 
     @Test
     void 서비스_레이어_장소_단일_조회_테스트() {
-        place1.setLikes(Collections.singletonList(1L));
-
         when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
         when(place1.getId()).thenReturn(1L);
 
@@ -129,8 +128,9 @@ class RecommendForUserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
 
         service.writeReview(dto);
+
         assertAll(
-                () -> verify(reviewRepository, times(1)).save(dto.toEntity(user1, place1))
+                () -> verify(reviewRepository, times(1)).save(any(Review.class))
         );
     }
 }

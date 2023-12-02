@@ -15,6 +15,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String email;
+    private String password;
+
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
+
+    public User(String email, String password) {
+    }
 }
