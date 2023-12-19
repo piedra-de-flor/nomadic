@@ -31,15 +31,15 @@ public class RecommendController {
     }
 
     @PutMapping("/recommend/user/like")
-    public ResponseEntity<Void> like(@RequestBody RecommendLikeDto recommendLikeDto) {
+    public ResponseEntity<RecommendLikeDto> like(@RequestBody RecommendLikeDto recommendLikeDto) {
         service.like(recommendLikeDto.placeId(), recommendLikeDto.userId());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(recommendLikeDto);
     }
 
     @PostMapping("/recommend/user/review")
-    public ResponseEntity<Void> writeReview(@RequestBody RecommendWriteReviewDto writeReviewRequestDto) {
+    public ResponseEntity<RecommendWriteReviewDto> writeReview(@RequestBody RecommendWriteReviewDto writeReviewRequestDto) {
         service.writeReview(writeReviewRequestDto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(writeReviewRequestDto);
     }
 
     @GetMapping("/recommend/user/plan")

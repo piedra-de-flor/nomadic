@@ -14,11 +14,13 @@ import java.util.Optional;
 public class AdminRecommendService {
     private final PlaceRepository repository;
 
-    public void createPlace(AdminRecommendCreatePlaceDto createPlaceRequestDto) {
-        repository.save(createPlaceRequestDto.toEntity());
+    public Place createPlace(AdminRecommendCreatePlaceDto createPlaceRequestDto) {
+        Place place = createPlaceRequestDto.toEntity();
+        repository.save(place);
+        return place;
     }
 
-    public void updatePlace(AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
+    public Place updatePlace(AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
         Optional<Place> place = repository.findById(updatePlaceRequestDto.placeId());
         Place target = place.orElseThrow(() -> new IllegalArgumentException("no place entity for update"));
 
@@ -27,12 +29,15 @@ public class AdminRecommendService {
                 updatePlaceRequestDto.subTitle(),
                 updatePlaceRequestDto.location(),
                 updatePlaceRequestDto.mainImage());
+
+        return target;
     }
 
-    public void deletePlace(Long placeId) {
+    public long deletePlace(Long placeId) {
         Optional<Place> place = repository.findById(placeId);
         Place target = place.orElseThrow(() -> new IllegalArgumentException("no place entity for delete"));
 
         repository.delete(target);
+        return placeId;
     }
 }
