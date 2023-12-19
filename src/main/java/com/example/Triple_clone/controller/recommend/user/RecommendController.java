@@ -42,7 +42,7 @@ public class RecommendController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/recommend/user/redirect/plan")
+    @GetMapping("/recommend/user/plan")
     public String redirectToPlanning(@RequestParam String target, @RequestParam long placeId, RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("placeId", placeId);
         return "redirect:/" + REDIRECT_END_POINT_TO_PLANNING_SERVICE + target;
