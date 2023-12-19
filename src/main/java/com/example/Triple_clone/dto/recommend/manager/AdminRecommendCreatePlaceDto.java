@@ -2,7 +2,7 @@ package com.example.Triple_clone.dto.recommend.manager;
 
 import com.example.Triple_clone.entity.Place;
 
-public record RecommendForManagerCreatePlaceRequestDto(
+public record AdminRecommendCreatePlaceDto(
         String title,
         String notionUrl,
         String subTitle,

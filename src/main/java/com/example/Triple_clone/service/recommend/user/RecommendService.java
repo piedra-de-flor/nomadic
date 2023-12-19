@@ -1,7 +1,7 @@
 package com.example.Triple_clone.service.recommend.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.entity.Place;
 import com.example.Triple_clone.entity.Review;
 import com.example.Triple_clone.entity.User;
@@ -18,22 +18,22 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class RecommendForUserService {
+public class RecommendService {
     private final static int PAGE_SIZE = 5;
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
 
-    public RecommendForUserReadResponseDto findById(long placeId, long userId) {
+    public RecommendReadDto findById(long placeId, long userId) {
         Optional<Place> place = placeRepository.findById(placeId);
 
         Place exsitPlace = place.orElseThrow(() -> new IllegalArgumentException("no place entity"));
         boolean likeOrNot = exsitPlace.getLikes().contains(userId);
 
-        return new RecommendForUserReadResponseDto(exsitPlace, likeOrNot);
+        return new RecommendReadDto(exsitPlace, likeOrNot);
     }
 
-    public Page<RecommendForUserReadResponseDto> findAll(String orderType, Pageable pageable) {
+    public Page<RecommendReadDto> findAll(String orderType, Pageable pageable) {
         Page<Place> placesPage;
         Pageable customPageable;
 
@@ -48,8 +48,8 @@ public class RecommendForUserService {
                 break;
         }
 
-        List<RecommendForUserReadResponseDto> dtos = placesPage.getContent().stream()
-                .map(place -> new RecommendForUserReadResponseDto(place, false))
+        List<RecommendReadDto> dtos = placesPage.getContent().stream()
+                .map(place -> new RecommendReadDto(place, false))
                 .toList();
 
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
@@ -61,7 +61,7 @@ public class RecommendForUserService {
     }
 
     @Transactional
-    public void writeReview(RecommendForUserWriteReviewRequestDto writeReviewRequestDto) {
+    public void writeReview(RecommendWriteReviewDto writeReviewRequestDto) {
         Optional<Place> place = placeRepository.findById(writeReviewRequestDto.placeId());
         Optional<User> user = userRepository.findById(writeReviewRequestDto.userId());
 

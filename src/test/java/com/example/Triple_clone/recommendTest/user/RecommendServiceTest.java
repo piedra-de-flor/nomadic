@@ -1,21 +1,20 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.entity.Place;
 import com.example.Triple_clone.entity.Review;
 import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.*;
 
 import java.time.LocalDateTime;
@@ -28,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RecommendForUserServiceTest {
+class RecommendServiceTest {
     @Mock
     private PlaceRepository placeRepository;
 
@@ -48,7 +47,7 @@ class RecommendForUserServiceTest {
     private User user1;
 
     @InjectMocks
-    private RecommendForUserService service;
+    private RecommendService service;
 
     @Mock
     Pageable pageable;
@@ -59,7 +58,7 @@ class RecommendForUserServiceTest {
         when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
         when(place1.getId()).thenReturn(1L);
 
-        RecommendForUserReadResponseDto responseDto = service.findById(1L, 1L);
+        RecommendReadDto responseDto = service.findById(1L, 1L);
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.id()).isEqualTo(place1.getId());
@@ -85,7 +84,7 @@ class RecommendForUserServiceTest {
         when(place1.getDate()).thenReturn(LocalDateTime.of(2023, 11, 1, 0, 0));
         when(place2.getDate()).thenReturn(LocalDateTime.of(2023, 10, 15, 0, 0));
 
-        Page<RecommendForUserReadResponseDto> responsePage = service.findAll("date", pageable);
+        Page<RecommendReadDto> responsePage = service.findAll("date", pageable);
 
         assertThat(responsePage).isNotNull();
         assertThat(responsePage.getContent().size()).isEqualTo(2);
@@ -105,7 +104,7 @@ class RecommendForUserServiceTest {
         when(place1.getTitle()).thenReturn("AAA");
         when(place2.getTitle()).thenReturn("BBB");
 
-        Page<RecommendForUserReadResponseDto> responsePage = service.findAll("name", pageable);
+        Page<RecommendReadDto> responsePage = service.findAll("name", pageable);
 
         assertThat(responsePage).isNotNull();
         assertThat(responsePage.getContent().size()).isEqualTo(2);
@@ -123,7 +122,7 @@ class RecommendForUserServiceTest {
 
     @Test
     void 서비스_레이어_리뷰_작성_테스트() {
-        RecommendForUserWriteReviewRequestDto dto = new RecommendForUserWriteReviewRequestDto(1L, 1L, "test", "test");
+        RecommendWriteReviewDto dto = new RecommendWriteReviewDto(1L, 1L, "test", "test");
         when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
 

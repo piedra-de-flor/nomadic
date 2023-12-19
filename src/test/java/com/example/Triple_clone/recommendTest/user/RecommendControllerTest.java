@@ -1,7 +1,7 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.controller.recommend.user.RecommendForUserController;
-import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import com.example.Triple_clone.controller.recommend.user.RecommendController;
+import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,13 +12,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(RecommendForUserController.class)
-public class RecommendForUserControllerTest {
+@WebMvcTest(RecommendController.class)
+public class RecommendControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private RecommendForUserService service;
+    private RecommendService service;
 
     @Test
     void Controller_레이어_장소_전체_조회_이름순_테스트() throws Exception {

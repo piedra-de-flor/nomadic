@@ -5,7 +5,7 @@ import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -24,7 +24,7 @@ public class LikeTest {
 
     @Autowired
     ReviewRepository reviewRepository;
-    RecommendForUserService service;
+    RecommendService service;
 
     Place testPlace = new Place("test", "test", "test", "test", "test");
     @Mock
@@ -32,7 +32,7 @@ public class LikeTest {
 
     @BeforeEach
     void setUp() {
-        service = new RecommendForUserService(placeRepository, userRepository, reviewRepository);
+        service = new RecommendService(placeRepository, userRepository, reviewRepository);
     }
 
 

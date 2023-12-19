@@ -2,7 +2,7 @@ package com.example.Triple_clone.dto.recommend.manager;
 
 import java.util.Optional;
 
-public record RecommendForManagerUpdatePlaceRequestDto(
+public record AdminRecommendUpdatePlaceDto(
         long placeId,
         Optional<String> title,
         Optional<String> notionUrl,

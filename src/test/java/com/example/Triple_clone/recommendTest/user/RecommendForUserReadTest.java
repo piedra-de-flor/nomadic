@@ -1,11 +1,11 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserReadResponseDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.entity.Place;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,13 +26,13 @@ public class RecommendForUserReadTest {
 
     @Autowired
     ReviewRepository reviewrepository;
-    RecommendForUserService service;
+    RecommendService service;
     @Mock
     Pageable pageable;
 
     @BeforeEach
     void setUp() {
-        service = new RecommendForUserService(repository, userRepository, reviewrepository);
+        service = new RecommendService(repository, userRepository, reviewrepository);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class RecommendForUserReadTest {
         repository.save(place2);
         repository.save(place1);
 
-        Page<RecommendForUserReadResponseDto> responsePage = service.findAll("date", pageable);
+        Page<RecommendReadDto> responsePage = service.findAll("date", pageable);
 
         assertThat(responsePage.getContent().get(2).title()).isEqualTo(place1.getTitle());
         assertThat(responsePage.getContent().get(1).title()).isEqualTo(place2.getTitle());
@@ -66,7 +66,7 @@ public class RecommendForUserReadTest {
         repository.save(place2);
         repository.save(place1);
 
-        Page<RecommendForUserReadResponseDto> responsePage = service.findAll("name", pageable);
+        Page<RecommendReadDto> responsePage = service.findAll("name", pageable);
 
         assertThat(responsePage.getContent().get(2).title()).isEqualTo(place1.getTitle());
         assertThat(responsePage.getContent().get(1).title()).isEqualTo(place2.getTitle());
@@ -78,7 +78,7 @@ public class RecommendForUserReadTest {
         Place place1 = new Place("test0", "test0", "test0", "test0", "test0");
         repository.save(place1);
 
-        RecommendForUserReadResponseDto dto = service.findById(1, 0);
+        RecommendReadDto dto = service.findById(1, 0);
         assertThat(dto.title()).isEqualTo(place1.getTitle());
         assertThat(dto.id()).isEqualTo(place1.getId());
     }

@@ -4,5 +4,5 @@ import com.example.Triple_clone.entity.Place;
 
 import java.util.List;
 
-public record RecommendForUserReadAllResponseDto(List<Place> places) {
+public record RecommendReadAllDto(List<Place> places) {
 }

@@ -1,12 +1,12 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.entity.Place;
 import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +24,11 @@ public class reviewTest {
 
     @Autowired
     ReviewRepository reviewRepository;
-    RecommendForUserService service;
+    RecommendService service;
 
     @BeforeEach
     void setUp() {
-        service = new RecommendForUserService(placeRepository, userRepository, reviewRepository);
+        service = new RecommendService(placeRepository, userRepository, reviewRepository);
         userRepository.deleteAll();
         placeRepository.deleteAll();
     }
@@ -41,7 +41,7 @@ public class reviewTest {
         userRepository.save(testUser);
         placeRepository.save(testPlace);
 
-        RecommendForUserWriteReviewRequestDto dto = new RecommendForUserWriteReviewRequestDto(testUser.getId(), testPlace.getId(), "test", "test");
+        RecommendWriteReviewDto dto = new RecommendWriteReviewDto(testUser.getId(), testPlace.getId(), "test", "test");
 
 
         service.writeReview(dto);
