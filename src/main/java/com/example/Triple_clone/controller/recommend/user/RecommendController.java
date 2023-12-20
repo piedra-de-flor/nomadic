@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,7 +38,7 @@ public class RecommendController {
     }
 
     @PostMapping("/recommend/review")
-    public ResponseEntity<RecommendWriteReviewDto> writeReview(@RequestBody RecommendWriteReviewDto writeReviewRequestDto) {
+    public ResponseEntity<RecommendWriteReviewDto> writeReview(@RequestBody @Validated RecommendWriteReviewDto writeReviewRequestDto) {
         service.writeReview(writeReviewRequestDto);
         return ResponseEntity.ok(writeReviewRequestDto);
     }

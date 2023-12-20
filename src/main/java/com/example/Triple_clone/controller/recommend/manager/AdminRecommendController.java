@@ -6,6 +6,7 @@ import com.example.Triple_clone.entity.Place;
 import com.example.Triple_clone.service.recommend.manager.AdminRecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +15,7 @@ public class AdminRecommendController {
     private final AdminRecommendService service;
 
     @PostMapping("/recommend/admin")
-    public ResponseEntity<Place> createPlace(@RequestBody AdminRecommendCreatePlaceDto createPlaceRequestDto) {
+    public ResponseEntity<Place> createPlace(@RequestBody @Validated AdminRecommendCreatePlaceDto createPlaceRequestDto) {
         return ResponseEntity.ok(service.createPlace(createPlaceRequestDto));
     }
 
