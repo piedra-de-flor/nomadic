@@ -1,12 +1,14 @@
 package com.example.Triple_clone.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -44,12 +46,12 @@ public class Place {
         this.reviews = new ArrayList<>();
     }
 
-    public void update(Optional<String> title, Optional<String> notionUrl, Optional<String> subTitle, Optional<String> location, Optional<String> mainImage) {
-        title.ifPresent(update -> this.title = update);
-        notionUrl.ifPresent(update -> this.notionUrl = update);
-        subTitle.ifPresent(update -> this.subTitle = update);
-        location.ifPresent(update -> this.location = update);
-        mainImage.ifPresent(update -> this.mainImage = update);
+    public void update(String title, String notionUrl, String subTitle, String location, String mainImage) {
+        this.title = title;
+        this.notionUrl = notionUrl;
+        this.subTitle = subTitle;
+        this.location = location;
+        this.mainImage = mainImage;
         this.date = LocalDateTime.now();
     }
 

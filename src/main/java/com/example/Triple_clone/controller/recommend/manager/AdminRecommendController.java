@@ -18,7 +18,7 @@ public class AdminRecommendController {
         return ResponseEntity.ok(service.createPlace(createPlaceRequestDto));
     }
 
-    @PutMapping("/recommend/admin")
+    @PatchMapping("/recommend/admin")
     public ResponseEntity<Place> updatePlace(@RequestBody AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
         return ResponseEntity.ok(service.updatePlace(updatePlaceRequestDto));
     }

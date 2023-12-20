@@ -30,6 +30,7 @@ public class AdminRecommendService {
                 updatePlaceRequestDto.location(),
                 updatePlaceRequestDto.mainImage());
 
+        repository.save(target);
         return target;
     }
 

@@ -17,26 +17,26 @@ public class RecommendController {
     private static final String REDIRECT_END_POINT_TO_PLANNING_SERVICE = "";
     private final RecommendService service;
 
-    @GetMapping("/recommend/user/all")
+    @GetMapping("/recommend/place/all")
     public ResponseEntity<Page<RecommendReadDto>> readAllOrderBy(
             @RequestParam(required = false, defaultValue = "") String sort,
             Pageable pageable) {
         return ResponseEntity.ok(service.findAll(sort, pageable));
     }
 
-    @GetMapping("/recommend/user")
+    @GetMapping("/recommend/place")
     public ResponseEntity<RecommendReadDto> read(@RequestParam long placeId, @RequestParam long userId) {
         RecommendReadDto recommendReadDto = service.findById(placeId, userId);
         return ResponseEntity.ok(recommendReadDto);
     }
 
-    @PutMapping("/recommend/user/like")
+    @PutMapping("/recommend/place/like")
     public ResponseEntity<RecommendLikeDto> like(@RequestBody RecommendLikeDto recommendLikeDto) {
         service.like(recommendLikeDto.placeId(), recommendLikeDto.userId());
         return ResponseEntity.ok(recommendLikeDto);
     }
 
-    @PostMapping("/recommend/user/review")
+    @PostMapping("/recommend/review")
     public ResponseEntity<RecommendWriteReviewDto> writeReview(@RequestBody RecommendWriteReviewDto writeReviewRequestDto) {
         service.writeReview(writeReviewRequestDto);
         return ResponseEntity.ok(writeReviewRequestDto);

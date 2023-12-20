@@ -36,7 +36,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	//Secure
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('bootBuildImage') {
