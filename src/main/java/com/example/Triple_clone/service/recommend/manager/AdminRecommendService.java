@@ -4,6 +4,7 @@ import com.example.Triple_clone.dto.recommend.manager.AdminRecommendCreatePlaceD
 import com.example.Triple_clone.dto.recommend.manager.AdminRecommendUpdatePlaceDto;
 import com.example.Triple_clone.entity.Place;
 import com.example.Triple_clone.repository.PlaceRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class AdminRecommendService {
         return place;
     }
 
+    @Transactional
     public Place updatePlace(AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
         Optional<Place> place = repository.findById(updatePlaceRequestDto.placeId());
         Place target = place.orElseThrow(() -> new IllegalArgumentException("no place entity for update"));
@@ -30,10 +32,10 @@ public class AdminRecommendService {
                 updatePlaceRequestDto.location(),
                 updatePlaceRequestDto.mainImage());
 
-        repository.save(target);
         return target;
     }
 
+    @Transactional
     public long deletePlace(Long placeId) {
         Optional<Place> place = repository.findById(placeId);
         Place target = place.orElseThrow(() -> new IllegalArgumentException("no place entity for delete"));

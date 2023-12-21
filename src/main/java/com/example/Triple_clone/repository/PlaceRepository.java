@@ -13,22 +13,5 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     Page<Place> findAllByOrderByDateDesc(Pageable pageable);
 
-    default void saveLike(long userId, long placeId) {
-        Optional<Place> place = findById(placeId);
-
-        if (place.isEmpty()) {
-            throw new RuntimeException("no entity place");
-        }
-
-        Place exsitPlace = place.get();
-        List<Long> likes = exsitPlace.getLikes();
-
-        if (likes.contains(userId)) {
-            likes.remove(userId);
-        } else {
-            likes.add(userId);
-        }
-
-        save(exsitPlace);
-    }
+    void saveLike(long userId, long placeId);
 }

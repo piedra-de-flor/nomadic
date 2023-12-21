@@ -8,10 +8,10 @@ import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +24,7 @@ public class RecommendService {
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
 
+    @Transactional(readOnly = true)
     public RecommendReadDto findById(long placeId, long userId) {
         Optional<Place> place = placeRepository.findById(placeId);
 
@@ -33,6 +34,7 @@ public class RecommendService {
         return new RecommendReadDto(exsitPlace, likeOrNot);
     }
 
+    @Transactional(readOnly = true)
     public Page<RecommendReadDto> findAll(String orderType, Pageable pageable) {
         Page<Place> placesPage;
         Pageable customPageable;
@@ -57,7 +59,20 @@ public class RecommendService {
 
     @Transactional
     public void like(long placeId, Long userId) {
-        placeRepository.saveLike(userId, placeId);
+        Optional<Place> place = placeRepository.findById(placeId);
+
+        if (place.isEmpty()) {
+            throw new RuntimeException("no entity place");
+        }
+
+        Place exsitPlace = place.get();
+        List<Long> likes = exsitPlace.getLikes();
+
+        if (likes.contains(userId)) {
+            likes.remove(userId);
+        } else {
+            likes.add(userId);
+        }
     }
 
     @Transactional
