@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.*;
 public class AdminRecommendController {
     private final AdminRecommendService service;
 
-    @PostMapping("/recommend/admin")
+    @PostMapping("/admin/recommend")
     public ResponseEntity<Place> createPlace(@RequestBody @Validated AdminRecommendCreatePlaceDto createPlaceRequestDto) {
         return ResponseEntity.ok(service.createPlace(createPlaceRequestDto));
     }
 
-    @PatchMapping("/recommend/admin")
+    @PatchMapping("/admin/recommend")
     public ResponseEntity<Place> updatePlace(@RequestBody AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
         return ResponseEntity.ok(service.updatePlace(updatePlaceRequestDto));
     }
 
-    @DeleteMapping("/recommend/admin")
+    @DeleteMapping("/admin/recommend")
     public ResponseEntity<Long> deletePlace(@RequestParam Long placeId) {
         return ResponseEntity.ok(service.deletePlace(placeId));
     }

@@ -7,6 +7,7 @@ import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
+import com.example.Triple_clone.vo.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class reviewTest {
 
     @Test
     void 리뷰_작성_테스트() {
-        User testUser = new User("test", "test");
+        User testUser = new User("test", "test", Role.ADMIN);
         Place testPlace = new Place("test", "test", "test", "test", "test");
 
         userRepository.save(testUser);

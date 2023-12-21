@@ -112,13 +112,13 @@ class RecommendServiceTest {
     }
 
 
-  /*  @Test
+    @Test
     void 서비스_레이어_장소_좋아요_테스트() {
         service.like(1L, 1L);
         assertAll(
-                () -> verify(placeRepository, times(1)).saveLike(1L, 1L)
+                () -> verify(service, times(1)).like(1L, 1L)
         );
-    }*/
+    }
 
     @Test
     void 서비스_레이어_리뷰_작성_테스트() {

@@ -12,6 +12,4 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     Page<Place> findAllByOrderByTitleDesc(Pageable pageable);
 
     Page<Place> findAllByOrderByDateDesc(Pageable pageable);
-
-    void saveLike(long userId, long placeId);
 }
