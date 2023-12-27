@@ -3,15 +3,20 @@ package com.example.Triple_clone.dto.recommend.manager;
 import com.example.Triple_clone.entity.Place;
 import lombok.NonNull;
 
+import java.util.Objects;
+
 public record AdminRecommendCreatePlaceDto(
-        @NonNull
         String title,
-        @NonNull
         String notionUrl,
         String subTitle,
-        @NonNull
         String location,
         String mainImage) {
+
+    public AdminRecommendCreatePlaceDto {
+        Objects.requireNonNull(title);
+        Objects.requireNonNull(notionUrl);
+        Objects.requireNonNull(location);
+    }
     public Place toEntity() {
         return Place.builder()
                 .location(location)

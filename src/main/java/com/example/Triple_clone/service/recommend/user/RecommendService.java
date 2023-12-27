@@ -8,6 +8,7 @@ import com.example.Triple_clone.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
+import com.example.Triple_clone.vo.RecommendOrderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -42,16 +43,8 @@ public class RecommendService {
         Page<Place> placesPage;
         Pageable customPageable;
 
-        switch (orderType) {
-            case "name":
-                customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by("title").descending());
-                placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
-                break;
-            default:
-                customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by("date").descending());
-                placesPage = placeRepository.findAllByOrderByDateDesc(customPageable);
-                break;
-        }
+        customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by(RecommendOrderType.valueOf(orderType).property).descending());
+        placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
 
         List<RecommendReadDto> dtos = placesPage.getContent().stream()
                 .map(place -> new RecommendReadDto(place, false))

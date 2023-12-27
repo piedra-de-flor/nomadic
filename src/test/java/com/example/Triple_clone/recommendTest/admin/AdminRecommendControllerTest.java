@@ -1,4 +1,4 @@
-package com.example.Triple_clone.recommendTest.user;
+package com.example.Triple_clone.recommendTest.admin;
 
 import com.example.Triple_clone.controller.recommend.manager.AdminRecommendController;
 import com.example.Triple_clone.service.recommend.manager.AdminRecommendService;
