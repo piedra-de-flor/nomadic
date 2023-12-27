@@ -19,9 +19,8 @@ public class RecommendController {
     private final RecommendService service;
 
     @GetMapping("/recommend/place/all")
-    public ResponseEntity<Page<RecommendReadDto>> readAllOrderBy(
-            @RequestParam(required = false, defaultValue = "") String sort,
-            Pageable pageable) {
+    public ResponseEntity<Page<RecommendReadDto>> readAllOrderBy(@RequestParam(required = false, defaultValue = "") String sort,
+                                                                 Pageable pageable) {
         return ResponseEntity.ok(service.findAll(sort, pageable));
     }
 
@@ -43,6 +42,10 @@ public class RecommendController {
         return ResponseEntity.ok(writeReviewRequestDto);
     }
 
+
+    //TODO
+    //FIXME
+    //    // - 추후에 추천 장소를 내 계획에 추가하는 로직 구현 예정
     @GetMapping("/recommend/user/plan")
     public String redirectToPlanning(@RequestParam String target, @RequestParam long placeId, RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("placeId", placeId);

@@ -16,16 +16,19 @@ public class AdminRecommendController {
 
     @PostMapping("/admin/recommend")
     public ResponseEntity<Place> createPlace(@RequestBody @Validated AdminRecommendCreatePlaceDto createPlaceRequestDto) {
-        return ResponseEntity.ok(service.createPlace(createPlaceRequestDto));
+        Place createdPlace = service.createPlace(createPlaceRequestDto);
+        return ResponseEntity.ok(createdPlace);
     }
 
     @PatchMapping("/admin/recommend")
     public ResponseEntity<Place> updatePlace(@RequestBody AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
-        return ResponseEntity.ok(service.updatePlace(updatePlaceRequestDto));
+        Place updatedPlace = service.updatePlace(updatePlaceRequestDto);
+        return ResponseEntity.ok(updatedPlace);
     }
 
     @DeleteMapping("/admin/recommend")
-    public ResponseEntity<Long> deletePlace(@RequestParam Long placeId) {
-        return ResponseEntity.ok(service.deletePlace(placeId));
+    public ResponseEntity<Long> deletePlace(@RequestParam long placeId) {
+        Long deletedPlaceId = service.deletePlace(placeId);
+        return ResponseEntity.ok(deletedPlaceId);
     }
 }

@@ -39,11 +39,8 @@ public class RecommendService {
 
     @Transactional(readOnly = true)
     public Page<RecommendReadDto> findAll(String orderType, Pageable pageable) {
-        Page<Place> placesPage;
-        Pageable customPageable;
-
-        customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by(RecommendOrderType.valueOf(orderType).property).descending());
-        placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
+        Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by(RecommendOrderType.valueOf(orderType).property).descending());
+        Page<Place> placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
 
         List<RecommendReadDto> dtos = placesPage.getContent().stream()
                 .map(place -> new RecommendReadDto(place, false))
