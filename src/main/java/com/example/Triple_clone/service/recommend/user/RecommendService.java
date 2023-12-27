@@ -32,9 +32,8 @@ public class RecommendService {
         Optional<Place> place = placeRepository.findById(placeId);
 
         Place exsitPlace = place.orElseThrow(() -> new IllegalArgumentException("no place entity"));
-        boolean likeOrNot = exsitPlace.getLikes().contains(userId);
+        boolean likeOrNot = exsitPlace.isLikedBy(userId);
 
-        log.info("read place / Place : {}", exsitPlace);
         return new RecommendReadDto(exsitPlace, likeOrNot);
     }
 
@@ -50,8 +49,6 @@ public class RecommendService {
                 .map(place -> new RecommendReadDto(place, false))
                 .toList();
 
-        log.info("readAll place / page : {}", pageable.getPageNumber());
-        log.info("readAll place / elementAmount : {}", placesPage.getTotalElements());
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
     }
 
@@ -59,21 +56,8 @@ public class RecommendService {
     public void like(long placeId, Long userId) {
         Optional<Place> place = placeRepository.findById(placeId);
 
-        if (place.isEmpty()) {
-            throw new RuntimeException("no entity place");
-        }
-
-        Place exsitPlace = place.get();
-        List<Long> likes = exsitPlace.getLikes();
-        log.info("before like place / likes : {}", likes.size());
-
-        if (likes.contains(userId)) {
-            likes.remove(userId);
-        } else {
-            likes.add(userId);
-        }
-
-        log.info("after like place / likes : {}", likes.size());
+        Place exsitPlace = place.orElseThrow(() -> new RuntimeException("no entity place"));
+        exsitPlace.like(userId);
     }
 
     @Transactional
@@ -83,11 +67,9 @@ public class RecommendService {
 
         Place exsitPlace = place.orElseThrow(() -> new IllegalArgumentException("no place entity"));
         User writer = user.orElseThrow(() -> new IllegalArgumentException("no user entity"));
-        log.info("before write review / reviews : {}", exsitPlace.getReviews().size());
 
         Review review = writeReviewRequestDto.toEntity(writer, exsitPlace);
         reviewRepository.save(review);
-        exsitPlace.getReviews().add(review);
-        log.info("after write review / reviews : {}", exsitPlace.getReviews().size());
+        exsitPlace.addReview(review);
     }
 }

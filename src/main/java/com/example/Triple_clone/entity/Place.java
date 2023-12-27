@@ -34,7 +34,7 @@ public class Place {
     private List<Review> reviews;
 
     @Builder
-    public Place(String title, String notionUrl, String subTitle, String location, String mainImage) {
+    public Place(@NonNull String title, String notionUrl, String subTitle, String location, String mainImage) {
         this.title = title;
         this.notionUrl = notionUrl;
         this.subTitle = subTitle;
@@ -52,6 +52,22 @@ public class Place {
         this.location = location;
         this.mainImage = mainImage;
         this.date = LocalDateTime.now();
+    }
+
+    public void like(long userId) {
+        if (isLikedBy(userId)) {
+            likes.remove(userId);
+            return;
+        }
+        likes.add(userId);
+    }
+
+    public boolean isLikedBy(long userId) {
+        return likes.contains(userId);
+    }
+
+    public void addReview(Review review) {
+        reviews.add(review);
     }
 
     public int getLikesNumber() {

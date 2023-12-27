@@ -20,7 +20,6 @@ public class AdminRecommendService {
     public Place createPlace(AdminRecommendCreatePlaceDto createPlaceRequestDto) {
         Place place = createPlaceRequestDto.toEntity();
         repository.save(place);
-        log.info("create place / Place id : {}", place.getId());
         return place;
     }
 
@@ -35,7 +34,6 @@ public class AdminRecommendService {
                 updatePlaceRequestDto.location(),
                 updatePlaceRequestDto.mainImage());
 
-        log.info("update place / Place id : {}", target.getId());
         return target;
     }
 
@@ -45,7 +43,6 @@ public class AdminRecommendService {
         Place target = place.orElseThrow(() -> new IllegalArgumentException("no place entity for delete"));
 
         repository.delete(target);
-        log.info("delete place / Place id : {}", target.getId());
         return placeId;
     }
 }
