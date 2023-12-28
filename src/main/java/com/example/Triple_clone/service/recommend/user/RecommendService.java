@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -31,7 +32,7 @@ public class RecommendService {
     public RecommendReadDto findById(long placeId, long userId) {
         Optional<Place> place = placeRepository.findById(placeId);
 
-        Place exsitPlace = place.orElseThrow(() -> new IllegalArgumentException("no place entity"));
+        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no place entity"));
         boolean likeOrNot = exsitPlace.isLikedBy(userId);
 
         return new RecommendReadDto(exsitPlace, likeOrNot);
@@ -53,7 +54,7 @@ public class RecommendService {
     public void like(long placeId, Long userId) {
         Optional<Place> place = placeRepository.findById(placeId);
 
-        Place exsitPlace = place.orElseThrow(() -> new RuntimeException("no entity place"));
+        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no entity place"));
         exsitPlace.like(userId);
     }
 
@@ -62,8 +63,8 @@ public class RecommendService {
         Optional<Place> place = placeRepository.findById(writeReviewRequestDto.placeId());
         Optional<User> user = userRepository.findById(writeReviewRequestDto.userId());
 
-        Place exsitPlace = place.orElseThrow(() -> new IllegalArgumentException("no place entity"));
-        User writer = user.orElseThrow(() -> new IllegalArgumentException("no user entity"));
+        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no place entity"));
+        User writer = user.orElseThrow(() -> new NoSuchElementException("no user entity"));
 
         Review review = writeReviewRequestDto.toEntity(writer, exsitPlace);
         reviewRepository.save(review);

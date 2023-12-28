@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -26,7 +27,7 @@ public class AdminRecommendService {
     @Transactional
     public Place updatePlace(AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
         Optional<Place> place = repository.findById(updatePlaceRequestDto.placeId());
-        Place target = place.orElseThrow(() -> new IllegalArgumentException("no place entity for update"));
+        Place target = place.orElseThrow(() -> new NoSuchElementException("no place entity for update"));
 
         target.update(updatePlaceRequestDto.title(),
                 updatePlaceRequestDto.notionUrl(),
@@ -40,7 +41,7 @@ public class AdminRecommendService {
     @Transactional
     public long deletePlace(Long placeId) {
         Optional<Place> place = repository.findById(placeId);
-        Place target = place.orElseThrow(() -> new IllegalArgumentException("no place entity for delete"));
+        Place target = place.orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
 
         repository.delete(target);
         return placeId;

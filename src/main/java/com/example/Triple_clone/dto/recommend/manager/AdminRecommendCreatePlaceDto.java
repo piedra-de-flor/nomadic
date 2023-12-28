@@ -1,22 +1,17 @@
 package com.example.Triple_clone.dto.recommend.manager;
 
 import com.example.Triple_clone.entity.Place;
-import lombok.NonNull;
-
-import java.util.Objects;
+import jakarta.validation.constraints.NotNull;
 
 public record AdminRecommendCreatePlaceDto(
+        @NotNull
         String title,
+        @NotNull
         String notionUrl,
         String subTitle,
+        @NotNull
         String location,
         String mainImage) {
-
-    public AdminRecommendCreatePlaceDto {
-        Objects.requireNonNull(title);
-        Objects.requireNonNull(notionUrl);
-        Objects.requireNonNull(location);
-    }
     public Place toEntity() {
         return Place.builder()
                 .location(location)

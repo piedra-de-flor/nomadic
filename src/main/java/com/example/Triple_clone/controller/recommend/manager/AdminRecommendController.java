@@ -4,9 +4,9 @@ import com.example.Triple_clone.dto.recommend.manager.AdminRecommendCreatePlaceD
 import com.example.Triple_clone.dto.recommend.manager.AdminRecommendUpdatePlaceDto;
 import com.example.Triple_clone.entity.Place;
 import com.example.Triple_clone.service.recommend.manager.AdminRecommendService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +15,7 @@ public class AdminRecommendController {
     private final AdminRecommendService service;
 
     @PostMapping("/admin/recommend")
-    public ResponseEntity<Place> createPlace(@RequestBody @Validated AdminRecommendCreatePlaceDto createPlaceRequestDto) {
+    public ResponseEntity<Place> createPlace(@RequestBody @Valid AdminRecommendCreatePlaceDto createPlaceRequestDto) {
         Place createdPlace = service.createPlace(createPlaceRequestDto);
         return ResponseEntity.ok(createdPlace);
     }
