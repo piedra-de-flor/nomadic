@@ -1,6 +1,6 @@
 package com.example.Triple_clone.dto.recommend.user;
 
-import com.example.Triple_clone.entity.Place;
+import com.example.Triple_clone.domain.entity.Place;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package com.example.Triple_clone.vo;
+package com.example.Triple_clone.dto.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

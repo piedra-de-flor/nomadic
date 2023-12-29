@@ -1,5 +1,7 @@
-package com.example.Triple_clone.filter;
+package com.example.Triple_clone.web.filter;
 
+import com.example.Triple_clone.domain.vo.AuthErrorCode;
+import com.example.Triple_clone.web.exception.RestApiException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,10 +19,11 @@ public class JwtAuthFilter implements Filter {
         String token = httpRequest.getHeader("Authorization");
 
         if (token != null && token.equals("ADMIN")) {
-            log.info("인증완료");
+            log.info("role={} 관리자 인증 완료", token);
             chain.doFilter(request, response);
         } else {
-            log.info("인증실패");
+            log.info("role={} 관리자 인증 실패", token);
+            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
         }
     }
 }

@@ -1,6 +1,7 @@
-package com.example.Triple_clone.entity;
+package com.example.Triple_clone.domain.entity;
 
-import com.example.Triple_clone.vo.Role;
+import com.example.Triple_clone.domain.entity.Review;
+import com.example.Triple_clone.domain.vo.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

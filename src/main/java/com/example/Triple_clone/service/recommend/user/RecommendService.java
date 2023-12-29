@@ -2,13 +2,13 @@ package com.example.Triple_clone.service.recommend.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
-import com.example.Triple_clone.entity.Place;
-import com.example.Triple_clone.entity.Review;
-import com.example.Triple_clone.entity.User;
+import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Review;
+import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.vo.RecommendOrderType;
+import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;

@@ -1,4 +1,4 @@
-package com.example.Triple_clone.controller.recommend.user;
+package com.example.Triple_clone.web.controller.recommend.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendLikeDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
@@ -18,7 +18,7 @@ public class RecommendController {
     private static final String REDIRECT_END_POINT_TO_PLANNING_SERVICE = "";
     private final RecommendService service;
 
-    @GetMapping("/recommend/place/all")
+    @GetMapping("/recommend/places")
     public ResponseEntity<Page<RecommendReadDto>> readAllOrderBy(@RequestParam(required = false, defaultValue = "") String sort,
                                                                  Pageable pageable) {
         return ResponseEntity.ok(service.findAll(sort, pageable));

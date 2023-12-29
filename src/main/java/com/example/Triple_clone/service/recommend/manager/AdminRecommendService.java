@@ -2,7 +2,7 @@ package com.example.Triple_clone.service.recommend.manager;
 
 import com.example.Triple_clone.dto.recommend.manager.AdminRecommendCreatePlaceDto;
 import com.example.Triple_clone.dto.recommend.manager.AdminRecommendUpdatePlaceDto;
-import com.example.Triple_clone.entity.Place;
+import com.example.Triple_clone.domain.entity.Place;
 import com.example.Triple_clone.repository.PlaceRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

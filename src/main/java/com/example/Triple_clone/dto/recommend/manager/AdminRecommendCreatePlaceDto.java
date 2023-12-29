@@ -1,6 +1,6 @@
 package com.example.Triple_clone.dto.recommend.manager;
 
-import com.example.Triple_clone.entity.Place;
+import com.example.Triple_clone.domain.entity.Place;
 import jakarta.validation.constraints.NotNull;
 
 public record AdminRecommendCreatePlaceDto(

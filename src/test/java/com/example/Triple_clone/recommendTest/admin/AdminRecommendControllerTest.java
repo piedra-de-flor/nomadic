@@ -1,6 +1,6 @@
 package com.example.Triple_clone.recommendTest.admin;
 
-import com.example.Triple_clone.controller.recommend.manager.AdminRecommendController;
+import com.example.Triple_clone.web.controller.recommend.admin.AdminRecommendController;
 import com.example.Triple_clone.service.recommend.manager.AdminRecommendService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

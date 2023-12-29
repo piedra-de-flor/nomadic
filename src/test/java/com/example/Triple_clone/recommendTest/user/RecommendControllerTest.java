@@ -1,6 +1,6 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.controller.recommend.user.RecommendController;
+import com.example.Triple_clone.web.controller.recommend.user.RecommendController;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

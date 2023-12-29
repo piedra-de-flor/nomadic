@@ -1,9 +1,8 @@
-package com.example.Triple_clone.controller.exception;
+package com.example.Triple_clone.web.exception;
 
-import com.example.Triple_clone.vo.ErrorCode;
-import com.example.Triple_clone.vo.ErrorResponse;
-import com.example.Triple_clone.vo.GlobalErrorCode;
-import com.example.Triple_clone.vo.RestApiException;
+import com.example.Triple_clone.domain.vo.ErrorCode;
+import com.example.Triple_clone.dto.error.ErrorResponse;
+import com.example.Triple_clone.domain.vo.GlobalErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -24,13 +23,14 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RestApiException.class)
     public ResponseEntity<Object> handleCustomException(RestApiException e) {
+        log.warn("WhatIsIt", e);
         ErrorCode errorCode = e.getErrorCode();
         return handleExceptionInternal(errorCode);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Object> handleIllegalArgument(NoSuchElementException e) {
-        log.warn("handleIllegalArgument", e);
+        log.warn("handleNoSuchElementException", e);
         ErrorCode errorCode = GlobalErrorCode.RESOURCE_NOT_FOUND;
         return handleExceptionInternal(errorCode, e.getMessage());
     }
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatusCode status,
             WebRequest request) {
-        log.warn("handleIllegalArgument", ex);
+        log.warn("handleNotValidException", ex);
         ErrorCode errorCode = GlobalErrorCode.INVALID_PARAMETER;
         return handleExceptionInternal(ex, errorCode);
     }

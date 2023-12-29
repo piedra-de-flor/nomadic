@@ -1,4 +1,4 @@
-package com.example.Triple_clone.entity;
+package com.example.Triple_clone.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

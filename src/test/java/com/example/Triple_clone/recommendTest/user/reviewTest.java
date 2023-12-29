@@ -1,13 +1,13 @@
 package com.example.Triple_clone.recommendTest.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
-import com.example.Triple_clone.entity.Place;
-import com.example.Triple_clone.entity.User;
+import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
-import com.example.Triple_clone.vo.Role;
+import com.example.Triple_clone.domain.vo.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

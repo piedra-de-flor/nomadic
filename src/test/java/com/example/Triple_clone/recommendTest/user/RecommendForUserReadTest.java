@@ -1,7 +1,7 @@
 package com.example.Triple_clone.recommendTest.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
-import com.example.Triple_clone.entity.Place;
+import com.example.Triple_clone.domain.entity.Place;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;

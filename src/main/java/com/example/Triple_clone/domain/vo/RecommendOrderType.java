@@ -1,4 +1,4 @@
-package com.example.Triple_clone.vo;
+package com.example.Triple_clone.domain.vo;
 
 public enum RecommendOrderType {
     name("title"),
