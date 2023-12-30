@@ -1,7 +1,7 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.controller.recommend.user.RecommendForUserController;
-import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import com.example.Triple_clone.web.controller.recommend.user.RecommendController;
+import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,33 +12,33 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(RecommendForUserController.class)
-public class RecommendForUserControllerTest {
+@WebMvcTest(RecommendController.class)
+public class RecommendControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private RecommendForUserService service;
+    private RecommendService service;
 
     @Test
     void Controller_레이어_장소_전체_조회_이름순_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recommend/user/all")
-                        .param("orderType", "name"))
+                        .get("/recommend/place/all")
+                        .param("sort", "name"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void Controller_레이어_장소_전체_조회_날짜순_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recommend/user/all"))
+                        .get("/recommend/place/all"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void Controller_레이어_장소_단일_조회_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recommend/user")
+                        .get("/recommend/place")
                         .param("placeId", "1")
                         .param("userId", "1"))
                 .andExpect(status().isOk());
@@ -47,27 +47,27 @@ public class RecommendForUserControllerTest {
     @Test
     void Controller_레이어_리뷰_작성_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/recommend/user/review")
+                        .post("/recommend/review")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"userId\":\"1\", \"placeId\":\"1\", \"content\":\"test\", \"image\":\"test\"}"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 
     @Test
     void Controller_레이어_좋아요_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/recommend/user/like")
+                        .put("/recommend/place/like")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"userId\":\"1\", \"placeId\":\"1\"}"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 
     @Test
     void Controller_레이어_장소_내_여행에_추가_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recommend/user/redirect/plan")
+                        .get("/recommend/user/plan")
                         .param("target", "test")
                         .param("placeId", "1"))
                 .andExpect(status().is2xxSuccessful());

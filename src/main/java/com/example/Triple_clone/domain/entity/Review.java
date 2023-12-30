@@ -1,11 +1,12 @@
-package com.example.Triple_clone.entity;
+package com.example.Triple_clone.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Review {
     @Id
@@ -13,9 +14,11 @@ public class Review {
     private long reviewId;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "place_id")
     private Place place;
 
     private String content;

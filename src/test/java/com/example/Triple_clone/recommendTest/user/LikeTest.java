@@ -1,13 +1,14 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.entity.Place;
-import com.example.Triple_clone.entity.User;
+import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -23,14 +24,15 @@ public class LikeTest {
 
     @Autowired
     ReviewRepository reviewRepository;
-    RecommendForUserService service;
+    RecommendService service;
 
     Place testPlace = new Place("test", "test", "test", "test", "test");
-    User testUser = new User();
+    @Mock
+    User testUser;
 
     @BeforeEach
     void setUp() {
-        service = new RecommendForUserService(placeRepository, userRepository, reviewRepository);
+        service = new RecommendService(placeRepository, userRepository, reviewRepository);
     }
 
 

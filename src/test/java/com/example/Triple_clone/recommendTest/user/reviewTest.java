@@ -1,12 +1,13 @@
 package com.example.Triple_clone.recommendTest.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendForUserWriteReviewRequestDto;
-import com.example.Triple_clone.entity.Place;
-import com.example.Triple_clone.entity.User;
+import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
+import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.repository.PlaceRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.recommend.user.RecommendForUserService;
+import com.example.Triple_clone.service.recommend.user.RecommendService;
+import com.example.Triple_clone.domain.vo.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,24 +25,24 @@ public class reviewTest {
 
     @Autowired
     ReviewRepository reviewRepository;
-    RecommendForUserService service;
+    RecommendService service;
 
     @BeforeEach
     void setUp() {
-        service = new RecommendForUserService(placeRepository, userRepository, reviewRepository);
+        service = new RecommendService(placeRepository, userRepository, reviewRepository);
         userRepository.deleteAll();
         placeRepository.deleteAll();
     }
 
     @Test
     void 리뷰_작성_테스트() {
-        User testUser = new User();
+        User testUser = new User("test", "test", Role.ADMIN);
         Place testPlace = new Place("test", "test", "test", "test", "test");
 
         userRepository.save(testUser);
         placeRepository.save(testPlace);
 
-        RecommendForUserWriteReviewRequestDto dto = new RecommendForUserWriteReviewRequestDto(testUser.getId(), testPlace.getId(), "test", "test");
+        RecommendWriteReviewDto dto = new RecommendWriteReviewDto(testUser.getId(), testPlace.getId(), "test", "test");
 
 
         service.writeReview(dto);
