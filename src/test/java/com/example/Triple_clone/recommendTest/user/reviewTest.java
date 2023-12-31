@@ -36,7 +36,12 @@ public class reviewTest {
 
     @Test
     void 리뷰_작성_테스트() {
-        User testUser = new User("test", "test", Role.ADMIN);
+        User testUser = User.builder()
+                .name("test")
+                .email("test")
+                .password("test")
+                .role(Role.ADMIN)
+                .build();
         Place testPlace = new Place("test", "test", "test", "test", "test");
 
         userRepository.save(testUser);

@@ -28,7 +28,7 @@ public class AdminRecommendController {
 
     @DeleteMapping("/admin/recommend")
     public ResponseEntity<Long> deletePlace(@RequestParam long placeId) {
-        Long deletedPlaceId = service.deletePlace(placeId);
+        long deletedPlaceId = service.deletePlace(placeId);
         return ResponseEntity.ok(deletedPlaceId);
     }
 }
