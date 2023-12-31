@@ -26,24 +26,24 @@ public class AdminRecommendService {
 
     @Transactional
     public Place updatePlace(AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
-        Optional<Place> place = repository.findById(updatePlaceRequestDto.placeId());
-        Place target = place.orElseThrow(() -> new NoSuchElementException("no place entity for update"));
+        Place place = repository.findById(updatePlaceRequestDto.placeId())
+                .orElseThrow(() -> new NoSuchElementException("no place entity for update"));
 
-        target.update(updatePlaceRequestDto.title(),
+        place.update(updatePlaceRequestDto.title(),
                 updatePlaceRequestDto.notionUrl(),
                 updatePlaceRequestDto.subTitle(),
                 updatePlaceRequestDto.location(),
                 updatePlaceRequestDto.mainImage());
 
-        return target;
+        return place;
     }
 
     @Transactional
     public long deletePlace(Long placeId) {
-        Optional<Place> place = repository.findById(placeId);
-        Place target = place.orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
+        Place place = repository.findById(placeId)
+                .orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
 
-        repository.delete(target);
+        repository.delete(place);
         return placeId;
     }
 }

@@ -30,12 +30,12 @@ public class RecommendService {
 
     @Transactional(readOnly = true)
     public RecommendReadDto findById(long placeId, long userId) {
-        Optional<Place> place = placeRepository.findById(placeId);
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new NoSuchElementException("no place entity"));
 
-        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no place entity"));
-        boolean likeOrNot = exsitPlace.isLikedBy(userId);
+        boolean likeOrNot = place.isLikedBy(userId);
 
-        return new RecommendReadDto(exsitPlace, likeOrNot);
+        return new RecommendReadDto(place, likeOrNot);
     }
 
     @Transactional(readOnly = true)
@@ -52,22 +52,22 @@ public class RecommendService {
 
     @Transactional
     public void like(long placeId, Long userId) {
-        Optional<Place> place = placeRepository.findById(placeId);
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new NoSuchElementException("no place entity"));
 
-        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no entity place"));
-        exsitPlace.like(userId);
+        place.like(userId);
     }
 
     @Transactional
     public void writeReview(RecommendWriteReviewDto writeReviewRequestDto) {
-        Optional<Place> place = placeRepository.findById(writeReviewRequestDto.placeId());
-        Optional<User> user = userRepository.findById(writeReviewRequestDto.userId());
+        Place place = placeRepository.findById(writeReviewRequestDto.placeId())
+                .orElseThrow(() -> new NoSuchElementException("no place entity"));
+        User user = userRepository.findById(writeReviewRequestDto.userId())
+                .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
-        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no place entity"));
-        User writer = user.orElseThrow(() -> new NoSuchElementException("no user entity"));
+        Review review = writeReviewRequestDto.toEntity(user, place);
 
-        Review review = writeReviewRequestDto.toEntity(writer, exsitPlace);
         reviewRepository.save(review);
-        exsitPlace.addReview(review);
+        place.addReview(review);
     }
 }
