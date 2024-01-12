@@ -9,7 +9,7 @@ public record UserJoinRequestDto(String name, String email, String password, Str
                 .name(name)
                 .email(email)
                 .password(password)
-                .role(Role.valueOf(role))
+                .roles(Role.valueOf(role))
                 .build();
     }
 }

@@ -1,11 +1,10 @@
 package com.example.Triple_clone.web.controller.membership;
 
-import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
-import com.example.Triple_clone.dto.membership.UserResponseDto;
-import com.example.Triple_clone.dto.membership.UserUpdateDto;
+import com.example.Triple_clone.dto.membership.*;
 import com.example.Triple_clone.service.membership.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,15 +12,24 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService service;
 
-    @PostMapping("/user")
+    @PostMapping("/join")
     public ResponseEntity<UserResponseDto> join(@RequestBody @Valid final UserJoinRequestDto userJoinRequestDto) {
         UserResponseDto responseDto = service.join(userJoinRequestDto);
-        return ResponseEntity
-                .created(URI.create("/user/" + responseDto.userId()))
-                .body(responseDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/login")
+    public JwtTokenDto signIn(@RequestBody LoginDto signInDto) {
+        String username = signInDto.email();
+        String password = signInDto.password();
+        JwtTokenDto jwtToken = service.login(username, password);
+        log.info("request username = {}, password = {}", username, password);
+        log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.accessToken(), jwtToken.refreshToken());
+        return jwtToken;
     }
 
     @GetMapping("/user")
