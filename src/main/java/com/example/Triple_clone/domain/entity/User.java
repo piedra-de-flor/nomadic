@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name = "userEntity")
@@ -31,18 +30,18 @@ public class User implements UserDetails {
     //FIXME
     // - 추루에 Spring Security 와 함께 사용될 Role 필드
     // - 현재는 Spring filter만을 이용해서 token 검증
-    private List<Role> roles;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
 
     @Builder
-    public User(String name, String email, String password, Role roles) {
+    public User(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.roles = new ArrayList<>();
-        this.roles.add(roles);
+        this.role = role;
         this.reviews = new ArrayList<>();
     }
 
@@ -53,15 +52,12 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(role -> role.role)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
     public String getUsername() {
-        return name;
+        return email;
     }
 
     @Override

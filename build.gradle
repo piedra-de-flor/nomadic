@@ -7,10 +7,6 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	sourceCompatibility = '21'
-}
-
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -29,10 +25,11 @@ dependencies {
 	//DB
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.h2database:h2'
+	implementation 'mysql:mysql-connector-java:8.0.33'
 
 	//Web & Programming
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -40,7 +37,7 @@ dependencies {
 	testImplementation 'junit:junit:4.13.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-// Spring Security
+	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// JWT

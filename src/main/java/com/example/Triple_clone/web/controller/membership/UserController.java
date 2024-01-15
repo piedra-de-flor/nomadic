@@ -22,14 +22,9 @@ public class UserController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/login")
+  @PostMapping("/login")
     public JwtTokenDto signIn(@RequestBody LoginDto signInDto) {
-        String username = signInDto.email();
-        String password = signInDto.password();
-        JwtTokenDto jwtToken = service.login(username, password);
-        log.info("request username = {}, password = {}", username, password);
-        log.info("jwtToken accessToken = {}, refreshToken = {}", jwtToken.accessToken(), jwtToken.refreshToken());
-        return jwtToken;
+      return service.login(signInDto);
     }
 
     @GetMapping("/user")

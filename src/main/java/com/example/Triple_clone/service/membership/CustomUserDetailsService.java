@@ -11,24 +11,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements MemberService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .map(this::createUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 회원을 찾을 수 없습니다."));
-    }
-
-    private UserDetails createUserDetails(User user) {
-        return User.builder()
-                .email(user.getEmail())
-                .name(user.getUsername())
-                .password(passwordEncoder.encode(user.getPassword()))
-                .roles(user.getRoles().getFirst())
-                .build();
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) {
+                return userRepository.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            }
+        };
     }
 }

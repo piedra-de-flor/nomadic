@@ -14,7 +14,7 @@ public class Review {
     private long reviewId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private User user;
 
     @ManyToOne

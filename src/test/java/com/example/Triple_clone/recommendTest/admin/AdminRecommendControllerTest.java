@@ -26,6 +26,7 @@ public class AdminRecommendControllerTest {
                         .post("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "ADMIN")
                         .content("{\"title\":\"test\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":\"test\", \"mainImage\":\"test\"}"))
                 .andExpect(status().isOk());
     }
@@ -36,6 +37,7 @@ public class AdminRecommendControllerTest {
                         .patch("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "ADMIN")
                         .content("{\"placeId\":\"1\", \"title\":\"test\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":\"test\", \"mainImage\":\"test\"}"))
                 .andExpect(status().isOk());
     }
@@ -44,6 +46,7 @@ public class AdminRecommendControllerTest {
     void 관리자_Controller_추천_장소_삭제_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/admin/recommend")
+                        .header("Authorization", "ADMIN")
                         .param("placeId", "1"))
                 .andExpect(status().isOk());
     }

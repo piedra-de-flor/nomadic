@@ -1,18 +1,14 @@
 package com.example.Triple_clone.service.membership;
 
 import com.example.Triple_clone.domain.entity.User;
-import com.example.Triple_clone.dto.membership.JwtTokenDto;
-import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
-import com.example.Triple_clone.dto.membership.UserResponseDto;
-import com.example.Triple_clone.dto.membership.UserUpdateDto;
+import com.example.Triple_clone.dto.membership.*;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -21,20 +17,23 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
     public UserResponseDto join(UserJoinRequestDto userJoinRequestDto) {
         User user = userJoinRequestDto.toEntity();
         repository.save(user);
         return UserResponseDto.fromUser(user);
     }
 
-    public JwtTokenDto login(String email, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        return jwtTokenProvider.generateToken(authentication);
+    @Transactional
+    public JwtTokenDto login(LoginDto loginDto) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.email(), loginDto.password()));
+        User user = repository.findByEmail(loginDto.email())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+        String jwt = jwtService.generateToken(user);
+        return JwtTokenDto.builder().token(jwt).build();
     }
 
     public UserResponseDto read(long userId) {

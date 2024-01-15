@@ -20,6 +20,7 @@ import org.springframework.data.domain.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,7 +68,7 @@ class RecommendServiceTest {
     @Test
     void 서비스_레이어_장소_단일_조회_실패_테스트() {
         when(placeRepository.findById(2L)).thenReturn(Optional.empty());
-        Assertions.assertThrows(IllegalArgumentException.class,
+        Assertions.assertThrows(NoSuchElementException.class,
                 () -> service.findById(2L, 1L));
     }
 
