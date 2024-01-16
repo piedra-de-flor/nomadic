@@ -36,6 +36,7 @@ dependencies {
 	//Test
 	testImplementation 'junit:junit:4.13.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -48,6 +49,8 @@ dependencies {
 	//vault
 	implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
 }
+
+
 
 dependencyManagement {
 	imports {

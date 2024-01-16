@@ -1,15 +1,19 @@
 package com.example.Triple_clone.service.membership;
 
 import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.domain.vo.Role;
 import com.example.Triple_clone.dto.membership.*;
 import com.example.Triple_clone.repository.UserRepository;
+import com.example.Triple_clone.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -17,25 +21,43 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtProvider;
 
-    public UserResponseDto join(UserJoinRequestDto userJoinRequestDto) {
-        User user = userJoinRequestDto.toEntity();
+    @Transactional
+    public UserResponseDto join(UserJoinRequestDto userDto) {
+
+        // UserDto의 username을 이용해 DB에 존재하는지 확인
+        if (repository.findOneWithAuthoritiesByEmail(userDto.toEntity().getEmail()).orElse(null)
+                != null) {
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
+
+        // 권한정보를 포함한 User 정보를 생성
+        User user = User.builder()
+                .email(userDto.toEntity().getEmail())
+                .password(userDto.toEntity().getPassword())
+                .name(userDto.toEntity().getName())
+                .role(userDto.toEntity().getRole())
+                .build();
+
         repository.save(user);
+        // 최정 설정한 User 정보를 DB에 저장
         return UserResponseDto.fromUser(user);
     }
 
-    @Transactional
+    /*@Transactional
     public JwtTokenDto login(LoginDto loginDto) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.email(), loginDto.password()));
         User user = repository.findByEmail(loginDto.email())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
-        String jwt = jwtService.generateToken(user);
-        return JwtTokenDto.builder().token(jwt).build();
-    }
+                .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
+        if (loginDto.password().equals(user.getPassword())) {
+            log.info("[login] 계정을 찾았습니다. " + user);
+
+            return jwtProvider.createToken(user.getEmail(), user.getRole().role);
+        }
+        throw new IllegalArgumentException("password wrong");
+    }
+*/
     public UserResponseDto read(long userId) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("no user entity for update"));

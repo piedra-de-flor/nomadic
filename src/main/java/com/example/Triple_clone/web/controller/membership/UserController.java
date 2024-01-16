@@ -22,10 +22,10 @@ public class UserController {
         return ResponseEntity.ok(responseDto);
     }
 
-  @PostMapping("/login")
+/*  @PostMapping("/login")
     public JwtTokenDto signIn(@RequestBody LoginDto signInDto) {
       return service.login(signInDto);
-    }
+    }*/
 
     @GetMapping("/user")
     public ResponseEntity<UserResponseDto> read(@RequestParam long userId) {
