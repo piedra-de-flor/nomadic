@@ -1,5 +1,5 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:21-jdk-alpine
 VOLUME /tmp
-ARG JAR_FILE=build/libs/myapp.jar
+ARG JAR_FILE=build/libs/Triple_clone-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
