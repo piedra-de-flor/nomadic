@@ -1,19 +1,13 @@
 package com.example.Triple_clone.service.membership;
 
 import com.example.Triple_clone.domain.entity.User;
-import com.example.Triple_clone.domain.vo.Role;
 import com.example.Triple_clone.dto.membership.*;
 import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -21,7 +15,6 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
-    private final JwtTokenProvider jwtProvider;
 
     @Transactional
     public UserResponseDto join(UserJoinRequestDto userDto) {
@@ -45,19 +38,19 @@ public class UserService {
         return UserResponseDto.fromUser(user);
     }
 
-    /*@Transactional
-    public JwtTokenDto login(LoginDto loginDto) {
+    @Transactional
+    public UserResponseDto login(LoginDto loginDto) {
         User user = repository.findByEmail(loginDto.email())
                 .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
         if (loginDto.password().equals(user.getPassword())) {
             log.info("[login] 계정을 찾았습니다. " + user);
 
-            return jwtProvider.createToken(user.getEmail(), user.getRole().role);
+            return UserResponseDto.fromUser(user);
         }
         throw new IllegalArgumentException("password wrong");
     }
-*/
+
     public UserResponseDto read(long userId) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("no user entity for update"));
