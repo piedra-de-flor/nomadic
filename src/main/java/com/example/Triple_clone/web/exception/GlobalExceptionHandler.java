@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RestApiException.class)
     public ResponseEntity<Object> handleCustomException(RestApiException e) {
-        log.warn("WhatIsIt", e);
+        log.warn("AuthError", e);
         ErrorCode errorCode = e.getErrorCode();
         return handleExceptionInternal(errorCode);
     }
