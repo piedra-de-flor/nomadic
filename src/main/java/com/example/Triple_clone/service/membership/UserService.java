@@ -18,14 +18,11 @@ public class UserService {
 
     @Transactional
     public UserResponseDto join(UserJoinRequestDto userDto) {
-
-        // UserDto의 username을 이용해 DB에 존재하는지 확인
-        if (repository.findOneWithAuthoritiesByEmail(userDto.toEntity().getEmail()).orElse(null)
+        if (repository.findByEmail(userDto.toEntity().getEmail()).orElse(null)
                 != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
-        // 권한정보를 포함한 User 정보를 생성
         User user = User.builder()
                 .email(userDto.toEntity().getEmail())
                 .password(userDto.toEntity().getPassword())
@@ -34,7 +31,6 @@ public class UserService {
                 .build();
 
         repository.save(user);
-        // 최정 설정한 User 정보를 DB에 저장
         return UserResponseDto.fromUser(user);
     }
 

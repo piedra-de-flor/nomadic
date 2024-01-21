@@ -32,6 +32,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
 
+    @OneToMany(mappedBy = "user")
+    private List<Plan> plans;
+
     @Builder
     public User(String name, String email, String password, Role role) {
         this.name = name;
@@ -39,6 +42,7 @@ public class User {
         this.password = password;
         this.role = role;
         this.reviews = new ArrayList<>();
+        this.plans = new ArrayList<>();
     }
 
     public void update(String name, String password) {
