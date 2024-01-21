@@ -17,6 +17,8 @@ import java.util.NoSuchElementException;
 public class PlanService {
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
+    private User user;
+    private Plan plan;
 
     public PlanCreateDto createPlan(PlanCreateDto createDto) {
         Plan plan = createDto.toEntity();
@@ -24,12 +26,15 @@ public class PlanService {
         return createDto;
     }
 
-    public PlanReadResponseDto findPlan(PlanReadRequestDto readRequestDto) {
-        User user = userRepository.findById(readRequestDto.userId())
+    private void isExist(PlanDto dto) {
+        user = userRepository.findById(dto.userId())
                 .orElseThrow(() -> new NoSuchElementException("no user Entity"));
-        Plan plan = planRepository.findById(readRequestDto.planId())
+        plan = planRepository.findById(dto.planId())
                 .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
+    }
 
+    public PlanReadResponseDto findPlan(PlanDto readRequestDto) {
+        isExist(readRequestDto);
         if (plan.isMine(user.getId())) {
             return new PlanReadResponseDto(plan);
         }
@@ -45,10 +50,7 @@ public class PlanService {
     }
 
     public PlanStyleUpdateDto updateStyle(PlanStyleUpdateDto updateDto) {
-        User user = userRepository.findById(updateDto.userId())
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
-        Plan plan = planRepository.findById(updateDto.planId())
-                .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
+        isExist(updateDto.planDto());
 
         if (plan.isMine(user.getId())) {
             plan.chooseStyle(Style.toStyles(updateDto.styles()));
@@ -59,10 +61,7 @@ public class PlanService {
     }
 
     public PlanPartnerUpdateDto updatePartner(PlanPartnerUpdateDto updateDto) {
-        User user = userRepository.findById(updateDto.userId())
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
-        Plan plan = planRepository.findById(updateDto.planId())
-                .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
+        isExist(updateDto.planDto());
 
         if (plan.isMine(user.getId())) {
             plan.choosePartner(Partner.valueOf(updateDto.partner()));
@@ -72,11 +71,8 @@ public class PlanService {
         throw new IllegalArgumentException("no auth to access this plan id");
     }
 
-    public PlanDeleteDto deletePlan(PlanDeleteDto deleteDto) {
-        User user = userRepository.findById(deleteDto.userId())
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
-        Plan plan = planRepository.findById(deleteDto.planId())
-                .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
+    public PlanDto deletePlan(PlanDto deleteDto) {
+        isExist(deleteDto);
 
         if (plan.isMine(user.getId())) {
             planRepository.delete(plan);

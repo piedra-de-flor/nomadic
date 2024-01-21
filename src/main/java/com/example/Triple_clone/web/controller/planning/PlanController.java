@@ -18,7 +18,7 @@ public class PlanController {
     }
 
     @GetMapping("/plan")
-    public ResponseEntity<PlanReadResponseDto> readPlan(@RequestBody PlanReadRequestDto readRequestDto) {
+    public ResponseEntity<PlanReadResponseDto> readPlan(@RequestBody PlanDto readRequestDto) {
         PlanReadResponseDto responseDto = service.findPlan(readRequestDto);
         return ResponseEntity.ok(responseDto);
     }
@@ -42,8 +42,8 @@ public class PlanController {
     }
 
     @DeleteMapping("/plan")
-    public ResponseEntity<PlanDeleteDto> createPlan(@RequestBody PlanDeleteDto deleteDto) {
-        PlanDeleteDto responseDto = service.deletePlan(deleteDto);
-        return ResponseEntity.ok(deleteDto);
+    public ResponseEntity<PlanDto> createPlan(@RequestBody PlanDto deleteDto) {
+        PlanDto responseDto = service.deletePlan(deleteDto);
+        return ResponseEntity.ok(responseDto);
     }
 }
