@@ -2,12 +2,15 @@ package com.example.Triple_clone.service.planning;
 
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.domain.vo.AuthErrorCode;
 import com.example.Triple_clone.domain.vo.Partner;
 import com.example.Triple_clone.domain.vo.Style;
 import com.example.Triple_clone.dto.planning.*;
 import com.example.Triple_clone.repository.PlanRepository;
 import com.example.Triple_clone.repository.UserRepository;
+import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -39,7 +42,7 @@ public class PlanService {
             return new PlanReadResponseDto(plan);
         }
 
-        throw new IllegalArgumentException("no auth to access this plan id");
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
     public PlanReadAllResponseDto findAllPlan(long userId) {
@@ -57,7 +60,7 @@ public class PlanService {
             return updateDto;
         }
 
-        throw new IllegalArgumentException("no auth to access this plan id");
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
     public PlanPartnerUpdateDto updatePartner(PlanPartnerUpdateDto updateDto) {
@@ -68,7 +71,7 @@ public class PlanService {
             return updateDto;
         }
 
-        throw new IllegalArgumentException("no auth to access this plan id");
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
     public PlanDto deletePlan(PlanDto deleteDto) {
@@ -79,6 +82,6 @@ public class PlanService {
             return deleteDto;
         }
 
-        throw new IllegalArgumentException("no auth to access this plan id");
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 }
