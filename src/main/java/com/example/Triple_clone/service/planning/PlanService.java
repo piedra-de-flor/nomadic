@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.NoSuchElementException;
 
 @Service
@@ -41,12 +42,12 @@ public class PlanService {
     }
 
     public void updateStyle(PlanStyleUpdateDto updateDto) {
-        Plan plan = findById(updateDto.planDto().planId());
+        Plan plan = findById(updateDto.planId());
         plan.chooseStyle(Style.toStyles(updateDto.styles()));
     }
 
     public void updatePartner(PlanPartnerUpdateDto updateDto) {
-        Plan plan = findById(updateDto.planDto().planId());
+        Plan plan = findById(updateDto.planId());
         plan.choosePartner(Partner.valueOf(updateDto.partner()));
     }
 

@@ -27,6 +27,7 @@ public class Plan {
     private List<Style> styles;
     private Date startDay;
     private Date endDay;
+
     @OneToMany(mappedBy = "plan")
     private List<DetailPlan> plans;
 
