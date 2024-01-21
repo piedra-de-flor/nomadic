@@ -24,7 +24,6 @@ public class PlanService {
     public List<DetailPlan> getPlans(long planId) {
         Plan plan = repository.findById(planId)
                 .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
-
         return plan.getPlans();
     }
 
@@ -42,12 +41,12 @@ public class PlanService {
     }
 
     public void updateStyle(PlanStyleUpdateDto updateDto) {
-        Plan plan = findById(updateDto.planId());
+        Plan plan = findById(updateDto.planDto().planId());
         plan.chooseStyle(Style.toStyles(updateDto.styles()));
     }
 
     public void updatePartner(PlanPartnerUpdateDto updateDto) {
-        Plan plan = findById(updateDto.planId());
+        Plan plan = findById(updateDto.planDto().planId());
         plan.choosePartner(Partner.valueOf(updateDto.partner()));
     }
 

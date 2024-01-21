@@ -40,4 +40,10 @@ public class PlanController {
         PlanPartnerUpdateDto responseDto = service.updatePartner(updateDto);
         return ResponseEntity.ok(responseDto);
     }
+
+    @DeleteMapping("/plan")
+    public ResponseEntity<PlanDto> deletePlan(@RequestBody PlanDto deleteDto) {
+        PlanDto responseDto = service.deletePlan(deleteDto);
+        return ResponseEntity.ok(responseDto);
+    }
 }
