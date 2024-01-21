@@ -4,6 +4,7 @@ import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.vo.Location;
 
+
 import java.util.Date;
 
 public record DetailPlanDto(

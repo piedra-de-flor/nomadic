@@ -4,7 +4,6 @@ import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
 import com.example.Triple_clone.service.planning.DetailPlanFacadeService;
-import com.example.Triple_clone.service.planning.DetailPlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
