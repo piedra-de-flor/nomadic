@@ -21,7 +21,6 @@ public class Plan {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
     private String place;
     private Partner partner;
     private List<Style> styles;
