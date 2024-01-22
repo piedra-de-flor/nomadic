@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 public class Plan {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -24,7 +25,7 @@ public class Plan {
     private List<Style> styles;
     private Date startDay;
     private Date endDay;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "plan")
     private List<DetailPlan> plans;
 
     @Builder
