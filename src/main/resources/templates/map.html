@@ -11,15 +11,13 @@
     google.charts.setOnLoadCallback(drawMap);
 
     function drawMap () {
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Address');
-      data.addColumn('string', 'Location');
-
-      data.addRows([
-        ['Lake Buena Vista, FL 32830, United States',                  'Walt Disney World'],
-        ['6000 Universal Boulevard, Orlando, FL 32819, United States', 'Universal Studios'],
-        ['7007 Sea World Drive, Orlando, FL 32821, United States',     'Seaworld Orlando' ]
+      var data = google.visualization.arrayToDataTable([
+        ['Lat', 'Long', 'Name'],
       ]);
+
+      locations.forEach(function (location) {
+        data.addRow([location.latitude, location.longitude, location.name]);
+      });
 
       var options = {
         mapType: 'styledMap',
