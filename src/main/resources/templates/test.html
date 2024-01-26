@@ -1,0 +1,69 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {
+            'packages': ['map'],
+            'mapsApiKey': 'AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM'
+        });
+        google.charts.setOnLoadCallback(drawMap);
+
+        function drawMap () {
+            /*<![CDATA[*/
+            var locations = [{"latitude":36.3172,"longitude":127.4292,"name":"test"}];
+            /*]]>*/
+            var data = google.visualization.arrayToDataTable([
+                ['Lat', 'Long', 'Name'],
+                [37.4232, -122.0853, 'Work'],
+                [37.4289, -122.1697, 'University'],
+                [37.6153, -122.3900, 'Airport'],
+                [37.4422, -122.1731, 'Shopping'],
+                /*[# th:each="location : ${locations}"]*/
+                [
+                    /*[(${location.latitude})*/,
+                    /*(${location.longitude})*/,
+                    /*('${location.name}')]*/
+                ],
+                /*[/]*/
+            ]);
+
+
+            var options = {
+                mapType: 'styledMap',
+                zoomLevel: 12,
+                showTooltip: true,
+                showInfoWindow: true,
+                useMapTypeControl: true,
+                maps: {
+                    // Your custom mapTypeId holding custom map styles.
+                    styledMap: {
+                        name: 'Styled Map', // This name will be displayed in the map type control.
+                        styles: [
+                            {featureType: 'poi.attraction',
+                                stylers: [{color: '#fce8b2'}]
+                            },
+                            {featureType: 'road.highway',
+                                stylers: [{hue: '#0277bd'}, {saturation: -50}]
+                            },
+                            {featureType: 'road.highway',
+                                elementType: 'labels.icon',
+                                stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
+                            },
+                            {featureType: 'landscape',
+                                stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
+                            }
+                        ]}}
+            };
+
+            var map = new google.visualization.Map(document.getElementById('map_div'));
+            map.draw(data,options,{
+                showTooltip: true,
+                showInfoWindow: true
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="map_div" style="height: 500px; width: 900px"></div>
+</body>
+</html>

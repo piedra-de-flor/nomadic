@@ -1,25 +1,31 @@
 <html>
 <head>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var locations = /*[[${locations}]]*/ [];
+    /*]]>*/
+  </script>
   <script type="text/javascript">
     google.charts.load('current', {
       'packages': ['map'],
-      // Note: you will need to get a mapsApiKey for your project.
-      // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
       'mapsApiKey': 'AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM'
     });
     google.charts.setOnLoadCallback(drawMap);
 
     function drawMap () {
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Address');
-      data.addColumn('string', 'Location');
-
-      data.addRows([
-        ['Lake Buena Vista, FL 32830, United States',                  'Walt Disney World'],
-        ['6000 Universal Boulevard, Orlando, FL 32819, United States', 'Universal Studios'],
-        ['7007 Sea World Drive, Orlando, FL 32821, United States',     'Seaworld Orlando' ]
+      var locations = [[${locations}]];
+      var data = google.visualization.arrayToDataTable([
+        ['Lat', 'Long', 'Name'],
+        /*[# th:each="location : ${locations}"]*/
+        [
+          /*[(${location.latitude})]*/,
+          /*[(${location.longitude})]*/,
+          /*[['${location.name}']]*/
+        ],
+        /*[/]*/
       ]);
+
 
       var options = {
         mapType: 'styledMap',
@@ -49,8 +55,10 @@
       };
 
       var map = new google.visualization.Map(document.getElementById('map_div'));
-
-      map.draw(data, options);
+      map.draw(data,options,{
+        showTooltip: true,
+        showInfoWindow: true
+      });
     }
   </script>
 </head>

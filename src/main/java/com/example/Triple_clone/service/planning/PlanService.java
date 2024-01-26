@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.planning;
 
+import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.domain.vo.AuthErrorCode;
@@ -10,9 +11,9 @@ import com.example.Triple_clone.repository.PlanRepository;
 import com.example.Triple_clone.repository.UserRepository;
 import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -24,7 +25,9 @@ public class PlanService {
     private Plan plan;
 
     public PlanCreateDto createPlan(PlanCreateDto createDto) {
-        Plan plan = createDto.toEntity();
+        user = userRepository.findById(createDto.userId())
+                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
+        Plan plan = createDto.toEntity(user);
         planRepository.save(plan);
         return createDto;
     }
@@ -83,5 +86,12 @@ public class PlanService {
         }
 
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+    }
+
+    public List<DetailPlan> getPlans(long planId) {
+        Plan plan = planRepository.findById(planId)
+                .orElseThrow(() -> new NoSuchElementException("new plan Entity"));
+
+        return plan.getPlans();
     }
 }

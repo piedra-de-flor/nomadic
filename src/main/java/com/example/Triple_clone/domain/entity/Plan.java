@@ -5,11 +5,13 @@ import com.example.Triple_clone.domain.vo.Style;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Plan {
@@ -29,15 +31,13 @@ public class Plan {
     private List<DetailPlan> plans;
 
     @Builder
-    public Plan(long userId, String place, Partner partner, Date startDay, Date endDay, List<Style> styles) {
-        Plan.builder()
-                .place(place)
-                .userId(userId)
-                .partner(partner)
-                .styles(styles)
-                .startDay(startDay)
-                .endDay(endDay)
-                .build();
+    public Plan(User user, String place, Partner partner, Date startDay, Date endDay, List<Style> styles) {
+        this.user = user;
+        this.place = place;
+        this.partner = partner;
+        this.startDay = startDay;
+        this.endDay = endDay;
+        this.styles = styles;
     }
 
     public void choosePartner(Partner partner) {
