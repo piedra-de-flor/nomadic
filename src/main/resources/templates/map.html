@@ -14,17 +14,14 @@
     google.charts.setOnLoadCallback(drawMap);
 
     function drawMap () {
-      var locations = [[${locations}]];
       var data = google.visualization.arrayToDataTable([
         ['Lat', 'Long', 'Name'],
-        /*[# th:each="location : ${locations}"]*/
-        [
-          /*[(${location.latitude})]*/,
-          /*[(${location.longitude})]*/,
-          /*[['${location.name}']]*/
-        ],
-        /*[/]*/
       ]);
+
+      locations.forEach(function (location) {
+        data.addRow([location.latitude, location.longitude, location.name]);
+      });
+
 
 
       var options = {
