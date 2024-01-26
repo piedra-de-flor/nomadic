@@ -1,11 +1,12 @@
 <html>
+
 <head>
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM&v=3.exp&libraries=visualization">
     </script>
     <script>
         /*<![CDATA[*/
-        var locations = {"latitude":36.3172,"longitude":127.4292,"name":"TEST"};
+        var locations = [{"latitude":36.3172,"longitude":127.4292,"name":'test'}];
         /*]]>*/
     </script>
     <script type="text/javascript">
@@ -15,9 +16,6 @@
                 zoom: 12
             });
 
-            var pathCoordinates = locations.map(function (location) {
-                return { lat: location.latitude, lng: location.longitude };
-            });
 
             var polyline = new google.maps.Polyline({
                 path: pathCoordinates,
@@ -47,7 +45,5 @@
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM&v=3.exp&libraries=visualization">
 </script>
 </body>
-
 </html>
-
 
