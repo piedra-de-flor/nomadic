@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class GoogleMapController {
     @GetMapping("/showMap")
-    public String index(@RequestParam(name = "planId") Long planId,
+    public String showMap(@RequestParam(name = "planId") Long planId,
                         @RequestParam(name = "name") String name,
                         @RequestParam(name = "latitude") Double latitude,
                         @RequestParam(name = "longitude") Double longitude,

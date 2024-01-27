@@ -22,14 +22,11 @@ public class DetailPlan {
     private String time;
 
     @Builder
-    public DetailPlan(Plan plan, String name, String location, Date date, String time) {
-        DetailPlan.builder()
-                .plan(plan)
-                .name(name)
-                .location(location)
-                .date(date)
-                .time(time)
-                .build();
+    public DetailPlan(Plan plan, Location location, Date date, String time) {
+        this.plan = plan;
+        this.location = location;
+        this.date = date;
+        this.time = time;
     }
 
     public void update(Location location, Date date, String time) {
