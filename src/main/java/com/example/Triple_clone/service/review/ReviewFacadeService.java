@@ -19,7 +19,7 @@ public class ReviewFacadeService {
 
     @Transactional
     public void writeReview(RecommendWriteReviewDto writeReviewRequestDto) {
-        Place place = recommendService.findById(writeReviewRequestDto.placeId());
+        Place place = recommendService.getById(writeReviewRequestDto.placeId());
         User user = userService.findById(writeReviewRequestDto.userId());
         Review review = writeReviewRequestDto.toEntity(user, place);
 

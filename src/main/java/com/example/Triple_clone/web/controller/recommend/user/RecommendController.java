@@ -24,7 +24,7 @@ public class RecommendController {
 
     @GetMapping("/recommend/place")
     public ResponseEntity<RecommendReadDto> read(@RequestParam long placeId, @RequestParam long userId) {
-        RecommendReadDto recommendReadDto = service.findById(placeId, userId);
+        RecommendReadDto recommendReadDto = service.getById(placeId, userId);
         return ResponseEntity.ok(recommendReadDto);
     }
 
