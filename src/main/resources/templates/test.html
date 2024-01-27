@@ -6,7 +6,7 @@
     </script>
     <script>
         /*<![CDATA[*/
-        var locations = [{"latitude":36.3172,"longitude":127.4292,"name":'test'}];
+        var locations = [{"latitude":36.3201,"longitude":127.4321,"name":"Test Name 2"},{"latitude":36.3172,"longitude":-127.4292,"name":"test"}];
         /*]]>*/
     </script>
     <script type="text/javascript">
@@ -16,6 +16,9 @@
                 zoom: 12
             });
 
+            var pathCoordinates = locations.map(function (location) {
+                return { lat: location.latitude, lng: location.longitude };
+            });
 
             var polyline = new google.maps.Polyline({
                 path: pathCoordinates,
@@ -33,7 +36,6 @@
                     map: map,
                     title: location.name
                 });
-
             });
         }
     </script>

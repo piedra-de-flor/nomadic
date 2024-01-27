@@ -34,9 +34,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 <<<<<<< HEAD
+<<<<<<< HEAD
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0-rc1'
 =======
 >>>>>>> 8b2b629 (feat : google map api 연동)
+=======
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0-rc1'
+>>>>>>> 6f49b78 (feat : google map 마커끼리 선 긋기 추가)
 
 	//Test
 	testImplementation 'junit:junit:4.13.1'
