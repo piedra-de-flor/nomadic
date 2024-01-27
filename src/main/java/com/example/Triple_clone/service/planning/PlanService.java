@@ -59,7 +59,6 @@ public class PlanService {
             System.out.println(plan.getLocation().getLongitude());
         }
         locations.add(new Location(latitude, longitude, name));
-<<<<<<< HEAD
         return locations;
     }
 
@@ -70,8 +69,6 @@ public class PlanService {
         for (DetailPlan plan : plans) {
             locations.add(plan.getLocation());
         }
-=======
->>>>>>> 6f49b78 (feat : google map 마커끼리 선 긋기 추가)
         return locations;
     }
 }
