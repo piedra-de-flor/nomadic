@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class GoogleMapController {
     private final PlanService service;
+
     @GetMapping("/addMap")
     public String addMap(@RequestParam(name = "planId") Long planId,
-                          @RequestParam(name = "name") String name,
-                          @RequestParam(name = "latitude") Double latitude,
-                          @RequestParam(name = "longitude") Double longitude,
-                          Model model) {
-
+                         @RequestParam(name = "name") String name,
+                         @RequestParam(name = "latitude") Double latitude,
+                         @RequestParam(name = "longitude") Double longitude,
+                         Model model) {
         model.addAttribute("locations", service.addLocation(
                 planId,
                 name,
