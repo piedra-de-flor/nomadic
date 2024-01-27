@@ -32,7 +32,7 @@ public class LikeTest {
 
     @BeforeEach
     void setUp() {
-        service = new RecommendService(placeRepository, userRepository, reviewRepository);
+        service = new RecommendService(placeRepository);
     }
 
 

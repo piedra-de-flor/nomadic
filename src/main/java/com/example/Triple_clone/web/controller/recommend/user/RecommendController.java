@@ -2,13 +2,11 @@ package com.example.Triple_clone.web.controller.recommend.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendLikeDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
-import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -26,7 +24,7 @@ public class RecommendController {
 
     @GetMapping("/recommend/place")
     public ResponseEntity<RecommendReadDto> read(@RequestParam long placeId, @RequestParam long userId) {
-        RecommendReadDto recommendReadDto = service.findById(placeId, userId);
+        RecommendReadDto recommendReadDto = service.getById(placeId, userId);
         return ResponseEntity.ok(recommendReadDto);
     }
 
@@ -35,13 +33,6 @@ public class RecommendController {
         service.like(recommendLikeDto.placeId(), recommendLikeDto.userId());
         return ResponseEntity.ok(recommendLikeDto);
     }
-
-    @PostMapping("/recommend/review")
-    public ResponseEntity<RecommendWriteReviewDto> writeReview(@RequestBody @Validated RecommendWriteReviewDto writeReviewRequestDto) {
-        service.writeReview(writeReviewRequestDto);
-        return ResponseEntity.ok(writeReviewRequestDto);
-    }
-
 
     //TODO
     //FIXME

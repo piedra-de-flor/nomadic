@@ -19,79 +19,35 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class PlanService {
-    private final PlanRepository planRepository;
-    private final UserRepository userRepository;
-    private User user;
-    private Plan plan;
+    private final PlanRepository repository;
 
-    public PlanCreateDto createPlan(PlanCreateDto createDto) {
-        user = userRepository.findById(createDto.userId())
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
-        Plan plan = createDto.toEntity(user);
-        planRepository.save(plan);
-        return createDto;
+    public List<DetailPlan> getPlans(long planId) {
+        Plan plan = repository.findById(planId)
+                .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
+
+        return plan.getPlans();
     }
 
-    private void isExist(PlanDto dto) {
-        user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
-        plan = planRepository.findById(dto.planId())
+    public Plan findById(long planId) {
+        return repository.findById(planId)
                 .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
     }
 
-    public PlanReadResponseDto findPlan(PlanDto readRequestDto) {
-        isExist(readRequestDto);
-        if (plan.isMine(user.getId())) {
-            return new PlanReadResponseDto(plan);
-        }
-
-        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+    public void save(Plan plan) {
+        repository.save(plan);
     }
 
-    public PlanReadAllResponseDto findAllPlan(long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
-
-        return new PlanReadAllResponseDto(user.getPlans());
+    public void delete(Plan plan) {
+        repository.delete(plan);
     }
 
-    public PlanStyleUpdateDto updateStyle(PlanStyleUpdateDto updateDto) {
-        isExist(updateDto.planDto());
-
-        if (plan.isMine(user.getId())) {
-            plan.chooseStyle(Style.toStyles(updateDto.styles()));
-            return updateDto;
-        }
-
-        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+    public void updateStyle(PlanStyleUpdateDto updateDto) {
+        Plan plan = findById(updateDto.planDto().planId());
+        plan.chooseStyle(Style.toStyles(updateDto.styles()));
     }
 
-    public PlanPartnerUpdateDto updatePartner(PlanPartnerUpdateDto updateDto) {
-        isExist(updateDto.planDto());
-
-        if (plan.isMine(user.getId())) {
-            plan.choosePartner(Partner.valueOf(updateDto.partner()));
-            return updateDto;
-        }
-
-        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-    }
-
-    public PlanDto deletePlan(PlanDto deleteDto) {
-        isExist(deleteDto);
-
-        if (plan.isMine(user.getId())) {
-            planRepository.delete(plan);
-            return deleteDto;
-        }
-
-        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-    }
-
-    public List<DetailPlan> getPlans(long planId) {
-        Plan plan = planRepository.findById(planId)
-                .orElseThrow(() -> new NoSuchElementException("new plan Entity"));
-
-        return plan.getPlans();
+    public void updatePartner(PlanPartnerUpdateDto updateDto) {
+        Plan plan = findById(updateDto.planDto().planId());
+        plan.choosePartner(Partner.valueOf(updateDto.partner()));
     }
 }

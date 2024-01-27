@@ -68,4 +68,9 @@ public class UserService {
         repository.delete(user);
         return userId;
     }
+
+    public User findById(long userId) {
+        return repository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
+    }
 }

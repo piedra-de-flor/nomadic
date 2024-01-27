@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.recommendTest.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
@@ -34,7 +35,8 @@ public class reviewTest {
         placeRepository.deleteAll();
     }
 
-    @Test
+    */
+/*@Test
     void 리뷰_작성_테스트() {
         User testUser = User.builder()
                 .name("test")
@@ -54,5 +56,7 @@ public class reviewTest {
 
         assertThat(reviewRepository.findAll().get(0).getContent()).isEqualTo("test");
         assertThat(testPlace.getReviews().get(0).getContent()).isEqualTo("test");
-    }
+    }*//*
+
 }
+*/

@@ -3,8 +3,6 @@ package com.example.Triple_clone.recommendTest.user;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.domain.entity.Place;
 import com.example.Triple_clone.repository.PlaceRepository;
-import com.example.Triple_clone.repository.ReviewRepository;
-import com.example.Triple_clone.repository.UserRepository;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,18 +19,13 @@ public class RecommendForUserReadTest {
     @Autowired
     PlaceRepository repository;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    ReviewRepository reviewrepository;
     RecommendService service;
     @Mock
     Pageable pageable;
 
     @BeforeEach
     void setUp() {
-        service = new RecommendService(repository, userRepository, reviewrepository);
+        service = new RecommendService(repository);
     }
 
     @Test
@@ -78,7 +71,7 @@ public class RecommendForUserReadTest {
         Place place1 = new Place("test0", "test0", "test0", "test0", "test0");
         repository.save(place1);
 
-        RecommendReadDto dto = service.findById(1, 0);
+        RecommendReadDto dto = service.getById(1, 0);
         assertThat(dto.title()).isEqualTo(place1.getTitle());
         assertThat(dto.id()).isEqualTo(place1.getId());
     }
