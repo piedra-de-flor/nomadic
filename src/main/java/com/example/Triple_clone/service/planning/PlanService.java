@@ -2,17 +2,16 @@ package com.example.Triple_clone.service.planning;
 
 import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
-import com.example.Triple_clone.domain.entity.User;
-import com.example.Triple_clone.domain.vo.AuthErrorCode;
+import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.domain.vo.Partner;
 import com.example.Triple_clone.domain.vo.Style;
-import com.example.Triple_clone.dto.planning.*;
+import com.example.Triple_clone.dto.planning.PlanPartnerUpdateDto;
+import com.example.Triple_clone.dto.planning.PlanStyleUpdateDto;
 import com.example.Triple_clone.repository.PlanRepository;
-import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -49,5 +48,17 @@ public class PlanService {
     public void updatePartner(PlanPartnerUpdateDto updateDto) {
         Plan plan = findById(updateDto.planDto().planId());
         plan.choosePartner(Partner.valueOf(updateDto.partner()));
+    }
+
+    public List<Location> getLocations(long planId, String name, double latitude, double longitude) {
+        List<DetailPlan> plans = getPlans(planId);
+        List<Location> locations = new ArrayList<>();
+
+        for (DetailPlan plan : plans) {
+            locations.add(plan.getLocation());
+        }
+        locations.add(new Location(latitude, longitude, name));
+
+        return locations;
     }
 }

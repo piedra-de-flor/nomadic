@@ -3,8 +3,6 @@ package com.example.Triple_clone.service.planning;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.domain.vo.AuthErrorCode;
-import com.example.Triple_clone.domain.vo.Partner;
-import com.example.Triple_clone.domain.vo.Style;
 import com.example.Triple_clone.dto.planning.*;
 import com.example.Triple_clone.service.membership.UserService;
 import com.example.Triple_clone.web.exception.RestApiException;
