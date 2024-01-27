@@ -50,7 +50,7 @@ public class PlanService {
         plan.choosePartner(Partner.valueOf(updateDto.partner()));
     }
 
-    public List<Location> getLocations(long planId, String name, double latitude, double longitude) {
+    public List<Location> addLocation(long planId, String name, double latitude, double longitude) {
         List<DetailPlan> plans = getPlans(planId);
         List<Location> locations = new ArrayList<>();
 
@@ -58,6 +58,16 @@ public class PlanService {
             locations.add(plan.getLocation());
         }
         locations.add(new Location(latitude, longitude, name));
+        return locations;
+    }
+
+    public List<Location> getLocation(long planId) {
+        List<DetailPlan> plans = getPlans(planId);
+        List<Location> locations = new ArrayList<>();
+
+        for (DetailPlan plan : plans) {
+            locations.add(plan.getLocation());
+        }
         return locations;
     }
 }

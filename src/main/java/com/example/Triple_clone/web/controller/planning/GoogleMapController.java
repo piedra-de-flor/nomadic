@@ -10,18 +10,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 @Controller
 public class GoogleMapController {
-    @GetMapping("/showMap")
-    public String showMap(@RequestParam(name = "planId") Long planId,
-                        @RequestParam(name = "name") String name,
-                        @RequestParam(name = "latitude") Double latitude,
-                        @RequestParam(name = "longitude") Double longitude,
-                        Model model) {
+    private final PlanService service;
+    @GetMapping("/addMap")
+    public String addMap(@RequestParam(name = "planId") Long planId,
+                          @RequestParam(name = "name") String name,
+                          @RequestParam(name = "latitude") Double latitude,
+                          @RequestParam(name = "longitude") Double longitude,
+                          Model model) {
 
-        model.addAttribute("locations", service.getLocations(
+        model.addAttribute("locations", service.addLocation(
                 planId,
                 name,
                 latitude,
                 longitude));
+        return "map";
+    }
+
+    @GetMapping("/showMap")
+    public String showMap(@RequestParam(name = "planId") Long planId, Model model) {
+        model.addAttribute("locations", service.getLocation(planId));
         return "map";
     }
 }
