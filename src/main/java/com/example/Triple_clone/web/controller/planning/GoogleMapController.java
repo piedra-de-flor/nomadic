@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class GoogleMapController {
     private final PlanService service;
     @GetMapping("/showMap")
-    public String index(@RequestParam(name = "planId") Long planId,
+    public String showMap(@RequestParam(name = "planId") Long planId,
                         @RequestParam(name = "name") String name,
                         @RequestParam(name = "latitude") Double latitude,
                         @RequestParam(name = "longitude") Double longitude,
