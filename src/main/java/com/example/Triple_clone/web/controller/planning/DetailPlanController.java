@@ -15,7 +15,7 @@ public class DetailPlanController {
     private final DetailPlanFacadeService service;
 
     @PostMapping("/detailPlan")
-    public String create(DetailPlanDto detailPlanDto, RedirectAttributes redirectAttributes) {
+    public String create(@RequestBody DetailPlanDto detailPlanDto, RedirectAttributes redirectAttributes) {
         DetailPlanDto response = service.create(detailPlanDto);
         redirectAttributes.addAttribute("planId", response.planId());
         redirectAttributes.addAttribute("name", response.location().getName());
@@ -26,7 +26,7 @@ public class DetailPlanController {
     }
 
     @PatchMapping("/detailPlan")
-    public ResponseEntity<DetailPlanDto> update(DetailPlanUpdateDto updateDto) {
+    public ResponseEntity<DetailPlanDto> update(@RequestBody DetailPlanUpdateDto updateDto) {
         DetailPlanDto response = service.update(updateDto);
         return ResponseEntity.ok(response);
     }
