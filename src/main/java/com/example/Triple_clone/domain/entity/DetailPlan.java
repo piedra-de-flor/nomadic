@@ -31,4 +31,10 @@ public class DetailPlan {
                 .time(time)
                 .build();
     }
+
+    public void update(Location location, Date date, String time) {
+        this.location = location;
+        this.date = date;
+        this.time = time;
+    }
 }
