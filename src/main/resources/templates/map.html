@@ -1,58 +1,47 @@
 <html>
+
 <head>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM&v=3.exp&libraries=visualization"></script>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var locations = /*[[${locations}]]*/ [];
+    /*]]>*/
+  </script>
   <script type="text/javascript">
-    google.charts.load('current', {
-      'packages': ['map'],
-      // Note: you will need to get a mapsApiKey for your project.
-      // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-      'mapsApiKey': 'AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM'
-    });
-    google.charts.setOnLoadCallback(drawMap);
-
-    function drawMap () {
-      var data = google.visualization.arrayToDataTable([
-        ['Lat', 'Long', 'Name'],
-      ]);
-
-      locations.forEach(function (location) {
-        data.addRow([location.latitude, location.longitude, location.name]);
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map_div'), {
+        center: { lat: 36.3181, lng: 127.4212 }, // Set your initial center coordinates
+        zoom: 12
       });
 
-      var options = {
-        mapType: 'styledMap',
-        zoomLevel: 12,
-        showTooltip: true,
-        showInfoWindow: true,
-        useMapTypeControl: true,
-        maps: {
-          // Your custom mapTypeId holding custom map styles.
-          styledMap: {
-            name: 'Styled Map', // This name will be displayed in the map type control.
-            styles: [
-              {featureType: 'poi.attraction',
-                stylers: [{color: '#fce8b2'}]
-              },
-              {featureType: 'road.highway',
-                stylers: [{hue: '#0277bd'}, {saturation: -50}]
-              },
-              {featureType: 'road.highway',
-                elementType: 'labels.icon',
-                stylers: [{hue: '#000'}, {saturation: 100}, {lightness: 50}]
-              },
-              {featureType: 'landscape',
-                stylers: [{hue: '#259b24'}, {saturation: 10}, {lightness: -22}]
-              }
-            ]}}
-      };
+      var pathCoordinates = locations.map(function (location) {
+        return { lat: location.latitude, lng: location.longitude };
+      });
 
-      var map = new google.visualization.Map(document.getElementById('map_div'));
+      var polyline = new google.maps.Polyline({
+        path: pathCoordinates,
+        strokeColor: '#9400D3',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      });
 
-      map.draw(data, options);
+      polyline.setMap(map);
+
+      // Add markers
+      locations.forEach(function (location) {
+        var marker = new google.maps.Marker({
+          position: { lat: location.latitude, lng: location.longitude },
+          map: map,
+          title: location.name
+        });
+      });
     }
   </script>
 </head>
+
 <body>
 <div id="map_div" style="height: 500px; width: 900px"></div>
+<script async defer onload="initMap()" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM&v=3.exp&libraries=visualization"></script>
 </body>
+
 </html>

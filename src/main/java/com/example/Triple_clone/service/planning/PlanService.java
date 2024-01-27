@@ -58,7 +58,6 @@ public class PlanService {
             locations.add(plan.getLocation());
         }
         locations.add(new Location(latitude, longitude, name));
-
         return locations;
     }
 }
