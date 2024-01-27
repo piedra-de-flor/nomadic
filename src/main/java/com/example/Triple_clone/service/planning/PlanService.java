@@ -56,9 +56,10 @@ public class PlanService {
 
         for (DetailPlan plan : plans) {
             locations.add(plan.getLocation());
+            System.out.println(plan.getLocation().getLatitude());
+            System.out.println(plan.getLocation().getLongitude());
         }
         locations.add(new Location(latitude, longitude, name));
-
         return locations;
     }
 }

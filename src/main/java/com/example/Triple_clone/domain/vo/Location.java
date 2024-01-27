@@ -1,13 +1,20 @@
 package com.example.Triple_clone.domain.vo;
 
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@AllArgsConstructor
 @Getter
-@RequiredArgsConstructor
+@Embeddable
 public class Location {
-    private final Double latitude;
-    private final Double longitude;
-    private final String name;
+    private Double latitude;
+    private Double longitude;
+    private String name;
+
+    public Location() {
+
+    }
 }
 
