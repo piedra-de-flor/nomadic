@@ -1,7 +1,7 @@
-package com.example.Triple_clone.service.recommend.manager;
+package com.example.Triple_clone.service.recommend.admin;
 
-import com.example.Triple_clone.dto.recommend.manager.AdminRecommendCreatePlaceDto;
-import com.example.Triple_clone.dto.recommend.manager.AdminRecommendUpdatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
 import com.example.Triple_clone.domain.entity.Place;
 import com.example.Triple_clone.repository.PlaceRepository;
 import jakarta.transaction.Transactional;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @Service

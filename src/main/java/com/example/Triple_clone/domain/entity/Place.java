@@ -46,6 +46,9 @@ public class Place {
     }
 
     public void update(String title, String notionUrl, String subTitle, String location, String mainImage) {
+        if (title.isEmpty()) {
+            throw new NullPointerException("there is no title");
+        }
         this.title = title;
         this.notionUrl = notionUrl;
         this.subTitle = subTitle;

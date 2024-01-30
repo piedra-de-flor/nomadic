@@ -1,4 +1,4 @@
-package com.example.Triple_clone.dto.recommend.manager;
+package com.example.Triple_clone.dto.recommend.admin;
 
 import com.example.Triple_clone.domain.entity.Place;
 import jakarta.validation.constraints.NotNull;
