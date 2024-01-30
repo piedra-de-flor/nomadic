@@ -11,14 +11,12 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
 
 public class ReviewServiceTest {
     @MockBean
     ReviewService reviewService;
-    @Mock
-    ReviewRepository reviewRepository;
     @Mock
     User user;
     @Mock
@@ -26,14 +24,15 @@ public class ReviewServiceTest {
 
     @Test
     void 리뷰_저장_테스트() {
-        reviewService = new ReviewService(reviewRepository);
+        ReviewRepository mockRepository = mock(ReviewRepository.class);
+        ReviewService reviewService = new ReviewService(mockRepository);
         Review review = new Review(user, place, "test", "test");
 
         reviewService.save(review);
-        verify(reviewService, Mockito.times(1)).save(review);
+        verify(mockRepository, Mockito.times(1)).save(review);
 
         ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
-        verify(reviewService).save(reviewCaptor.capture());
+        verify(mockRepository).save(reviewCaptor.capture());
 
         assertEquals(review, reviewCaptor.getValue());
     }

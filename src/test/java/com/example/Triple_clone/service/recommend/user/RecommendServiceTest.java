@@ -33,9 +33,6 @@ class RecommendServiceTest {
     @Mock
     private Place place2;
 
-    @Mock
-    private User user;
-
     @InjectMocks
     private RecommendService service;
 
@@ -104,20 +101,19 @@ class RecommendServiceTest {
 
     @Test
     void 서비스_레이어_장소_좋아요_테스트() {
-        when(user.getId()).thenReturn(1L);
         when(place1.getId()).thenReturn(1L);
+        when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
 
-        service.like(place1.getId(), user.getId());
+        service.like(place1.getId(), 1L);
         assertAll(
-                () -> verify(place1, times(1)).like(user.getId())
+                () -> verify(place1, times(1)).like(1L)
         );
     }
 
     @Test
     void 서비스_레이어_장소_좋아요_실패_테스트() {
-        when(user.getId()).thenReturn(1L);
-        when(place1.getId()).thenReturn(1L);
+        when(place1.getId()).thenThrow(NoSuchElementException.class);
 
-        Assertions.assertThrows(NoSuchElementException.class, () ->  service.like(place1.getId(), 2L));
+        Assertions.assertThrows(NoSuchElementException.class, () ->  service.like(place1.getId(), 1L));
     }
 }
