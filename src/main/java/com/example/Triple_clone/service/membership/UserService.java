@@ -22,7 +22,7 @@ public class UserService {
         // UserDto의 username을 이용해 DB에 존재하는지 확인
         if (repository.findOneWithAuthoritiesByEmail(userDto.toEntity().getEmail()).orElse(null)
                 != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new RuntimeException("already register user");
         }
 
         // 권한정보를 포함한 User 정보를 생성
@@ -44,8 +44,6 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
         if (loginDto.password().equals(user.getPassword())) {
-            log.info("[login] 계정을 찾았습니다. " + user);
-
             return UserResponseDto.fromUser(user);
         }
         throw new IllegalArgumentException("password wrong");
@@ -53,21 +51,21 @@ public class UserService {
 
     public UserResponseDto read(long userId) {
         User user = repository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("no user entity for update"));
+                .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
         return UserResponseDto.fromUser(user);
     }
 
     public void update(UserUpdateDto userUpdateDto) {
         User user = repository.findById(userUpdateDto.userId())
-                .orElseThrow(() -> new NoSuchElementException("no user entity for update"));
+                .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
         user.update(userUpdateDto.name(), userUpdateDto.password());
     }
 
     public long delete(long userId) {
         User user = repository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("no user entity for update"));
+                .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
         repository.delete(user);
         return userId;
