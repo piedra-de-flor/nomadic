@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,9 +33,8 @@ public class AdminRecommendServiceTest {
 
         service.createPlace(adminRecommendCreatePlaceDto);
 
-        assertAll(
-                () -> verify(placeRepository, times(1)).save(place)
-        );
+        verify(placeRepository, times(1)).save(place);
+
     }
 
     @Test
@@ -46,9 +44,9 @@ public class AdminRecommendServiceTest {
 
         service.updatePlace(adminRecommendUpdatePlaceDto);
 
-        assertAll(
-                () -> verify(place, times(1)).update(null, null, null, null, null)
-        );
+
+        verify(place, times(1)).update(null, null, null, null, null);
+
     }
 
     @Test
@@ -57,8 +55,8 @@ public class AdminRecommendServiceTest {
 
         service.deletePlace(1L);
 
-        assertAll(
-                () -> verify(placeRepository, times(1)).delete(place)
-        );
+
+        verify(placeRepository, times(1)).delete(place);
+
     }
 }

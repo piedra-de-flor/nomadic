@@ -105,9 +105,7 @@ class RecommendServiceTest {
         when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
 
         service.like(place1.getId(), 1L);
-        assertAll(
-                () -> verify(place1, times(1)).like(1L)
-        );
+        verify(place1, times(1)).like(1L);
     }
 
     @Test
