@@ -30,14 +30,21 @@ public class RecommendService {
         return new RecommendReadDto(place, likeOrNot);
     }
 
-    public Place getById(long placeId) {
-        return placeRepository.getReferenceById(placeId);
+    public Place findById(long placeId) {
+        return placeRepository.findById(placeId)
+                .orElseThrow(() -> new NoSuchElementException("no place entity"));
     }
 
     @Transactional(readOnly = true)
     public Page<RecommendReadDto> findAll(String orderType, Pageable pageable) {
+        Page<Place> placesPage;
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by(RecommendOrderType.valueOf(orderType).property).descending());
-        Page<Place> placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
+
+        if (RecommendOrderType.valueOf(orderType).equals(RecommendOrderType.name)) {
+            placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
+        } else {
+            placesPage = placeRepository.findAllByOrderByDateDesc(customPageable);
+        }
 
         List<RecommendReadDto> dtos = placesPage.getContent().stream()
                 .map(place -> new RecommendReadDto(place, false))
