@@ -1,4 +1,4 @@
-package com.example.Triple_clone.dto.recommend.manager;
+package com.example.Triple_clone.dto.recommend.admin;
 
 public record AdminRecommendUpdatePlaceDto(
         long placeId,

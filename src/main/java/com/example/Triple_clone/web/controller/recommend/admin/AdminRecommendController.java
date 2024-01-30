@@ -1,9 +1,8 @@
 package com.example.Triple_clone.web.controller.recommend.admin;
-
-import com.example.Triple_clone.dto.recommend.manager.AdminRecommendCreatePlaceDto;
-import com.example.Triple_clone.dto.recommend.manager.AdminRecommendUpdatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
 import com.example.Triple_clone.domain.entity.Place;
-import com.example.Triple_clone.service.recommend.manager.AdminRecommendService;
+import com.example.Triple_clone.service.recommend.admin.AdminRecommendService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,14 +1,9 @@
-package com.example.Triple_clone.recommendTest.user;
+package com.example.Triple_clone.service.recommend.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
-import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.domain.entity.Place;
-import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.repository.PlaceRepository;
-import com.example.Triple_clone.repository.ReviewRepository;
-import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,19 +28,13 @@ class RecommendServiceTest {
     private PlaceRepository placeRepository;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private ReviewRepository reviewRepository;
-
-    @Mock
     private Place place1;
 
     @Mock
     private Place place2;
 
     @Mock
-    private User user1;
+    private User user;
 
     @InjectMocks
     private RecommendService service;
@@ -115,22 +104,20 @@ class RecommendServiceTest {
 
     @Test
     void 서비스_레이어_장소_좋아요_테스트() {
-        service.like(1L, 1L);
+        when(user.getId()).thenReturn(1L);
+        when(place1.getId()).thenReturn(1L);
+
+        service.like(place1.getId(), user.getId());
         assertAll(
-                () -> verify(service, times(1)).like(1L, 1L)
+                () -> verify(place1, times(1)).like(user.getId())
         );
     }
 
     @Test
-    void 서비스_레이어_리뷰_작성_테스트() {
-        RecommendWriteReviewDto dto = new RecommendWriteReviewDto(1L, 1L, "test", "test");
-        when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+    void 서비스_레이어_장소_좋아요_실패_테스트() {
+        when(user.getId()).thenReturn(1L);
+        when(place1.getId()).thenReturn(1L);
 
-        service.writeReview(dto);
-
-        assertAll(
-                () -> verify(reviewRepository, times(1)).save(any(Review.class))
-        );
+        Assertions.assertThrows(NoSuchElementException.class, () ->  service.like(place1.getId(), 2L));
     }
 }
