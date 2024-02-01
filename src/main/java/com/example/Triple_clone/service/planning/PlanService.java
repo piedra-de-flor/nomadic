@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.planning;
 
+import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.domain.vo.Partner;
@@ -8,7 +9,6 @@ import com.example.Triple_clone.dto.planning.PlanPartnerUpdateDto;
 import com.example.Triple_clone.dto.planning.PlanStyleUpdateDto;
 import com.example.Triple_clone.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 package com.example.Triple_clone.dto.planning;
 
 import com.example.Triple_clone.domain.entity.Plan;
+import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.domain.vo.Partner;
 import com.example.Triple_clone.domain.vo.Style;
 
@@ -15,9 +16,9 @@ public record PlanCreateDto(
         String partner,
         List<String> styles
 ) {
-    public Plan toEntity() {
+    public Plan toEntity(User user) {
         return Plan.builder()
-                .userId(userId)
+                .userId(user.getId())
                 .place(place)
                 .styles(Style.toStyles(styles))
                 .startDay(startDay)
