@@ -2,7 +2,6 @@ package com.example.Triple_clone.web.controller.planning;
 
 import com.example.Triple_clone.dto.planning.*;
 import com.example.Triple_clone.service.planning.PlanFacadeService;
-import com.example.Triple_clone.service.planning.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,7 @@ public class PlanController {
 
     @PostMapping("/plan")
     public ResponseEntity<PlanCreateDto> createPlan(@RequestBody PlanCreateDto createDto) {
-        PlanCreateDto responseDto = service.createPlan(createDto);
+        PlanCreateDto responseDto = service.create(createDto);
         return ResponseEntity.ok(responseDto);
     }
 

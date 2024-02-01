@@ -31,15 +31,13 @@ public class Plan {
     private List<DetailPlan> plans;
 
     @Builder
-    public Plan(long userId, String place, Partner partner, Date startDay, Date endDay, List<Style> styles) {
-        Plan.builder()
-                .place(place)
-                .userId(userId)
-                .partner(partner)
-                .styles(styles)
-                .startDay(startDay)
-                .endDay(endDay)
-                .build();
+    public Plan(User user, String place, Partner partner, Date startDay, Date endDay, List<Style> styles) {
+        this.user = user;
+        this.place = place;
+        this.partner = partner;
+        this.startDay = startDay;
+        this.endDay = endDay;
+        this.styles = styles;
     }
 
     public void choosePartner(Partner partner) {

@@ -42,21 +42,22 @@ public class PlanService {
 
     public void updateStyle(PlanStyleUpdateDto updateDto) {
         Plan plan = findById(updateDto.planDto().planId());
-        plan.chooseStyle(Style.toStyles(updateDto.styles()));
+        if (plan.isMine(updateDto.planDto().userId())) {
+            plan.chooseStyle(Style.toStyles(updateDto.styles()));
+        }
+        throw new IllegalArgumentException("this plan is not yours");
     }
 
     public void updatePartner(PlanPartnerUpdateDto updateDto) {
         Plan plan = findById(updateDto.planDto().planId());
-        plan.choosePartner(Partner.valueOf(updateDto.partner()));
+        if (plan.isMine(updateDto.planDto().userId())) {
+            plan.choosePartner(Partner.valueOf(updateDto.partner()));
+        }
+        throw new IllegalArgumentException("this plan is not yours");
     }
 
     public List<Location> addLocation(long planId, String name, double latitude, double longitude) {
-        List<DetailPlan> plans = getPlans(planId);
-        List<Location> locations = new ArrayList<>();
-
-        for (DetailPlan plan : plans) {
-            locations.add(plan.getLocation());
-        }
+        List<Location> locations = getLocation(planId);
         locations.add(new Location(latitude, longitude, name));
         return locations;
     }

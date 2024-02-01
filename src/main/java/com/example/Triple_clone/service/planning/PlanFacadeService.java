@@ -18,7 +18,7 @@ public class PlanFacadeService {
     private User user;
     private Plan plan;
 
-    public PlanCreateDto createPlan(PlanCreateDto createDto) {
+    public PlanCreateDto create(PlanCreateDto createDto) {
         user = userService.findById(createDto.userId());
         Plan plan = createDto.toEntity(user);
         planService.save(plan);

@@ -18,7 +18,7 @@ public record PlanCreateDto(
 ) {
     public Plan toEntity(User user) {
         return Plan.builder()
-                .userId(user.getId())
+                .user(user)
                 .place(place)
                 .styles(Style.toStyles(styles))
                 .startDay(startDay)
