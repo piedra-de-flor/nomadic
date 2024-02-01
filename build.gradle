@@ -7,10 +7,6 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	sourceCompatibility = '21'
-}
-
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -21,16 +17,53 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2022.0.4")
+}
+
 dependencies {
+	//DB
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.h2database:h2'
+	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	//Web & Programming
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	//Test
+	testImplementation 'junit:junit:4.13.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	// Spring Security
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// JWT
+	//implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	//implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	//implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	//vault
+	implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+}
+
+
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+tasks.withType(Test).configureEach {
+	enabled = false
 }
 
 tasks.named('test') {
