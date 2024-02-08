@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum RecommendOrderType {
-    name("title"),
+    name("name"),
     date("date");
 
     public final String property;

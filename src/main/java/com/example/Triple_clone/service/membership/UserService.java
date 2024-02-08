@@ -18,10 +18,8 @@ public class UserService {
 
     @Transactional
     public UserResponseDto join(UserJoinRequestDto userDto) {
-        if (repository.findByEmail(userDto.toEntity().getEmail()).orElse(null)
-                != null) {
-            throw new RuntimeException("already register user");
-        }
+        repository.findByEmail(userDto.toEntity().getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("already register email"));
 
         User user = User.builder()
                 .email(userDto.toEntity().getEmail())
@@ -30,8 +28,8 @@ public class UserService {
                 .role(userDto.toEntity().getRole())
                 .build();
 
-        repository.save(user);
-        return UserResponseDto.fromUser(user);
+        User savedUser = repository.save(user);
+        return UserResponseDto.fromUser(savedUser);
     }
 
     @Transactional
@@ -52,6 +50,7 @@ public class UserService {
         return UserResponseDto.fromUser(user);
     }
 
+    @Transactional
     public void update(UserUpdateDto userUpdateDto) {
         User user = repository.findById(userUpdateDto.userId())
                 .orElseThrow(() -> new NoSuchElementException("no user entity"));
