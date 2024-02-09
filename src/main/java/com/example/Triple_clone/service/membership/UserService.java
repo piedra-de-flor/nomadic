@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -18,18 +19,21 @@ public class UserService {
 
     @Transactional
     public UserResponseDto join(UserJoinRequestDto userDto) {
-        repository.findByEmail(userDto.toEntity().getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("already register email"));
+        Optional<User> existUser = repository.findByEmail(userDto.toEntity().getEmail());
 
-        User user = User.builder()
-                .email(userDto.toEntity().getEmail())
-                .password(userDto.toEntity().getPassword())
-                .name(userDto.toEntity().getName())
-                .role(userDto.toEntity().getRole())
-                .build();
+        if (existUser.isPresent()) {
+            throw new IllegalArgumentException("already register email");
+        } else {
+            User user = User.builder()
+                    .email(userDto.toEntity().getEmail())
+                    .password(userDto.toEntity().getPassword())
+                    .name(userDto.toEntity().getName())
+                    .role(userDto.toEntity().getRole())
+                    .build();
 
-        User savedUser = repository.save(user);
-        return UserResponseDto.fromUser(savedUser);
+            User savedUser = repository.save(user);
+            return UserResponseDto.fromUser(savedUser);
+        }
     }
 
     @Transactional
