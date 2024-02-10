@@ -28,10 +28,10 @@ public class Place {
 
     @ElementCollection
     @CollectionTable(name = "place_like", joinColumns = @JoinColumn(name = "place_id"))
-    private List<Long> likes;
+    private List<Long> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "place")
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     @Builder
     public Place(@NonNull String title, String notionUrl, String subTitle, String location, String mainImage) {
@@ -41,8 +41,6 @@ public class Place {
         this.location = location;
         this.mainImage = mainImage;
         this.date = LocalDateTime.now();
-        this.likes = new ArrayList<>();
-        this.reviews = new ArrayList<>();
     }
 
     public void update(String title, String notionUrl, String subTitle, String location, String mainImage) {
@@ -67,6 +65,10 @@ public class Place {
 
     public boolean isLikedBy(long userId) {
         return likes.contains(userId);
+    }
+
+    public void updateLike(List<Long> users) {
+        this.likes = users;
     }
 
     public void addReview(Review review) {
