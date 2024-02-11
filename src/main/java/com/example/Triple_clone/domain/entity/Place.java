@@ -67,10 +67,6 @@ public class Place {
         return likes.contains(userId);
     }
 
-    public void updateLike(List<Long> users) {
-        this.likes = users;
-    }
-
     public void addReview(Review review) {
         reviews.add(review);
     }
