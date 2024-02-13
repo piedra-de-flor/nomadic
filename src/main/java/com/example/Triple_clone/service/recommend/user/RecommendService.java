@@ -12,16 +12,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecommendService {
     private final static int PAGE_SIZE = 5;
-    Map<Long, List<Long>> likes = new HashMap<>();
+    ConcurrentHashMap<Long, ConcurrentLinkedDeque<Long>> likes = new ConcurrentHashMap<>();
 
     private final PlaceRepository placeRepository;
 
@@ -67,7 +66,7 @@ public class RecommendService {
                 likes.get(placeId).add(userId);
             }
         } else {
-            likes.put(placeId, new ArrayList<>());
+            likes.put(placeId, new ConcurrentLinkedDeque<>());
             likes.get(placeId).add(userId);
         }
     }
@@ -76,20 +75,12 @@ public class RecommendService {
     @Transactional
     public void saveLike() {
         if (!likes.isEmpty()) {
-            log.info("update likes");
-            Set<Long> updateList = likes.keySet();
-
-            for (Long placeId : updateList) {
+            likes.forEach((placeId, userIds) -> {
                 Place target = placeRepository.findById(placeId)
                         .orElseThrow(NoSuchElementException::new);
-
-                for (Long userId : likes.get(placeId)) {
-                    target.like(userId);
-                }
-            }
+                userIds.forEach(target::like);
+            });
             likes.clear();
         }
-        log.info("No update likes");
     }
-
 }
