@@ -47,7 +47,11 @@ dependencies {
 	//implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	//vault
-	implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+	//implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+
+	//monitor
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 

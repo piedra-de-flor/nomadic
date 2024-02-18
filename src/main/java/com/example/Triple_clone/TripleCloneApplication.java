@@ -15,10 +15,10 @@ public class TripleCloneApplication {
 		SpringApplication.run(TripleCloneApplication.class, args);
 	}
 
-/*	@Value("${test}")
-	String password;*/
+	/*@Value("${test}")
+	String password;
 
-/*	@PostConstruct
+	@PostConstruct
 	private void postConstruct() {
 		System.out.println("My password is: " + password);
 	}*/
