@@ -32,6 +32,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'com.bucket4j:bucket4j-core:8.3.0'
 
 	//Test
 	testImplementation 'junit:junit:4.13.1'
