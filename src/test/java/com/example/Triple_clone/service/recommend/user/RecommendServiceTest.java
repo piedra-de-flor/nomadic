@@ -84,14 +84,14 @@ class RecommendServiceTest {
         list.add(place1);
         list.add(place2);
         Page<Place> page = new PageImpl<>(list, PageRequest.of(0, list.size()), list.size());
-        Pageable customPageable = PageRequest.of(pageable.getPageNumber(), 5, Sort.by("title").descending());
 
+        Pageable customPageable = PageRequest.of(pageable.getPageNumber(), 5, Sort.by("title").descending());
         when(placeRepository.findAllByOrderByTitleDesc(customPageable)).thenReturn(page);
 
         when(place1.getTitle()).thenReturn("AAA");
         when(place2.getTitle()).thenReturn("BBB");
 
-        Page<RecommendReadDto> responsePage = service.findAll("name", pageable);
+        Page<RecommendReadDto> responsePage = service.findAll("title", pageable);
 
         assertThat(responsePage).isNotNull();
         assertThat(responsePage.getContent().size()).isEqualTo(2);
@@ -105,6 +105,8 @@ class RecommendServiceTest {
         when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
 
         service.like(place1.getId(), 1L);
+        service.saveLike();
+
         verify(place1, times(1)).like(1L);
     }
 

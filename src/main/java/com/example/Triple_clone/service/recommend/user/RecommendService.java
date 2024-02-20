@@ -45,7 +45,7 @@ public class RecommendService {
         Page<Place> placesPage;
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by(RecommendOrderType.valueOf(orderType).property).descending());
 
-        if (RecommendOrderType.valueOf(orderType).equals(RecommendOrderType.name)) {
+        if (RecommendOrderType.valueOf(orderType).equals(RecommendOrderType.title)) {
             placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
         } else {
             placesPage = placeRepository.findAllByOrderByDateDesc(customPageable);

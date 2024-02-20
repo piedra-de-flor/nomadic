@@ -15,7 +15,6 @@ import java.util.concurrent.BlockingQueue;
 @RequiredArgsConstructor
 public class RateLimitAspect {
     private final Bucket bucket;
-    private final BlockingQueue<ProceedingJoinPoint> queue;
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping) && execution(* com.example.Triple_clone.web.controller.recommend.user.RecommendController.like(..))")
     public void likeMethod() {
@@ -26,8 +25,7 @@ public class RateLimitAspect {
         if (bucket.tryConsume(1)) {
             return joinPoint.proceed();
         } else {
-            queue.put(joinPoint);
-            return queue.size();
+            throw new IllegalArgumentException("request pull exceed");
         }
     }
 }

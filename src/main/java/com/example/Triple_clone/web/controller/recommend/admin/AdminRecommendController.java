@@ -6,6 +6,7 @@ import com.example.Triple_clone.service.recommend.admin.AdminRecommendService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,13 +15,13 @@ public class AdminRecommendController {
     private final AdminRecommendService service;
 
     @PostMapping("/admin/recommend")
-    public ResponseEntity<Place> createPlace(@RequestBody @Valid AdminRecommendCreatePlaceDto createPlaceRequestDto) {
+    public ResponseEntity<Place> createPlace(@RequestBody @Validated AdminRecommendCreatePlaceDto createPlaceRequestDto) {
         Place createdPlace = service.createPlace(createPlaceRequestDto);
         return ResponseEntity.ok(createdPlace);
     }
 
     @PatchMapping("/admin/recommend")
-    public ResponseEntity<Place> updatePlace(@RequestBody AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
+    public ResponseEntity<Place> updatePlace(@RequestBody @Validated AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
         Place updatedPlace = service.updatePlace(updatePlaceRequestDto);
         return ResponseEntity.ok(updatedPlace);
     }
