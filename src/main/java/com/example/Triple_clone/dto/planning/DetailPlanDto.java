@@ -4,14 +4,15 @@ import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.vo.Location;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
 public record DetailPlanDto(
         long planId,
-        @NotBlank(message = "Location can not be null")
+        @NotNull(message = "Location can not be null")
         Location location,
-        @NotBlank(message = "Date can not be null")
+        @NotNull(message = "Date can not be null")
         Date date,
         String time
 ) {

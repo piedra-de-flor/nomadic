@@ -2,6 +2,8 @@ package com.example.Triple_clone.domain.entity;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Review;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
