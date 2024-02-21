@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -18,20 +19,21 @@ public class UserService {
 
     @Transactional
     public UserResponseDto join(UserJoinRequestDto userDto) {
-        if (repository.findByEmail(userDto.toEntity().getEmail()).orElse(null)
-                != null) {
-            throw new RuntimeException("already register user");
+        Optional<User> existUser = repository.findByEmail(userDto.toEntity().getEmail());
+
+        if (existUser.isPresent()) {
+            throw new IllegalArgumentException("already register email");
+        } else {
+            User user = User.builder()
+                    .email(userDto.toEntity().getEmail())
+                    .password(userDto.toEntity().getPassword())
+                    .name(userDto.toEntity().getName())
+                    .role(userDto.toEntity().getRole())
+                    .build();
+
+            User savedUser = repository.save(user);
+            return UserResponseDto.fromUser(savedUser);
         }
-
-        User user = User.builder()
-                .email(userDto.toEntity().getEmail())
-                .password(userDto.toEntity().getPassword())
-                .name(userDto.toEntity().getName())
-                .role(userDto.toEntity().getRole())
-                .build();
-
-        repository.save(user);
-        return UserResponseDto.fromUser(user);
     }
 
     @Transactional
@@ -52,6 +54,7 @@ public class UserService {
         return UserResponseDto.fromUser(user);
     }
 
+    @Transactional
     public void update(UserUpdateDto userUpdateDto) {
         User user = repository.findById(userUpdateDto.userId())
                 .orElseThrow(() -> new NoSuchElementException("no user entity"));

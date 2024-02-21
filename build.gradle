@@ -34,6 +34,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0-rc1'
+	implementation 'com.bucket4j:bucket4j-core:8.3.0'
 
 	//Test
 	testImplementation 'junit:junit:4.13.1'
@@ -49,7 +50,11 @@ dependencies {
 	//implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	//vault
-	implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+	//implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+
+	//monitor
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 

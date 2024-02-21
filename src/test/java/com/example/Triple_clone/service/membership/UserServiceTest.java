@@ -41,6 +41,7 @@ class UserServiceTest {
         when(userJoinRequestDto.toEntity()).thenReturn(user);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         when(user.getRole()).thenReturn(Role.valueOf("USER"));
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
         UserResponseDto resultDto = userService.join(userJoinRequestDto);
 
