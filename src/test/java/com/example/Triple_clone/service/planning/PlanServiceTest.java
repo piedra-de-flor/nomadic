@@ -78,9 +78,9 @@ public class PlanServiceTest {
         PlanDto planDto = mock(PlanDto.class);
 
         when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(plan));
-        when(planService.findById(anyLong())).thenReturn(plan);
-        when(plan.isMine(anyLong())).thenReturn(true);
         when(planStyleUpdateDto.planDto()).thenReturn(planDto);
+        when(planStyleUpdateDto.planDto().planId()).thenReturn(1L);
+        when(plan.isMine(anyLong())).thenReturn(true);
         when(planDto.planId()).thenReturn(1L);
         when(planDto.userId()).thenReturn(1L);
 
@@ -123,10 +123,12 @@ public class PlanServiceTest {
         when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(plan));
         when(planPartnerUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
+        when(plan.isMine(anyLong())).thenReturn(true);
+        when(planPartnerUpdateDto.partner()).thenReturn("COUPLE");
 
         planService.updatePartner(planPartnerUpdateDto);
 
-        verify(plan, times(1)).chooseStyle(any());
+        verify(plan, times(1)).choosePartner(any());
     }
 
     @Test

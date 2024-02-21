@@ -44,6 +44,7 @@ public class PlanService {
         Plan plan = findById(updateDto.planDto().planId());
         if (plan.isMine(updateDto.planDto().userId())) {
             plan.chooseStyle(Style.toStyles(updateDto.styles()));
+            return;
         }
         throw new IllegalArgumentException("this plan is not yours");
     }
@@ -52,6 +53,7 @@ public class PlanService {
         Plan plan = findById(updateDto.planDto().planId());
         if (plan.isMine(updateDto.planDto().userId())) {
             plan.choosePartner(Partner.valueOf(updateDto.partner()));
+            return;
         }
         throw new IllegalArgumentException("this plan is not yours");
     }
