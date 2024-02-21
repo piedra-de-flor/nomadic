@@ -1,15 +1,15 @@
-package com.example.Triple_clone.dto.recommend.manager;
+package com.example.Triple_clone.dto.recommend.admin;
 
 import com.example.Triple_clone.domain.entity.Place;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record AdminRecommendCreatePlaceDto(
-        @NotNull
+        @NotBlank(message = "Title can not be null")
         String title,
-        @NotNull
+        @NotBlank(message = "Notion URL can not be null")
         String notionUrl,
         String subTitle,
-        @NotNull
+        @NotBlank(message = "Location can not be null")
         String location,
         String mainImage) {
     public Place toEntity() {

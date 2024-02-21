@@ -1,7 +1,7 @@
-package com.example.Triple_clone.service.recommend.manager;
+package com.example.Triple_clone.service.recommend.admin;
 
-import com.example.Triple_clone.dto.recommend.manager.AdminRecommendCreatePlaceDto;
-import com.example.Triple_clone.dto.recommend.manager.AdminRecommendUpdatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
 import com.example.Triple_clone.domain.entity.Place;
 import com.example.Triple_clone.repository.PlaceRepository;
 import jakarta.transaction.Transactional;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -26,24 +25,24 @@ public class AdminRecommendService {
 
     @Transactional
     public Place updatePlace(AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
-        Optional<Place> place = repository.findById(updatePlaceRequestDto.placeId());
-        Place target = place.orElseThrow(() -> new NoSuchElementException("no place entity for update"));
+        Place place = repository.findById(updatePlaceRequestDto.placeId())
+                .orElseThrow(() -> new NoSuchElementException("no place entity for update"));
 
-        target.update(updatePlaceRequestDto.title(),
+        place.update(updatePlaceRequestDto.title(),
                 updatePlaceRequestDto.notionUrl(),
                 updatePlaceRequestDto.subTitle(),
                 updatePlaceRequestDto.location(),
                 updatePlaceRequestDto.mainImage());
 
-        return target;
+        return place;
     }
 
     @Transactional
     public long deletePlace(Long placeId) {
-        Optional<Place> place = repository.findById(placeId);
-        Place target = place.orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
+        Place place = repository.findById(placeId)
+                .orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
 
-        repository.delete(target);
+        repository.delete(place);
         return placeId;
     }
 }

@@ -1,14 +1,9 @@
-package com.example.Triple_clone.recommendTest.user;
+package com.example.Triple_clone.service.recommend.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
-import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.domain.entity.Place;
-import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.repository.PlaceRepository;
-import com.example.Triple_clone.repository.ReviewRepository;
-import com.example.Triple_clone.repository.UserRepository;
-import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +15,7 @@ import org.springframework.data.domain.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,19 +28,10 @@ class RecommendServiceTest {
     private PlaceRepository placeRepository;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private ReviewRepository reviewRepository;
-
-    @Mock
     private Place place1;
 
     @Mock
     private Place place2;
-
-    @Mock
-    private User user1;
 
     @InjectMocks
     private RecommendService service;
@@ -67,7 +54,7 @@ class RecommendServiceTest {
     @Test
     void 서비스_레이어_장소_단일_조회_실패_테스트() {
         when(placeRepository.findById(2L)).thenReturn(Optional.empty());
-        Assertions.assertThrows(IllegalArgumentException.class,
+        Assertions.assertThrows(NoSuchElementException.class,
                 () -> service.findById(2L, 1L));
     }
 
@@ -97,14 +84,14 @@ class RecommendServiceTest {
         list.add(place1);
         list.add(place2);
         Page<Place> page = new PageImpl<>(list, PageRequest.of(0, list.size()), list.size());
-        Pageable customPageable = PageRequest.of(pageable.getPageNumber(), 5, Sort.by("title").descending());
 
+        Pageable customPageable = PageRequest.of(pageable.getPageNumber(), 5, Sort.by("title").descending());
         when(placeRepository.findAllByOrderByTitleDesc(customPageable)).thenReturn(page);
 
         when(place1.getTitle()).thenReturn("AAA");
         when(place2.getTitle()).thenReturn("BBB");
 
-        Page<RecommendReadDto> responsePage = service.findAll("name", pageable);
+        Page<RecommendReadDto> responsePage = service.findAll("title", pageable);
 
         assertThat(responsePage).isNotNull();
         assertThat(responsePage.getContent().size()).isEqualTo(2);
@@ -114,22 +101,19 @@ class RecommendServiceTest {
 
     @Test
     void 서비스_레이어_장소_좋아요_테스트() {
-        service.like(1L, 1L);
-        assertAll(
-                () -> verify(service, times(1)).like(1L, 1L)
-        );
+        when(place1.getId()).thenReturn(1L);
+        when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
+
+        service.like(place1.getId(), 1L);
+        service.saveLike();
+
+        verify(place1, times(1)).like(1L);
     }
 
     @Test
-    void 서비스_레이어_리뷰_작성_테스트() {
-        RecommendWriteReviewDto dto = new RecommendWriteReviewDto(1L, 1L, "test", "test");
-        when(placeRepository.findById(1L)).thenReturn(Optional.of(place1));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+    void 서비스_레이어_장소_좋아요_실패_테스트() {
+        when(place1.getId()).thenThrow(NoSuchElementException.class);
 
-        service.writeReview(dto);
-
-        assertAll(
-                () -> verify(reviewRepository, times(1)).save(any(Review.class))
-        );
+        Assertions.assertThrows(NoSuchElementException.class, () ->  service.like(place1.getId(), 1L));
     }
 }

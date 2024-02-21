@@ -1,47 +1,55 @@
 package com.example.Triple_clone.service.recommend.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
-import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.domain.entity.Place;
-import com.example.Triple_clone.domain.entity.Review;
-import com.example.Triple_clone.domain.entity.User;
-import com.example.Triple_clone.repository.PlaceRepository;
-import com.example.Triple_clone.repository.ReviewRepository;
-import com.example.Triple_clone.repository.UserRepository;
 import com.example.Triple_clone.domain.vo.RecommendOrderType;
+import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
+import com.example.Triple_clone.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecommendService {
     private final static int PAGE_SIZE = 5;
+    ConcurrentHashMap<Long, ConcurrentLinkedDeque<Long>> likes = new ConcurrentHashMap<>();
+
     private final PlaceRepository placeRepository;
-    private final UserRepository userRepository;
-    private final ReviewRepository reviewRepository;
+
 
     @Transactional(readOnly = true)
     public RecommendReadDto findById(long placeId, long userId) {
-        Optional<Place> place = placeRepository.findById(placeId);
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new NoSuchElementException("no place entity"));
 
-        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no place entity"));
-        boolean likeOrNot = exsitPlace.isLikedBy(userId);
+        boolean likeOrNot = place.isLikedBy(userId);
 
-        return new RecommendReadDto(exsitPlace, likeOrNot);
+        return new RecommendReadDto(place, likeOrNot);
+    }
+
+    public Place findById(long placeId) {
+        return placeRepository.findById(placeId)
+                .orElseThrow(() -> new NoSuchElementException("no place entity"));
     }
 
     @Transactional(readOnly = true)
     public Page<RecommendReadDto> findAll(String orderType, Pageable pageable) {
+        Page<Place> placesPage;
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by(RecommendOrderType.valueOf(orderType).property).descending());
-        Page<Place> placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
+
+        if (RecommendOrderType.valueOf(orderType).equals(RecommendOrderType.title)) {
+            placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
+        } else {
+            placesPage = placeRepository.findAllByOrderByDateDesc(customPageable);
+        }
 
         List<RecommendReadDto> dtos = placesPage.getContent().stream()
                 .map(place -> new RecommendReadDto(place, false))
@@ -50,24 +58,29 @@ public class RecommendService {
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
     }
 
-    @Transactional
-    public void like(long placeId, Long userId) {
-        Optional<Place> place = placeRepository.findById(placeId);
-
-        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no entity place"));
-        exsitPlace.like(userId);
+    public void like(Long placeId, Long userId) {
+        if (likes.containsKey(placeId)) {
+            if (likes.get(placeId).contains(userId)) {
+                likes.get(placeId).remove(userId);
+            } else {
+                likes.get(placeId).add(userId);
+            }
+        } else {
+            likes.put(placeId, new ConcurrentLinkedDeque<>());
+            likes.get(placeId).add(userId);
+        }
     }
 
+    @Scheduled(fixedRate = 5000)
     @Transactional
-    public void writeReview(RecommendWriteReviewDto writeReviewRequestDto) {
-        Optional<Place> place = placeRepository.findById(writeReviewRequestDto.placeId());
-        Optional<User> user = userRepository.findById(writeReviewRequestDto.userId());
-
-        Place exsitPlace = place.orElseThrow(() -> new NoSuchElementException("no place entity"));
-        User writer = user.orElseThrow(() -> new NoSuchElementException("no user entity"));
-
-        Review review = writeReviewRequestDto.toEntity(writer, exsitPlace);
-        reviewRepository.save(review);
-        exsitPlace.addReview(review);
+    public void saveLike() {
+        if (!likes.isEmpty()) {
+            likes.forEach((placeId, userIds) -> {
+                Place target = placeRepository.findById(placeId)
+                        .orElseThrow(NoSuchElementException::new);
+                userIds.forEach(target::like);
+            });
+            likes.clear();
+        }
     }
 }

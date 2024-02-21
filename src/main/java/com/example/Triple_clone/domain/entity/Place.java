@@ -28,10 +28,10 @@ public class Place {
 
     @ElementCollection
     @CollectionTable(name = "place_like", joinColumns = @JoinColumn(name = "place_id"))
-    private List<Long> likes;
+    private List<Long> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "place")
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     @Builder
     public Place(@NonNull String title, String notionUrl, String subTitle, String location, String mainImage) {
@@ -41,11 +41,12 @@ public class Place {
         this.location = location;
         this.mainImage = mainImage;
         this.date = LocalDateTime.now();
-        this.likes = new ArrayList<>();
-        this.reviews = new ArrayList<>();
     }
 
     public void update(String title, String notionUrl, String subTitle, String location, String mainImage) {
+        if (title.isEmpty()) {
+            throw new IllegalArgumentException("there is no title");
+        }
         this.title = title;
         this.notionUrl = notionUrl;
         this.subTitle = subTitle;
