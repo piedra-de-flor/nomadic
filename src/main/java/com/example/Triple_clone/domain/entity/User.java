@@ -35,9 +35,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Plan> plans;
 
-    @OneToMany(mappedBy = "user")
-    private List<Reservation> reservations;
-
     @Builder
     public User(String name, String email, String password, Role role) {
         this.name = name;

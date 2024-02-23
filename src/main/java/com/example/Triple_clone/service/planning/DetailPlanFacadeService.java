@@ -7,6 +7,8 @@ import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -22,6 +24,16 @@ public class DetailPlanFacadeService {
         detailPlanService.save(detailPlan);
 
         return detailPlanDto;
+    }
+
+    public List<DetailPlanDto> readAll(long planId) {
+        Plan plan = planService.findById(planId);
+        List<DetailPlanDto> response = new ArrayList<>();
+
+        for (DetailPlan detailPlan : plan.getPlans()) {
+            response.add(detailPlan.toDto());
+        }
+        return response;
     }
 
     public DetailPlanDto update(DetailPlanUpdateDto updateDto) {

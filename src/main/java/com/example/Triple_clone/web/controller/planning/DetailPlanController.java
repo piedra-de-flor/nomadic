@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class DetailPlanController {
@@ -17,6 +19,12 @@ public class DetailPlanController {
     @PostMapping("/detailPlan")
     public ResponseEntity<DetailPlanDto> create(DetailPlanDto detailPlanDto) {
         DetailPlanDto response = service.create(detailPlanDto);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/detailPlans")
+    public ResponseEntity<List<DetailPlanDto>> readAll(@RequestParam long planId) {
+        List<DetailPlanDto> response = service.readAll(planId);
         return ResponseEntity.ok(response);
     }
 
