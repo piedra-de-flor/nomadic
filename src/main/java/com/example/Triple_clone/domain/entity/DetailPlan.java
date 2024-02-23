@@ -3,10 +3,7 @@ package com.example.Triple_clone.domain.entity;
 import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
