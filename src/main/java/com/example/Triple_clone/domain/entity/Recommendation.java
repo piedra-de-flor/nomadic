@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Table(name = "place")
 @Entity
-public class Place {
+public class Recommendation {
     private static final long LIKE_INITIAL_NUMBER = 0;
 
     @Id
@@ -34,7 +34,7 @@ public class Place {
     private List<Review> reviews = new ArrayList<>();
 
     @Builder
-    public Place(@NonNull String title, String notionUrl, String subTitle, String location, String mainImage) {
+    public Recommendation(@NonNull String title, String notionUrl, String subTitle, String location, String mainImage) {
         this.title = title;
         this.notionUrl = notionUrl;
         this.subTitle = subTitle;

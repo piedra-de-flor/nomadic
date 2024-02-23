@@ -1,6 +1,6 @@
 package com.example.Triple_clone.dto.recommend.user;
 
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +14,7 @@ public record RecommendReadDto(
     LocalDateTime date,
     boolean like) {
 
-    public RecommendReadDto(Place place, boolean like) {
-        this(place.getId(), place.getTitle(), place.getNotionUrl(), place.getSubTitle(), place.getLocation(), place.getMainImage(), place.getDate(), like);
+    public RecommendReadDto(Recommendation recommendation, boolean like) {
+        this(recommendation.getId(), recommendation.getTitle(), recommendation.getNotionUrl(), recommendation.getSubTitle(), recommendation.getLocation(), recommendation.getMainImage(), recommendation.getDate(), like);
     }
 }

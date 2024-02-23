@@ -19,14 +19,14 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "place_id")
-    private Place place;
+    private Recommendation recommendation;
 
     private String content;
     private String image;
 
-    public Review(User user, Place place, String content, String image) {
+    public Review(User user, Recommendation recommendation, String content, String image) {
         this.user = user;
-        this.place = place;
+        this.recommendation = recommendation;
         this.content = content;
         this.image = image;
     }

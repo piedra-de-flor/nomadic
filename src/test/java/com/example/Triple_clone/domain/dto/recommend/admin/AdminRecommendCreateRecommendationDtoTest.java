@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AdminRecommendCreatePlaceDtoTest {
+public class AdminRecommendCreateRecommendationDtoTest {
 
     private Validator validator;
 

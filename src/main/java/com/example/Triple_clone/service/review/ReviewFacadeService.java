@@ -1,6 +1,6 @@
 package com.example.Triple_clone.service.review;
 
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
@@ -19,11 +19,11 @@ public class ReviewFacadeService {
 
     @Transactional
     public void writeReview(RecommendWriteReviewDto writeReviewRequestDto) {
-        Place place = recommendService.getById(writeReviewRequestDto.placeId());
+        Recommendation recommendation = recommendService.getById(writeReviewRequestDto.placeId());
         User user = userService.findById(writeReviewRequestDto.userId());
-        Review review = writeReviewRequestDto.toEntity(user, place);
+        Review review = writeReviewRequestDto.toEntity(user, recommendation);
 
         reviewService.save(review);
-        place.addReview(review);
+        recommendation.addReview(review);
     }
 }

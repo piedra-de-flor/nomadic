@@ -1,7 +1,6 @@
 package com.example.Triple_clone.service.review;
 
-import com.example.Triple_clone.domain.entity.Place;
-import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.service.membership.UserService;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
@@ -27,12 +26,12 @@ public class ReviewFacadeServiceTest {
     @Mock
     ReviewService reviewService;
     @Mock
-    Place place;
+    Recommendation recommendation;
 
     @Test
     void 리뷰_작성_실패_유저_없음_테스트() {
         when(userService.findById(2)).thenThrow(NoSuchElementException.class);
-        when(recommendService.getById(1)).thenReturn(place);
+        when(recommendService.getById(1)).thenReturn(recommendation);
 
         reviewFacadeService = new ReviewFacadeService(userService, reviewService, recommendService);
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(2, 1, "test", "test");

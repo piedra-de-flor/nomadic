@@ -1,6 +1,6 @@
 package com.example.Triple_clone.web.controller.recommend.admin;
 
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
 import com.example.Triple_clone.service.recommend.admin.AdminRecommendService;
@@ -32,7 +32,7 @@ public class AdminRecommendControllerTest {
     void 관리자_Controller_추천_장소_생성_테스트() throws Exception {
         // given
         AdminRecommendCreatePlaceDto request = new AdminRecommendCreatePlaceDto("test", "test", "test", "test", "test");
-        Place response = request.toEntity();
+        Recommendation response = request.toEntity();
         when(adminRecommendService.createPlace(any(AdminRecommendCreatePlaceDto.class))).thenReturn(response);
 
         // when
@@ -85,7 +85,7 @@ public class AdminRecommendControllerTest {
     @Test
     void 관리자_Controller_추천_장소_수정_테스트() throws Exception {
         // given
-        Place response = Place.builder()
+        Recommendation response = Recommendation.builder()
                 .title("testUpdate")
                 .notionUrl("test")
                 .subTitle("test")

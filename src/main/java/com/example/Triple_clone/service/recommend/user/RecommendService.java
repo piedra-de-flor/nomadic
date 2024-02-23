@@ -1,6 +1,6 @@
 package com.example.Triple_clone.service.recommend.user;
 
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.repository.PlaceRepository;
@@ -27,21 +27,21 @@ public class RecommendService {
 
     @Transactional(readOnly = true)
     public RecommendReadDto getById(long placeId, long userId) {
-        Place place = placeRepository.findById(placeId)
+        Recommendation recommendation = placeRepository.findById(placeId)
                 .orElseThrow(() -> new NoSuchElementException("no place entity"));
 
-        boolean likeOrNot = place.isLikedBy(userId);
+        boolean likeOrNot = recommendation.isLikedBy(userId);
 
-        return new RecommendReadDto(place, likeOrNot);
+        return new RecommendReadDto(recommendation, likeOrNot);
     }
 
-    public Place getById(long placeId) {
+    public Recommendation getById(long placeId) {
         return placeRepository.getReferenceById(placeId);
     }
 
     @Transactional(readOnly = true)
     public Page<RecommendReadDto> findAll(String orderType, Pageable pageable) {
-        Page<Place> placesPage;
+        Page<Recommendation> placesPage;
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by(RecommendOrderType.valueOf(orderType).property).descending());
 
         if (RecommendOrderType.valueOf(orderType).equals(RecommendOrderType.title)) {
@@ -75,7 +75,7 @@ public class RecommendService {
     public void saveLike() {
         if (!likes.isEmpty()) {
             likes.forEach((placeId, userIds) -> {
-                Place target = placeRepository.findById(placeId)
+                Recommendation target = placeRepository.findById(placeId)
                         .orElseThrow(NoSuchElementException::new);
                 userIds.forEach(target::like);
             });

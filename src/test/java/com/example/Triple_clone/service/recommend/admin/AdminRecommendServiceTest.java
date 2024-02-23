@@ -1,6 +1,6 @@
 package com.example.Triple_clone.service.recommend.admin;
 
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
 import com.example.Triple_clone.repository.PlaceRepository;
@@ -21,7 +21,7 @@ public class AdminRecommendServiceTest {
     @InjectMocks
     private AdminRecommendService service;
     @Mock
-    Place place;
+    Recommendation recommendation;
     @Mock
     AdminRecommendCreatePlaceDto adminRecommendCreatePlaceDto;
     @Mock
@@ -29,34 +29,34 @@ public class AdminRecommendServiceTest {
 
     @Test
     void 서비스_레이어_관리자_장소_생성_테스트() {
-        when(adminRecommendCreatePlaceDto.toEntity()).thenReturn(place);
+        when(adminRecommendCreatePlaceDto.toEntity()).thenReturn(recommendation);
 
         service.createPlace(adminRecommendCreatePlaceDto);
 
-        verify(placeRepository, times(1)).save(place);
+        verify(placeRepository, times(1)).save(recommendation);
 
     }
 
     @Test
     void 서비스_레이어_관리자_장소_수정_테스트() {
         when(adminRecommendUpdatePlaceDto.placeId()).thenReturn(1L);
-        when(placeRepository.findById(1L)).thenReturn(Optional.ofNullable(place));
+        when(placeRepository.findById(1L)).thenReturn(Optional.ofNullable(recommendation));
 
         service.updatePlace(adminRecommendUpdatePlaceDto);
 
 
-        verify(place, times(1)).update(null, null, null, null, null);
+        verify(recommendation, times(1)).update(null, null, null, null, null);
 
     }
 
     @Test
     void 서비스_레이어_관리자_장소_삭제_테스트() {
-        when(placeRepository.findById(1L)).thenReturn(Optional.ofNullable(place));
+        when(placeRepository.findById(1L)).thenReturn(Optional.ofNullable(recommendation));
 
         service.deletePlace(1L);
 
 
-        verify(placeRepository, times(1)).delete(place);
+        verify(placeRepository, times(1)).delete(recommendation);
 
     }
 }

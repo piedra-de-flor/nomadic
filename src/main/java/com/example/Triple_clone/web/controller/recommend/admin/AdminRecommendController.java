@@ -1,9 +1,8 @@
 package com.example.Triple_clone.web.controller.recommend.admin;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.service.recommend.admin.AdminRecommendService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,15 +14,15 @@ public class AdminRecommendController {
     private final AdminRecommendService service;
 
     @PostMapping("/admin/recommend")
-    public ResponseEntity<Place> createPlace(@RequestBody @Validated AdminRecommendCreatePlaceDto createPlaceRequestDto) {
-        Place createdPlace = service.createPlace(createPlaceRequestDto);
-        return ResponseEntity.ok(createdPlace);
+    public ResponseEntity<Recommendation> createPlace(@RequestBody @Validated AdminRecommendCreatePlaceDto createPlaceRequestDto) {
+        Recommendation createdRecommendation = service.createPlace(createPlaceRequestDto);
+        return ResponseEntity.ok(createdRecommendation);
     }
 
     @PatchMapping("/admin/recommend")
-    public ResponseEntity<Place> updatePlace(@RequestBody @Validated AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
-        Place updatedPlace = service.updatePlace(updatePlaceRequestDto);
-        return ResponseEntity.ok(updatedPlace);
+    public ResponseEntity<Recommendation> updatePlace(@RequestBody @Validated AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
+        Recommendation updatedRecommendation = service.updatePlace(updatePlaceRequestDto);
+        return ResponseEntity.ok(updatedRecommendation);
     }
 
     @DeleteMapping("/admin/recommend")

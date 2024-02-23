@@ -1,6 +1,6 @@
 package com.example.Triple_clone.service.review;
 
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.repository.ReviewRepository;
@@ -20,13 +20,13 @@ public class ReviewServiceTest {
     @Mock
     User user;
     @Mock
-    Place place;
+    Recommendation recommendation;
 
     @Test
     void 리뷰_저장_테스트() {
         ReviewRepository mockRepository = mock(ReviewRepository.class);
         ReviewService reviewService = new ReviewService(mockRepository);
-        Review review = new Review(user, place, "test", "test");
+        Review review = new Review(user, recommendation, "test", "test");
 
         reviewService.save(review);
         verify(mockRepository, Mockito.times(1)).save(review);
