@@ -23,11 +23,11 @@ public class PlanController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/plans")
+    /*@GetMapping("/plans")
     public ResponseEntity<PlanReadAllResponseDto> readPlan(@RequestParam long userId) {
         PlanReadAllResponseDto responseDto = service.findAllPlan(userId);
         return ResponseEntity.ok(responseDto);
-    }
+    }*/
 
     @PutMapping("/plan/style")
     public ResponseEntity<PlanStyleUpdateDto> updateStyle(@RequestBody PlanStyleUpdateDto updateDto) {

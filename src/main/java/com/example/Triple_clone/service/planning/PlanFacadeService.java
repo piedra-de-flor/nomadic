@@ -39,10 +39,10 @@ public class PlanFacadeService {
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
-    public PlanReadAllResponseDto findAllPlan(long userId) {
+    /*public PlanReadAllResponseDto findAllPlan(long userId) {
         User user = userService.findById(userId);
         return new PlanReadAllResponseDto(user.getPlans());
-    }
+    }*/
 
     public PlanStyleUpdateDto updateStyle(PlanStyleUpdateDto updateDto) {
         isExist(updateDto.planDto());

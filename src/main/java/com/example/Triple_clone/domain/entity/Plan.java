@@ -23,10 +23,19 @@ public class Plan {
     private User user;
 
     private String place;
+
+    @Enumerated(EnumType.STRING)
     private Partner partner;
+
+    @ElementCollection
+    @CollectionTable(name = "plan_styles", joinColumns = @JoinColumn(name = "plan_id"))
+    @Enumerated(EnumType.STRING)
     private List<Style> styles;
+
     private Date startDay;
+
     private Date endDay;
+
     @OneToMany(mappedBy = "plan")
     private List<DetailPlan> plans;
 
