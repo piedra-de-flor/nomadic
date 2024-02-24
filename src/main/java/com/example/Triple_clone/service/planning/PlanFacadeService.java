@@ -9,6 +9,9 @@ import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class PlanFacadeService {
@@ -39,10 +42,15 @@ public class PlanFacadeService {
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
-    /*public PlanReadAllResponseDto findAllPlan(long userId) {
+    public PlanReadAllResponseDto findAllPlan(long userId) {
         User user = userService.findById(userId);
-        return new PlanReadAllResponseDto(user.getPlans());
-    }*/
+        List<PlanReadResponseDto> plans = new ArrayList<>();
+
+        for (Plan plan : user.getPlans()) {
+            plans.add(new PlanReadResponseDto(plan));
+        }
+        return new PlanReadAllResponseDto(plans);
+    }
 
     public PlanStyleUpdateDto updateStyle(PlanStyleUpdateDto updateDto) {
         isExist(updateDto.planDto());

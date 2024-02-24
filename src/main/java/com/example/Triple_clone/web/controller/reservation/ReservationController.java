@@ -1,6 +1,7 @@
 package com.example.Triple_clone.web.controller.reservation;
 
 import com.example.Triple_clone.domain.entity.DetailPlan;
+import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.service.reservation.ReservationFacadeService;
 //import com.example.Triple_clone.service.reservation.ScrapingService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,8 @@ public class ReservationController {
     }*/
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<DetailPlan>> findAllReservations(@RequestParam long userId) {
-        List<DetailPlan> response = reservationFacadeService.findAllReservation(userId);
+    public ResponseEntity<List<DetailPlanDto>> findAllReservations(@RequestParam long userId) {
+        List<DetailPlanDto> response = reservationFacadeService.findAllReservation(userId);
         return ResponseEntity.ok(response);
     }
 }
