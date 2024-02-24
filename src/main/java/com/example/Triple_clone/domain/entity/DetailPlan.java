@@ -8,7 +8,9 @@ import lombok.*;
 import java.util.Date;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn()
+@RequiredArgsConstructor
 @Entity
 public class DetailPlan {
     @Id

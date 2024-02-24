@@ -4,6 +4,7 @@ import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
+import com.example.Triple_clone.dto.planning.ReservationCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,15 @@ public class DetailPlanFacadeService {
         detailPlanService.save(detailPlan);
 
         return detailPlanDto;
+    }
+
+    public ReservationCreateDto createReservation(ReservationCreateDto reservationCreateDto) {
+        Plan plan = planService.findById(reservationCreateDto.planId());
+        DetailPlan detailPlan = reservationCreateDto.toEntity(plan);
+
+        detailPlanService.save(detailPlan);
+
+        return reservationCreateDto;
     }
 
     public List<DetailPlanDto> readAll(long planId) {

@@ -1,13 +1,18 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.vo.Location;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+import java.util.Date;
+
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DiscriminatorValue("R")
 public class Reservation extends DetailPlan {
-    private long price;
+    public Reservation(Plan plan, Location location, Date date, String time) {
+        super(plan, location, date, time);
+    }
 }

@@ -3,6 +3,7 @@ package com.example.Triple_clone.web.controller.planning;
 import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
+import com.example.Triple_clone.dto.planning.ReservationCreateDto;
 import com.example.Triple_clone.service.planning.DetailPlanFacadeService;
 import com.example.Triple_clone.service.planning.DetailPlanService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,14 @@ public class DetailPlanController {
     private final DetailPlanFacadeService service;
 
     @PostMapping("/detailPlan")
-    public ResponseEntity<DetailPlanDto> create(DetailPlanDto detailPlanDto) {
+    public ResponseEntity<DetailPlanDto> create(@RequestBody DetailPlanDto detailPlanDto) {
         DetailPlanDto response = service.create(detailPlanDto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/detailPlan/reservation")
+    public ResponseEntity<ReservationCreateDto> create(@RequestBody ReservationCreateDto reservationCreateDto) {
+        ReservationCreateDto response = service.createReservation(reservationCreateDto);
         return ResponseEntity.ok(response);
     }
 
@@ -29,7 +36,7 @@ public class DetailPlanController {
     }
 
     @PatchMapping("/detailPlan")
-    public ResponseEntity<DetailPlanDto> update(DetailPlanUpdateDto updateDto) {
+    public ResponseEntity<DetailPlanDto> update(@RequestBody DetailPlanUpdateDto updateDto) {
         DetailPlanDto response = service.update(updateDto);
         return ResponseEntity.ok(response);
     }
