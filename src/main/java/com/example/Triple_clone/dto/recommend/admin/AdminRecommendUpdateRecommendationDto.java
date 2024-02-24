@@ -1,6 +1,6 @@
 package com.example.Triple_clone.dto.recommend.admin;
 
-public record AdminRecommendUpdatePlaceDto(
+public record AdminRecommendUpdateRecommendationDto(
         long placeId,
         String title,
         String notionUrl,

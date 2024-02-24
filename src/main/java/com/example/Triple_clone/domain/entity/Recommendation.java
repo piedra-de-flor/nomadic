@@ -9,7 +9,6 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "place")
 @Entity
 public class Recommendation {
     private static final long LIKE_INITIAL_NUMBER = 0;
@@ -27,10 +26,10 @@ public class Recommendation {
     private LocalDateTime date;
 
     @ElementCollection
-    @CollectionTable(name = "place_like", joinColumns = @JoinColumn(name = "place_id"))
+    @CollectionTable(name = "recommendation_like", joinColumns = @JoinColumn(name = "recommendation_id"))
     private List<Long> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "recommendation")
     private List<Review> reviews = new ArrayList<>();
 
     @Builder

@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.service.reservation;
 
 import org.python.core.*;
@@ -14,3 +15,4 @@ public class ScrapingService {
         Python_Interpreter.execfile("C:\\Users\\USER\\Desktop\\공부\\멘토링\\Triple_clone\\src\\main\\resources\\웹 크롤링 파이썬.py");
     }
 }
+*/

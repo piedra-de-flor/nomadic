@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.web.controller.reservation;
 
 import com.example.Triple_clone.service.reservation.ScrapingService;
@@ -21,3 +22,4 @@ public class ReservationController {
         return ResponseEntity.ok(scrapingService.findAccommodations(local, sort, page));
     }
 }
+*/

@@ -1,9 +1,9 @@
 package com.example.Triple_clone.service.recommend.admin;
 
-import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
-import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreateRecommendationDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdateRecommendationDto;
 import com.example.Triple_clone.domain.entity.Recommendation;
-import com.example.Triple_clone.repository.PlaceRepository;
+import com.example.Triple_clone.repository.RecommendationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,34 +15,34 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class AdminRecommendService {
-    private final PlaceRepository repository;
+    private final RecommendationRepository repository;
 
-    public Recommendation createPlace(AdminRecommendCreatePlaceDto createPlaceRequestDto) {
-        Recommendation recommendation = createPlaceRequestDto.toEntity();
+    public Recommendation createRecommendation(AdminRecommendCreateRecommendationDto createRecommendationRequestDto) {
+        Recommendation recommendation = createRecommendationRequestDto.toEntity();
         repository.save(recommendation);
         return recommendation;
     }
 
     @Transactional
-    public Recommendation updatePlace(AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
-        Recommendation recommendation = repository.findById(updatePlaceRequestDto.placeId())
+    public Recommendation updateRecommendation(AdminRecommendUpdateRecommendationDto updateRecommendationRequestDto) {
+        Recommendation recommendation = repository.findById(updateRecommendationRequestDto.placeId())
                 .orElseThrow(() -> new NoSuchElementException("no place entity for update"));
 
-        recommendation.update(updatePlaceRequestDto.title(),
-                updatePlaceRequestDto.notionUrl(),
-                updatePlaceRequestDto.subTitle(),
-                updatePlaceRequestDto.location(),
-                updatePlaceRequestDto.mainImage());
+        recommendation.update(updateRecommendationRequestDto.title(),
+                updateRecommendationRequestDto.notionUrl(),
+                updateRecommendationRequestDto.subTitle(),
+                updateRecommendationRequestDto.location(),
+                updateRecommendationRequestDto.mainImage());
 
         return recommendation;
     }
 
     @Transactional
-    public long deletePlace(Long placeId) {
-        Recommendation recommendation = repository.findById(placeId)
+    public long deleteRecommendation(Long recommendationId) {
+        Recommendation recommendation = repository.findById(recommendationId)
                 .orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
 
         repository.delete(recommendation);
-        return placeId;
+        return recommendationId;
     }
 }

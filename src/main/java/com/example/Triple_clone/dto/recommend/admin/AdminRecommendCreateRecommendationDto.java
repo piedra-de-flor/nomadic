@@ -3,7 +3,7 @@ package com.example.Triple_clone.dto.recommend.admin;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import jakarta.validation.constraints.NotBlank;
 
-public record AdminRecommendCreatePlaceDto(
+public record AdminRecommendCreateRecommendationDto(
         @NotBlank(message = "Title can not be null")
         String title,
         @NotBlank(message = "Notion URL can not be null")

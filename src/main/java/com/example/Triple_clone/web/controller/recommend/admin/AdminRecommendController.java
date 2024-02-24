@@ -1,6 +1,6 @@
 package com.example.Triple_clone.web.controller.recommend.admin;
-import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
-import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreateRecommendationDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdateRecommendationDto;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.service.recommend.admin.AdminRecommendService;
 import lombok.RequiredArgsConstructor;
@@ -14,20 +14,20 @@ public class AdminRecommendController {
     private final AdminRecommendService service;
 
     @PostMapping("/admin/recommend")
-    public ResponseEntity<Recommendation> createPlace(@RequestBody @Validated AdminRecommendCreatePlaceDto createPlaceRequestDto) {
-        Recommendation createdRecommendation = service.createPlace(createPlaceRequestDto);
+    public ResponseEntity<Recommendation> createPlace(@RequestBody @Validated AdminRecommendCreateRecommendationDto createPlaceRequestDto) {
+        Recommendation createdRecommendation = service.createRecommendation(createPlaceRequestDto);
         return ResponseEntity.ok(createdRecommendation);
     }
 
     @PatchMapping("/admin/recommend")
-    public ResponseEntity<Recommendation> updatePlace(@RequestBody @Validated AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
-        Recommendation updatedRecommendation = service.updatePlace(updatePlaceRequestDto);
+    public ResponseEntity<Recommendation> updatePlace(@RequestBody @Validated AdminRecommendUpdateRecommendationDto updatePlaceRequestDto) {
+        Recommendation updatedRecommendation = service.updateRecommendation(updatePlaceRequestDto);
         return ResponseEntity.ok(updatedRecommendation);
     }
 
     @DeleteMapping("/admin/recommend")
     public ResponseEntity<Long> deletePlace(@RequestParam long placeId) {
-        long deletedPlaceId = service.deletePlace(placeId);
+        long deletedPlaceId = service.deleteRecommendation(placeId);
         return ResponseEntity.ok(deletedPlaceId);
     }
 }

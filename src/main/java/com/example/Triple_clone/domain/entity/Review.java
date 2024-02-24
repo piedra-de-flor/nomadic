@@ -18,7 +18,7 @@ public class Review {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "recommendation_id")
     private Recommendation recommendation;
 
     private String content;

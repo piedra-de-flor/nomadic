@@ -1,8 +1,8 @@
 package com.example.Triple_clone.web.controller.recommend.admin;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
-import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
-import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreateRecommendationDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdateRecommendationDto;
 import com.example.Triple_clone.service.recommend.admin.AdminRecommendService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,9 @@ public class AdminRecommendControllerTest {
     @Test
     void 관리자_Controller_추천_장소_생성_테스트() throws Exception {
         // given
-        AdminRecommendCreatePlaceDto request = new AdminRecommendCreatePlaceDto("test", "test", "test", "test", "test");
+        AdminRecommendCreateRecommendationDto request = new AdminRecommendCreateRecommendationDto("test", "test", "test", "test", "test");
         Recommendation response = request.toEntity();
-        when(adminRecommendService.createPlace(any(AdminRecommendCreatePlaceDto.class))).thenReturn(response);
+        when(adminRecommendService.createRecommendation(any(AdminRecommendCreateRecommendationDto.class))).thenReturn(response);
 
         // when
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
@@ -93,7 +93,7 @@ public class AdminRecommendControllerTest {
                 .mainImage("test")
                 .build();
 
-        when(adminRecommendService.updatePlace(any(AdminRecommendUpdatePlaceDto.class))).thenReturn(response);
+        when(adminRecommendService.updateRecommendation(any(AdminRecommendUpdateRecommendationDto.class))).thenReturn(response);
 
         // when
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
@@ -115,7 +115,7 @@ public class AdminRecommendControllerTest {
     @Test
     void 관리자_Controller_추천_장소_삭제_테스트() throws Exception {
         //given
-        when(adminRecommendService.deletePlace(any(Long.class))).thenReturn(1L);
+        when(adminRecommendService.deleteRecommendation(any(Long.class))).thenReturn(1L);
 
         //when && then
         mockMvc.perform(MockMvcRequestBuilders

@@ -2,7 +2,7 @@ package com.example.Triple_clone.service.recommend.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.domain.entity.Recommendation;
-import com.example.Triple_clone.repository.PlaceRepository;
+import com.example.Triple_clone.repository.RecommendationRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class RecommendServiceTest {
     @Mock
-    private PlaceRepository placeRepository;
+    private RecommendationRepository recommendationRepository;
 
     @Mock
     private Recommendation recommendation1;
@@ -41,7 +41,7 @@ class RecommendServiceTest {
 
     @Test
     void 서비스_레이어_장소_단일_조회_테스트() {
-        when(placeRepository.findById(1L)).thenReturn(Optional.of(recommendation1));
+        when(recommendationRepository.findById(1L)).thenReturn(Optional.of(recommendation1));
         when(recommendation1.getId()).thenReturn(1L);
 
         RecommendReadDto responseDto = service.getById(1L, 1L);
@@ -52,7 +52,7 @@ class RecommendServiceTest {
 
     @Test
     void 서비스_레이어_장소_단일_조회_실패_테스트() {
-        when(placeRepository.findById(2L)).thenReturn(Optional.empty());
+        when(recommendationRepository.findById(2L)).thenReturn(Optional.empty());
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> service.getById(2L, 1L));
     }
@@ -65,7 +65,7 @@ class RecommendServiceTest {
         Page<Recommendation> page = new PageImpl<>(list, PageRequest.of(0, list.size()), list.size());
 
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), 5, Sort.by("date").descending());
-        when(placeRepository.findAllByOrderByDateDesc(customPageable)).thenReturn(page);
+        when(recommendationRepository.findAllByOrderByDateDesc(customPageable)).thenReturn(page);
 
         when(recommendation1.getDate()).thenReturn(LocalDateTime.of(2023, 11, 1, 0, 0));
         when(recommendation2.getDate()).thenReturn(LocalDateTime.of(2023, 10, 15, 0, 0));
@@ -85,7 +85,7 @@ class RecommendServiceTest {
         Page<Recommendation> page = new PageImpl<>(list, PageRequest.of(0, list.size()), list.size());
 
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), 5, Sort.by("title").descending());
-        when(placeRepository.findAllByOrderByTitleDesc(customPageable)).thenReturn(page);
+        when(recommendationRepository.findAllByOrderByTitleDesc(customPageable)).thenReturn(page);
 
         when(recommendation1.getTitle()).thenReturn("AAA");
         when(recommendation2.getTitle()).thenReturn("BBB");
@@ -101,7 +101,7 @@ class RecommendServiceTest {
     @Test
     void 서비스_레이어_장소_좋아요_테스트() {
         when(recommendation1.getId()).thenReturn(1L);
-        when(placeRepository.findById(1L)).thenReturn(Optional.of(recommendation1));
+        when(recommendationRepository.findById(1L)).thenReturn(Optional.of(recommendation1));
 
         service.like(recommendation1.getId(), 1L);
         service.saveLike();

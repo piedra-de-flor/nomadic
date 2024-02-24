@@ -3,7 +3,7 @@ package com.example.Triple_clone.service.recommend.user;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
-import com.example.Triple_clone.repository.PlaceRepository;
+import com.example.Triple_clone.repository.RecommendationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -22,12 +22,12 @@ public class RecommendService {
     private final static int PAGE_SIZE = 5;
     ConcurrentHashMap<Long, ConcurrentLinkedDeque<Long>> likes = new ConcurrentHashMap<>();
 
-    private final PlaceRepository placeRepository;
+    private final RecommendationRepository recommendationRepository;
 
 
     @Transactional(readOnly = true)
-    public RecommendReadDto getById(long placeId, long userId) {
-        Recommendation recommendation = placeRepository.findById(placeId)
+    public RecommendReadDto getById(long recommendationId, long userId) {
+        Recommendation recommendation = recommendationRepository.findById(recommendationId)
                 .orElseThrow(() -> new NoSuchElementException("no place entity"));
 
         boolean likeOrNot = recommendation.isLikedBy(userId);
@@ -35,8 +35,8 @@ public class RecommendService {
         return new RecommendReadDto(recommendation, likeOrNot);
     }
 
-    public Recommendation getById(long placeId) {
-        return placeRepository.getReferenceById(placeId);
+    public Recommendation getById(long recommendationId) {
+        return recommendationRepository.getReferenceById(recommendationId);
     }
 
     @Transactional(readOnly = true)
@@ -45,9 +45,9 @@ public class RecommendService {
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.by(RecommendOrderType.valueOf(orderType).property).descending());
 
         if (RecommendOrderType.valueOf(orderType).equals(RecommendOrderType.title)) {
-            placesPage = placeRepository.findAllByOrderByTitleDesc(customPageable);
+            placesPage = recommendationRepository.findAllByOrderByTitleDesc(customPageable);
         } else {
-            placesPage = placeRepository.findAllByOrderByDateDesc(customPageable);
+            placesPage = recommendationRepository.findAllByOrderByDateDesc(customPageable);
         }
 
         List<RecommendReadDto> dtos = placesPage.getContent().stream()
@@ -57,16 +57,16 @@ public class RecommendService {
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
     }
 
-    public void like(Long placeId, Long userId) {
-        if (likes.containsKey(placeId)) {
-            if (likes.get(placeId).contains(userId)) {
-                likes.get(placeId).remove(userId);
+    public void like(Long recommendationId, Long userId) {
+        if (likes.containsKey(recommendationId)) {
+            if (likes.get(recommendationId).contains(userId)) {
+                likes.get(recommendationId).remove(userId);
             } else {
-                likes.get(placeId).add(userId);
+                likes.get(recommendationId).add(userId);
             }
         } else {
-            likes.put(placeId, new ConcurrentLinkedDeque<>());
-            likes.get(placeId).add(userId);
+            likes.put(recommendationId, new ConcurrentLinkedDeque<>());
+            likes.get(recommendationId).add(userId);
         }
     }
 
@@ -75,7 +75,7 @@ public class RecommendService {
     public void saveLike() {
         if (!likes.isEmpty()) {
             likes.forEach((placeId, userIds) -> {
-                Recommendation target = placeRepository.findById(placeId)
+                Recommendation target = recommendationRepository.findById(placeId)
                         .orElseThrow(NoSuchElementException::new);
                 userIds.forEach(target::like);
             });
