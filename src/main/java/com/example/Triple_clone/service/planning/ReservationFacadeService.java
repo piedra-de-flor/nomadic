@@ -1,4 +1,4 @@
-package com.example.Triple_clone.service.reservation;
+package com.example.Triple_clone.service.planning;
 
 import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
