@@ -3,10 +3,12 @@ package com.example.Triple_clone.web.controller.recommend.user;
 import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
+import com.example.Triple_clone.web.filter.JwtSecurityConfigForTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RecommendController.class)
+@Import(JwtSecurityConfigForTest.class)
 public class RecommendControllerTest {
 
     @MockBean
@@ -84,6 +87,8 @@ public class RecommendControllerTest {
 
     @Test
     void Controller_레이어_장소_내_여행에_추가_테스트() throws Exception {
+        String jwtToken = "your_generated_jwt_token_here";
+
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/recommend/user/plan")
                         .param("target", "1")

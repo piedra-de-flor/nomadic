@@ -5,10 +5,12 @@ import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreateRecommendationDto;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdateRecommendationDto;
 import com.example.Triple_clone.service.recommend.admin.AdminRecommendService;
+import com.example.Triple_clone.web.filter.JwtSecurityConfigForTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AdminRecommendController.class)
+@Import(JwtSecurityConfigForTest.class)
 public class AdminRecommendControllerTest {
 
     @MockBean
@@ -41,7 +44,6 @@ public class AdminRecommendControllerTest {
                         .post("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "ADMIN")
                         .content("{\"title\":\"test\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1,\"longitude\":1,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
                 .andReturn();
 
@@ -60,7 +62,6 @@ public class AdminRecommendControllerTest {
                         .post("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "ADMIN")
                         .content("{\"title\":null, \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
                 .andReturn();
 
@@ -75,7 +76,6 @@ public class AdminRecommendControllerTest {
                         .post("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "ADMIN")
                         .content("{\"title\":\"test\", \"notionUrl\":null, \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
                 .andReturn();
 
@@ -101,7 +101,6 @@ public class AdminRecommendControllerTest {
                         .patch("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "ADMIN")
                         .content("{\"placeId\":\"1\", \"title\":\"testUpdate\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
                 .andReturn();
 
@@ -121,7 +120,6 @@ public class AdminRecommendControllerTest {
         //when && then
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/admin/recommend")
-                        .header("Authorization", "ADMIN")
                         .param("placeId", "1"))
                 .andExpect(status().isOk());
     }
