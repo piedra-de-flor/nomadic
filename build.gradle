@@ -35,7 +35,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0-rc1'
 	implementation 'com.bucket4j:bucket4j-core:8.3.0'
-	implementation 'org.python:jython-standalone:2.7.2'
 
 	//Test
 	testImplementation 'junit:junit:4.13.1'
@@ -57,9 +56,6 @@ dependencies {
 	//monitor
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
-
-	//Scraping
-	implementation'org.seleniumhq.selenium:selenium-java:4.0.0'
 }
 
 
