@@ -1,5 +1,6 @@
 package com.example.Triple_clone.web.controller.membership;
 
+import com.example.Triple_clone.dto.auth.JwtToken;
 import com.example.Triple_clone.dto.membership.LoginDto;
 import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
 import com.example.Triple_clone.dto.membership.UserResponseDto;
@@ -26,11 +27,11 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PostMapping("/join")
-    public ResponseEntity<UserResponseDto> join(
+    @PostMapping("/signUp")
+    public ResponseEntity<UserResponseDto> signUp(
             @Parameter(description = "회원 가입 요청 정보", required = true)
             @RequestBody @Validated final UserJoinRequestDto userJoinRequestDto) {
-        UserResponseDto responseDto = service.join(userJoinRequestDto);
+        UserResponseDto responseDto = service.signUp(userJoinRequestDto);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -38,11 +39,11 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PostMapping("/login")
-    public UserResponseDto signIn(
+    @PostMapping("/signIn")
+    public JwtToken signIn(
             @Parameter(description = "로그인 요청 정보", required = true)
             @RequestBody @Validated LoginDto signInDto) {
-      return service.login(signInDto);
+      return service.signIn(signInDto.email(), signInDto.password());
     }
 
     @Operation(summary = "회원 조회", description = "기존의 회원을 단일 조회합니다")

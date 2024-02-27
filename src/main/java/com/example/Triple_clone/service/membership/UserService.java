@@ -1,76 +1,82 @@
 package com.example.Triple_clone.service.membership;
 
-import com.example.Triple_clone.domain.entity.User;
-import com.example.Triple_clone.dto.membership.*;
-import com.example.Triple_clone.repository.UserRepository;
+import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.dto.auth.JwtToken;
+import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
+import com.example.Triple_clone.dto.membership.UserResponseDto;
+import com.example.Triple_clone.dto.membership.UserUpdateDto;
+import com.example.Triple_clone.repository.MemberRepository;
+import com.example.Triple_clone.service.support.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository repository;
+    private final MemberRepository repository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponseDto join(UserJoinRequestDto userDto) {
-        Optional<User> existUser = repository.findByEmail(userDto.toEntity().getEmail());
-
-        if (existUser.isPresent()) {
-            throw new IllegalArgumentException("already register email");
-        } else {
-            User user = User.builder()
-                    .email(userDto.toEntity().getEmail())
-                    .password(userDto.toEntity().getPassword())
-                    .name(userDto.toEntity().getName())
-                    .role(userDto.toEntity().getRole())
-                    .build();
-
-            User savedUser = repository.save(user);
-            return UserResponseDto.fromUser(savedUser);
+    public UserResponseDto signUp(UserJoinRequestDto signUpDto) {
+        if (repository.findByEmail(signUpDto.email()).isPresent()) {
+            throw new IllegalArgumentException("이미 사용 중인 사용자 이름입니다.");
         }
+
+        String encodedPassword = passwordEncoder.encode(signUpDto.password());
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        Member savedMember = repository.save(signUpDto.toEntity(encodedPassword, roles));
+        return UserResponseDto.fromUser(savedMember);
     }
 
     @Transactional
-    public UserResponseDto login(LoginDto loginDto) {
-        User user = repository.findByEmail(loginDto.email())
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+    public JwtToken signIn(String email, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
-        if (loginDto.password().equals(user.getPassword())) {
-            return UserResponseDto.fromUser(user);
-        }
-        throw new IllegalArgumentException("password wrong");
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+
+        return jwtToken;
     }
 
     public UserResponseDto read(long userId) {
-        User user = repository.findById(userId)
+        Member member = repository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
-        return UserResponseDto.fromUser(user);
+        return UserResponseDto.fromUser(member);
     }
 
     @Transactional
     public void update(UserUpdateDto userUpdateDto) {
-        User user = repository.findById(userUpdateDto.userId())
+        Member member = repository.findById(userUpdateDto.userId())
                 .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
-        user.update(userUpdateDto.name(), userUpdateDto.password());
+        member.update(userUpdateDto.name(), userUpdateDto.password());
     }
 
     public long delete(long userId) {
-        User user = repository.findById(userId)
+        Member member = repository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
-        repository.delete(user);
+        repository.delete(member);
         return userId;
     }
 
-    public User findById(long userId) {
+    public Member findById(long userId) {
         return repository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("no user Entity"));
     }

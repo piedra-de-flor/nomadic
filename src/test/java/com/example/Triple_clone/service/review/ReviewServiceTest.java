@@ -2,7 +2,7 @@ package com.example.Triple_clone.service.review;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.entity.Review;
-import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.repository.ReviewRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -18,7 +18,7 @@ public class ReviewServiceTest {
     @MockBean
     ReviewService reviewService;
     @Mock
-    User user;
+    Member member;
     @Mock
     Recommendation recommendation;
 
@@ -26,7 +26,7 @@ public class ReviewServiceTest {
     void 리뷰_저장_테스트() {
         ReviewRepository mockRepository = mock(ReviewRepository.class);
         ReviewService reviewService = new ReviewService(mockRepository);
-        Review review = new Review(user, recommendation, "test", "test");
+        Review review = new Review(member, recommendation, "test", "test");
 
         reviewService.save(review);
         verify(mockRepository, Mockito.times(1)).save(review);

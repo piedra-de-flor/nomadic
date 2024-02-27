@@ -1,12 +1,12 @@
 package com.example.Triple_clone.service.membership;
 
-import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.vo.Role;
 import com.example.Triple_clone.dto.membership.LoginDto;
 import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
 import com.example.Triple_clone.dto.membership.UserResponseDto;
 import com.example.Triple_clone.dto.membership.UserUpdateDto;
-import com.example.Triple_clone.repository.UserRepository;
+import com.example.Triple_clone.repository.MemberRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,14 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class MemberServiceTest {
     @Mock
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
     @InjectMocks
     private UserService userService;
     @Mock
-    private User user;
+    private Member member;
     @Mock
     private UserJoinRequestDto userJoinRequestDto;
     @Mock
@@ -38,31 +38,31 @@ class UserServiceTest {
 
     @Test
     void 회원가입_성공_테스트() {
-        when(userJoinRequestDto.toEntity()).thenReturn(user);
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
-        when(user.getRole()).thenReturn(Role.valueOf("USER"));
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userJoinRequestDto.toEntity()).thenReturn(member);
+        when(memberRepository.findByEmail(member.getEmail())).thenReturn(Optional.empty());
+        when(member.getRole()).thenReturn(Role.valueOf("USER"));
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
 
         UserResponseDto resultDto = userService.join(userJoinRequestDto);
 
         assertNotNull(resultDto);
-        verify(userRepository, times(1)).findByEmail(userJoinRequestDto.email());
-        verify(userRepository, times(1)).save(any(User.class));
+        verify(memberRepository, times(1)).findByEmail(userJoinRequestDto.email());
+        verify(memberRepository, times(1)).save(any(Member.class));
     }
 
     @Test
     void 회원가입_실패_테스트() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(memberRepository.findByEmail(member.getEmail())).thenReturn(Optional.of(member));
 
         assertThrows(RuntimeException.class, () -> userService.login(loginDto));
     }
 
     @Test
     void 로그인_성공_테스트() {
-        when(userRepository.findByEmail(loginDto.email())).thenReturn(Optional.of(user));
+        when(memberRepository.findByEmail(loginDto.email())).thenReturn(Optional.of(member));
         when(loginDto.password()).thenReturn("test");
-        when(user.getPassword()).thenReturn("test");
-        when(user.getRole()).thenReturn(Role.valueOf("USER"));
+        when(member.getPassword()).thenReturn("test");
+        when(member.getRole()).thenReturn(Role.valueOf("USER"));
 
         UserResponseDto result = userService.login(loginDto);
 
@@ -71,16 +71,16 @@ class UserServiceTest {
 
     @Test
     void 로그인_실패_유저_없음_테스트() {
-        when(userRepository.findByEmail(loginDto.email())).thenReturn(Optional.empty());
+        when(memberRepository.findByEmail(loginDto.email())).thenReturn(Optional.empty());
 
         assertThrows(NoSuchElementException.class, () -> userService.login(loginDto));
     }
 
     @Test
     void 로그인_실패_비밀번호_오류_테스트() {
-        when(userRepository.findByEmail(loginDto.email())).thenReturn(Optional.of(user));
+        when(memberRepository.findByEmail(loginDto.email())).thenReturn(Optional.of(member));
         when(loginDto.password()).thenReturn("test");
-        when(user.getPassword()).thenReturn("test123");
+        when(member.getPassword()).thenReturn("test123");
 
         assertThrows(IllegalArgumentException.class, () -> userService.login(loginDto));
     }
@@ -88,26 +88,26 @@ class UserServiceTest {
     @Test
     void 읽기_실패_테스트() {
         long invalidUserId = 999L;
-        when(userRepository.findById(invalidUserId)).thenReturn(Optional.empty());
+        when(memberRepository.findById(invalidUserId)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(NoSuchElementException.class, () -> userService.read(invalidUserId));
     }
 
     @Test
     void 수정_성공_테스트() {
-        when(userRepository.findById(userUpdateDto.userId())).thenReturn(Optional.of(user));
+        when(memberRepository.findById(userUpdateDto.userId())).thenReturn(Optional.of(member));
         when(userUpdateDto.name()).thenReturn("test");
         when(userUpdateDto.password()).thenReturn("test");
 
         userService.update(userUpdateDto);
 
-        verify(userRepository, times(1)).findById(userUpdateDto.userId());
-        verify(user, times(1)).update("test", "test");
+        verify(memberRepository, times(1)).findById(userUpdateDto.userId());
+        verify(member, times(1)).update("test", "test");
     }
 
     @Test
     void 수정_실패_테스트() {
-        when(userRepository.findById(userUpdateDto.userId())).thenReturn(Optional.empty());
+        when(memberRepository.findById(userUpdateDto.userId())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(NoSuchElementException.class, () -> userService.update(userUpdateDto));
     }
@@ -115,18 +115,18 @@ class UserServiceTest {
     @Test
     void 삭제_성공_테스트() {
         long userId = 1L;
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(memberRepository.findById(userId)).thenReturn(Optional.of(member));
 
         long result = userService.delete(userId);
 
-        verify(userRepository, times(1)).delete(user);
+        verify(memberRepository, times(1)).delete(member);
         assertEquals(userId, result);
     }
 
     @Test
     void 삭제_실패_테스트() {
         long invalidUserId = 999L;
-        when(userRepository.findById(invalidUserId)).thenReturn(Optional.empty());
+        when(memberRepository.findById(invalidUserId)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(NoSuchElementException.class, () -> userService.delete(invalidUserId));
     }

@@ -14,8 +14,8 @@ public class Review {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "recommendation_id")
@@ -24,8 +24,8 @@ public class Review {
     private String content;
     private String image;
 
-    public Review(User user, Recommendation recommendation, String content, String image) {
-        this.user = user;
+    public Review(Member member, Recommendation recommendation, String content, String image) {
+        this.member = member;
         this.recommendation = recommendation;
         this.content = content;
         this.image = image;

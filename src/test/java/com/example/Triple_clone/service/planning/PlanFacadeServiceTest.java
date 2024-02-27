@@ -1,7 +1,7 @@
 package com.example.Triple_clone.service.planning;
 
 import com.example.Triple_clone.domain.entity.Plan;
-import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.dto.planning.PlanCreateDto;
 import com.example.Triple_clone.service.membership.UserService;
 import org.junit.jupiter.api.Test;
@@ -28,14 +28,14 @@ public class PlanFacadeServiceTest {
     @Mock
     Plan plan;
     @Mock
-    User user;
+    Member member;
 
     @Test
     void 계획_생성_테스트(){
         PlanCreateDto planCreateDto = mock(PlanCreateDto.class);
         when(planCreateDto.userId()).thenReturn(1L);
-        when(planCreateDto.toEntity(user)).thenReturn(plan);
-        when(userService.findById(anyLong())).thenReturn(user);
+        when(planCreateDto.toEntity(member)).thenReturn(plan);
+        when(userService.findById(anyLong())).thenReturn(member);
 
         planFacadeService.create(planCreateDto);
 

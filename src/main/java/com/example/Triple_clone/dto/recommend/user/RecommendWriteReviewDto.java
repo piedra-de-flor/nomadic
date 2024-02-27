@@ -2,7 +2,7 @@ package com.example.Triple_clone.dto.recommend.user;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.entity.Review;
-import com.example.Triple_clone.domain.entity.User;
+import com.example.Triple_clone.domain.entity.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -13,7 +13,7 @@ public record RecommendWriteReviewDto(
         @Size(max = 3000, message = "maximum contents size is 3000 words")
         String content,
         String image) {
-    public Review toEntity(User user, Recommendation recommendation) {
-        return new Review(user, recommendation, this.content, this.image);
+    public Review toEntity(Member member, Recommendation recommendation) {
+        return new Review(member, recommendation, this.content, this.image);
     }
 }
