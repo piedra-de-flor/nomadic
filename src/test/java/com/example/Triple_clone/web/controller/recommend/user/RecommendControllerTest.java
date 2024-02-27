@@ -1,5 +1,6 @@
 package com.example.Triple_clone.web.controller.recommend.user;
 
+import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class RecommendControllerTest {
     private Page<RecommendReadDto> placePage() {
         List<RecommendReadDto> placeList = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
-            placeList.add(new RecommendReadDto(i, "test" + i, "test", "test", "test", "test", LocalDateTime.now(), true));
+            placeList.add(new RecommendReadDto(i, "test" + i, "test", "test",  new Location(1D, 1D, "location"), "test", LocalDateTime.now(), true));
         }
 
         return new PageImpl<>(placeList);
@@ -85,7 +86,7 @@ public class RecommendControllerTest {
     void Controller_레이어_장소_내_여행에_추가_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/recommend/user/plan")
-                        .param("target", "test")
+                        .param("target", "1")
                         .param("placeId", "1"))
                 .andExpect(status().is2xxSuccessful());
     }

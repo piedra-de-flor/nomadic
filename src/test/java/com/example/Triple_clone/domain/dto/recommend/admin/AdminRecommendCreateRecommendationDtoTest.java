@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.dto.recommend.admin;
 
+import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreateRecommendationDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -23,7 +24,7 @@ public class AdminRecommendCreateRecommendationDtoTest {
     @Test
     void 추천_장소_생성_DTO_유효성_성공() {
         AdminRecommendCreateRecommendationDto dto = new AdminRecommendCreateRecommendationDto(
-                "Title", "http://example.com", "SubTitle", "Location", "main_image");
+                "Title", "http://example.com", "SubTitle", new Location(1D, 1D, "location"), "main_image");
 
         Set<ConstraintViolation<AdminRecommendCreateRecommendationDto>> violations = validator.validate(dto);
         assertThat(violations).isEmpty();
@@ -32,7 +33,7 @@ public class AdminRecommendCreateRecommendationDtoTest {
     @Test
     void 추천_장소_생성_DTO_유효성_실패_제목_null() {
         AdminRecommendCreateRecommendationDto dto = new AdminRecommendCreateRecommendationDto(
-                null, "http://example.com", "SubTitle", "Location", "main_image");
+                null, "http://example.com", "SubTitle", new Location(1D, 1D, "location"), "main_image");
 
         Set<ConstraintViolation<AdminRecommendCreateRecommendationDto>> violations = validator.validate(dto);
         assertThat(violations).hasSize(1);
@@ -42,7 +43,7 @@ public class AdminRecommendCreateRecommendationDtoTest {
     @Test
     void 추천_장소_생성_DTO_유효성_실패_노션_null() {
         AdminRecommendCreateRecommendationDto dto = new AdminRecommendCreateRecommendationDto(
-                "Title", null, "SubTitle", "Location", "main_image");
+                "Title", null, "SubTitle", new Location(1D, 1D, "location"), "main_image");
 
         Set<ConstraintViolation<AdminRecommendCreateRecommendationDto>> violations = validator.validate(dto);
         assertThat(violations).hasSize(1);

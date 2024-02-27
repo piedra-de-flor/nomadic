@@ -1,6 +1,7 @@
 package com.example.Triple_clone.web.controller.recommend.admin;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
+import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreateRecommendationDto;
 import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdateRecommendationDto;
 import com.example.Triple_clone.service.recommend.admin.AdminRecommendService;
@@ -31,7 +32,7 @@ public class AdminRecommendControllerTest {
     @Test
     void 관리자_Controller_추천_장소_생성_테스트() throws Exception {
         // given
-        AdminRecommendCreateRecommendationDto request = new AdminRecommendCreateRecommendationDto("test", "test", "test", "test", "test");
+        AdminRecommendCreateRecommendationDto request = new AdminRecommendCreateRecommendationDto("test", "test", "test",  new Location(1D, 1D, "location"), "test");
         Recommendation response = request.toEntity();
         when(adminRecommendService.createRecommendation(any(AdminRecommendCreateRecommendationDto.class))).thenReturn(response);
 
@@ -41,14 +42,14 @@ public class AdminRecommendControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "ADMIN")
-                        .content("{\"title\":\"test\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":\"test\", \"mainImage\":\"test\"}"))
+                        .content("{\"title\":\"test\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1,\"longitude\":1,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
                 .andReturn();
 
         // then
         assertEquals(200, mvcResult.getResponse().getStatus());
         assertThat(mvcResult.getResponse()
                 .getContentAsString()
-                .contains("\"title\":\"test\",\"notionUrl\":\"test\",\"subTitle\":\"test\",\"location\":\"test\",\"mainImage\":\"test\""))
+                .contains("\"title\":\"test\",\"notionUrl\":\"test\",\"subTitle\":\"test\",\"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"},\"mainImage\":\"test\""))
                 .isEqualTo(true);
     }
 
@@ -60,7 +61,7 @@ public class AdminRecommendControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "ADMIN")
-                        .content("{\"title\":null, \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":\"test\", \"mainImage\":\"test\"}"))
+                        .content("{\"title\":null, \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
                 .andReturn();
 
         // then
@@ -75,7 +76,7 @@ public class AdminRecommendControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "ADMIN")
-                        .content("{\"title\":\"test\", \"notionUrl\":null, \"subTitle\":\"test\", \"location\":\"test\", \"mainImage\":\"test\"}"))
+                        .content("{\"title\":\"test\", \"notionUrl\":null, \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
                 .andReturn();
 
         // then
@@ -89,7 +90,7 @@ public class AdminRecommendControllerTest {
                 .title("testUpdate")
                 .notionUrl("test")
                 .subTitle("test")
-                .location("test")
+                .location( new Location(1D, 1D, "location"))
                 .mainImage("test")
                 .build();
 
@@ -101,7 +102,7 @@ public class AdminRecommendControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "ADMIN")
-                        .content("{\"placeId\":\"1\", \"title\":\"testUpdate\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":\"test\", \"mainImage\":\"test\"}"))
+                        .content("{\"placeId\":\"1\", \"title\":\"testUpdate\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
                 .andReturn();
 
         // then
