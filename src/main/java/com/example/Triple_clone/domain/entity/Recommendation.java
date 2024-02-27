@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.vo.Location;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +22,7 @@ public class Recommendation {
     private String title;
     private String notionUrl;
     private String subTitle;
-    private String location;
+    private Location location;
     private String mainImage;
     private LocalDateTime date;
 
@@ -33,7 +34,7 @@ public class Recommendation {
     private List<Review> reviews = new ArrayList<>();
 
     @Builder
-    public Recommendation(@NonNull String title, String notionUrl, String subTitle, String location, String mainImage) {
+    public Recommendation(@NonNull String title, String notionUrl, String subTitle, Location location, String mainImage) {
         this.title = title;
         this.notionUrl = notionUrl;
         this.subTitle = subTitle;
@@ -42,7 +43,7 @@ public class Recommendation {
         this.date = LocalDateTime.now();
     }
 
-    public void update(String title, String notionUrl, String subTitle, String location, String mainImage) {
+    public void update(String title, String notionUrl, String subTitle, Location location, String mainImage) {
         if (title.isEmpty()) {
             throw new IllegalArgumentException("there is no title");
         }

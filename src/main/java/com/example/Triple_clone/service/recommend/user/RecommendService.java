@@ -26,7 +26,7 @@ public class RecommendService {
 
 
     @Transactional(readOnly = true)
-    public RecommendReadDto getById(long recommendationId, long userId) {
+    public RecommendReadDto findById(long recommendationId, long userId) {
         Recommendation recommendation = recommendationRepository.findById(recommendationId)
                 .orElseThrow(() -> new NoSuchElementException("no place entity"));
 
@@ -35,7 +35,7 @@ public class RecommendService {
         return new RecommendReadDto(recommendation, likeOrNot);
     }
 
-    public Recommendation getById(long recommendationId) {
+    public Recommendation findById(long recommendationId) {
         return recommendationRepository.getReferenceById(recommendationId);
     }
 

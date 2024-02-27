@@ -34,6 +34,20 @@ public class DetailPlanController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "추천 장소 계획에 추가", description = "추천 장소를 새로운 세부 계획으로 생성합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @PostMapping("/detailPlan/redirect")
+    public ResponseEntity<DetailPlanDto> create(
+            @Parameter(description = "추가할 추천 장소 ID", required = true)
+            @RequestParam long target,
+            @Parameter(description = "추천 장소를 생성할 PLAN ID", required = true)
+            @RequestParam long planId) {
+        DetailPlanDto response = service.addRecommendation(target, planId);
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "예약 생성", description = "새로운 예약을 생성합니다 (예약 = 세부계획의 하위그룹)")
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")

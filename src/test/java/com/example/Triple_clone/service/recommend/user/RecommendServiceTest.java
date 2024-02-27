@@ -44,7 +44,7 @@ class RecommendServiceTest {
         when(recommendationRepository.findById(1L)).thenReturn(Optional.of(recommendation1));
         when(recommendation1.getId()).thenReturn(1L);
 
-        RecommendReadDto responseDto = service.getById(1L, 1L);
+        RecommendReadDto responseDto = service.findById(1L, 1L);
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.id()).isEqualTo(recommendation1.getId());
@@ -54,7 +54,7 @@ class RecommendServiceTest {
     void 서비스_레이어_장소_단일_조회_실패_테스트() {
         when(recommendationRepository.findById(2L)).thenReturn(Optional.empty());
         Assertions.assertThrows(NoSuchElementException.class,
-                () -> service.getById(2L, 1L));
+                () -> service.findById(2L, 1L));
     }
 
     @Test

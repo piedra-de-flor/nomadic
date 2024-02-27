@@ -31,7 +31,7 @@ public class ReviewFacadeServiceTest {
     @Test
     void 리뷰_작성_실패_유저_없음_테스트() {
         when(userService.findById(2)).thenThrow(NoSuchElementException.class);
-        when(recommendService.getById(1)).thenReturn(recommendation);
+        when(recommendService.findById(1)).thenReturn(recommendation);
 
         reviewFacadeService = new ReviewFacadeService(userService, reviewService, recommendService);
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(2, 1, "test", "test");
@@ -42,7 +42,7 @@ public class ReviewFacadeServiceTest {
 
     @Test
     void 리뷰_작성_실패_장소_없음_테스트() {
-        when(recommendService.getById(2)).thenThrow(NoSuchElementException.class);
+        when(recommendService.findById(2)).thenThrow(NoSuchElementException.class);
 
         reviewFacadeService = new ReviewFacadeService(userService, reviewService, recommendService);
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(1, 2, "test", "test");

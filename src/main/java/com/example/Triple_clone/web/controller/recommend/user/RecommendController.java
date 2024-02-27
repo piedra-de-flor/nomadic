@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 @Tag(name = "장소 추천(사용자) Controller", description = "RECOMMEND API")
 public class RecommendController {
-    private static final String REDIRECT_END_POINT_TO_PLANNING_SERVICE = "";
+    private static final String REDIRECT_END_POINT_TO_PLANNING_SERVICE = "/detailPlan/redirect";
     private final RecommendService service;
 
     @Operation(summary = "추천 장소 전체 조회 (선택적 정렬)", description = "자신이 원하는 정렬순에 맞춰 추천 장소를 전체 조회합니다")
@@ -43,7 +43,7 @@ public class RecommendController {
             @RequestParam long placeId,
             @Parameter(description = "추천 장소 단일 조회 요청 정보 (유저 ID)", required = true)
             @RequestParam long userId) {
-        RecommendReadDto recommendReadDto = service.getById(placeId, userId);
+        RecommendReadDto recommendReadDto = service.findById(placeId, userId);
         return ResponseEntity.ok(recommendReadDto);
     }
 
@@ -59,21 +59,19 @@ public class RecommendController {
         return ResponseEntity.ok(recommendLikeDto);
     }
 
-    //TODO
-    //FIXME
-    //    // - 추후에 추천 장소를 내 계획에 추가하는 로직 구현 예정
     @Operation(summary = "추천 장소를 내 계획에 포함", description = "기존 추천 장소를 내 기존 계획에 포함합니다")
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @GetMapping("/recommend/user/plan")
     public String redirectToPlanning(
-            @Parameter(description = "타겟 계획", required = true)
-            @RequestParam String target,
-            @Parameter(description = "계획에 추가할 추천 장소", required = true)
+            @Parameter(description = "타겟 계획 ID", required = true)
+            @RequestParam long target,
+            @Parameter(description = "계획에 추가할 추천 장소 ID", required = true)
             @RequestParam long placeId,
             RedirectAttributes redirectAttributes) {
         redirectAttributes.addAttribute("placeId", placeId);
-        return "redirect:/" + REDIRECT_END_POINT_TO_PLANNING_SERVICE + target;
+        redirectAttributes.addAttribute("planId", target);
+        return "redirect:/" + REDIRECT_END_POINT_TO_PLANNING_SERVICE;
     }
 }
