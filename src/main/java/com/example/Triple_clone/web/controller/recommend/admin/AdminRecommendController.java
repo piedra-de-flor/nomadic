@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +27,9 @@ public class AdminRecommendController {
     @PostMapping("/admin/recommend")
     public ResponseEntity<Recommendation> createPlace(
             @Parameter(description = "추천 장소 생성 요청 정보", required = true)
-            @RequestBody @Validated AdminRecommendCreateRecommendationDto createPlaceRequestDto) {
-        Recommendation createdRecommendation = service.createRecommendation(createPlaceRequestDto);
+            @RequestBody @Validated AdminRecommendCreateRecommendationDto createPlaceRequestDto,
+            @RequestPart MultipartFile image) {
+        Recommendation createdRecommendation = service.createRecommendation(createPlaceRequestDto, image);
         return ResponseEntity.ok(createdRecommendation);
     }
 
@@ -39,8 +41,9 @@ public class AdminRecommendController {
     @PatchMapping("/admin/recommend")
     public ResponseEntity<Recommendation> updatePlace(
             @Parameter(description = "추천 장소 수정 요청 정보", required = true)
-            @RequestBody @Validated AdminRecommendUpdateRecommendationDto updatePlaceRequestDto) {
-        Recommendation updatedRecommendation = service.updateRecommendation(updatePlaceRequestDto);
+            @RequestBody @Validated AdminRecommendUpdateRecommendationDto updatePlaceRequestDto,
+            @RequestPart MultipartFile image) {
+        Recommendation updatedRecommendation = service.updateRecommendation(updatePlaceRequestDto, image);
         return ResponseEntity.ok(updatedRecommendation);
     }
 

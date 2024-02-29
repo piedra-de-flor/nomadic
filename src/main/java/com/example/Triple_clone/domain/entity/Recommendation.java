@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.vo.Image;
 import com.example.Triple_clone.domain.vo.Location;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +24,7 @@ public class Recommendation {
     private String notionUrl;
     private String subTitle;
     private Location location;
-    private String mainImage;
+    private Image mainImage;
     private LocalDateTime date;
 
     @ElementCollection
@@ -34,16 +35,15 @@ public class Recommendation {
     private List<Review> reviews = new ArrayList<>();
 
     @Builder
-    public Recommendation(@NonNull String title, String notionUrl, String subTitle, Location location, String mainImage) {
+    public Recommendation(@NonNull String title, String notionUrl, String subTitle, Location location) {
         this.title = title;
         this.notionUrl = notionUrl;
         this.subTitle = subTitle;
         this.location = location;
-        this.mainImage = mainImage;
         this.date = LocalDateTime.now();
     }
 
-    public void update(String title, String notionUrl, String subTitle, Location location, String mainImage) {
+    public void update(String title, String notionUrl, String subTitle, Location location) {
         if (title.isEmpty()) {
             throw new IllegalArgumentException("there is no title");
         }
@@ -51,7 +51,6 @@ public class Recommendation {
         this.notionUrl = notionUrl;
         this.subTitle = subTitle;
         this.location = location;
-        this.mainImage = mainImage;
         this.date = LocalDateTime.now();
     }
 
@@ -77,5 +76,10 @@ public class Recommendation {
 
     public int getReviewsNumber() {
         return reviews.size();
+    }
+
+    public String setImage(Image image) {
+        this.mainImage = image;
+        return image.getStoredFileName();
     }
 }

@@ -12,15 +12,13 @@ public record AdminRecommendCreateRecommendationDto(
         String notionUrl,
         String subTitle,
         @NotNull(message = "Location can not be null")
-        Location location,
-        String mainImage) {
+        Location location) {
     public Recommendation toEntity() {
         return Recommendation.builder()
                 .location(location)
                 .notionUrl(notionUrl)
                 .subTitle(subTitle)
                 .title(title)
-                .mainImage(mainImage)
                 .build();
     }
 }

@@ -7,6 +7,5 @@ public record AdminRecommendUpdateRecommendationDto(
         String title,
         String notionUrl,
         String subTitle,
-        Location location,
-        String mainImage) {
+        Location location) {
 }

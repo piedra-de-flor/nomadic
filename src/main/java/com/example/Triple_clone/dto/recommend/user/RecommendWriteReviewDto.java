@@ -11,9 +11,8 @@ public record RecommendWriteReviewDto(
         long placeId,
         @NotBlank(message = "There is no contents")
         @Size(max = 3000, message = "maximum contents size is 3000 words")
-        String content,
-        String image) {
+        String content) {
     public Review toEntity(Member member, Recommendation recommendation) {
-        return new Review(member, recommendation, this.content, this.image);
+        return new Review(member, recommendation, this.content);
     }
 }

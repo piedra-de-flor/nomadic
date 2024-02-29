@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,8 +28,9 @@ public class ReviewController {
     @PostMapping("/recommend/review")
     public ResponseEntity<RecommendWriteReviewDto> writeReview(
             @Parameter(description = "추천 장소에 대한 리뷰 생성 정보", required = true)
-            @RequestBody @Validated RecommendWriteReviewDto writeReviewRequestDto) {
-        service.writeReview(writeReviewRequestDto);
+            @RequestBody @Validated RecommendWriteReviewDto writeReviewRequestDto,
+            @RequestPart MultipartFile image) {
+        service.writeReview(writeReviewRequestDto, image);
         return ResponseEntity.ok(writeReviewRequestDto);
     }
 }
