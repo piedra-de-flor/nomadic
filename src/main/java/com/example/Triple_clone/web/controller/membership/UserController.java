@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
     private final UserService service;
+    private final String testJenkinsCI = "Success";
 
     @PostMapping("/join")
     public ResponseEntity<UserResponseDto> join(@RequestBody @Validated final UserJoinRequestDto userJoinRequestDto) {
