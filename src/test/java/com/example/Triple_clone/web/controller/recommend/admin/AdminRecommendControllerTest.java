@@ -1,4 +1,3 @@
-/*
 package com.example.Triple_clone.web.controller.recommend.admin;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
@@ -42,7 +41,7 @@ public class AdminRecommendControllerTest {
         // given
         AdminRecommendCreateRecommendationDto request = new AdminRecommendCreateRecommendationDto("test", "test", "test",  new Location(1D, 1D, "location"));
         Recommendation response = request.toEntity();
-        when(adminRecommendService.createRecommendation(any(AdminRecommendCreateRecommendationDto.class), any(MultipartFile.class))).thenReturn(response);
+        when(adminRecommendService.createRecommendation(any(AdminRecommendCreateRecommendationDto.class))).thenReturn(response);
 
         // when
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
@@ -56,7 +55,7 @@ public class AdminRecommendControllerTest {
         assertEquals(200, mvcResult.getResponse().getStatus());
         assertThat(mvcResult.getResponse()
                 .getContentAsString()
-                .contains("\"title\":\"test\",\"notionUrl\":\"test\",\"subTitle\":\"test\",\"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"},\"mainImage\":\"test\""))
+                .contains("\"title\":\"test\",\"notionUrl\":\"test\",\"subTitle\":\"test\",\"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}"))
                 .isEqualTo(true);
     }
 
@@ -67,7 +66,7 @@ public class AdminRecommendControllerTest {
                         .post("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":null, \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
+                        .content("{\"title\":null, \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}}"))
                 .andReturn();
 
         // then
@@ -81,7 +80,7 @@ public class AdminRecommendControllerTest {
                         .post("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"test\", \"notionUrl\":null, \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
+                        .content("{\"title\":\"test\", \"notionUrl\":null, \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}}"))
                 .andReturn();
 
         // then
@@ -96,7 +95,6 @@ public class AdminRecommendControllerTest {
                 .notionUrl("test")
                 .subTitle("test")
                 .location( new Location(1D, 1D, "location"))
-                .mainImage("test")
                 .build();
 
         when(adminRecommendService.updateRecommendation(any(AdminRecommendUpdateRecommendationDto.class))).thenReturn(response);
@@ -106,7 +104,7 @@ public class AdminRecommendControllerTest {
                         .patch("/admin/recommend")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"placeId\":\"1\", \"title\":\"testUpdate\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}, \"mainImage\":\"test\"}"))
+                        .content("{\"placeId\":\"1\", \"title\":\"testUpdate\", \"notionUrl\":\"test\", \"subTitle\":\"test\", \"location\":{\"latitude\":1.0,\"longitude\":1.0,\"name\":\"location\"}}"))
                 .andReturn();
 
         // then
@@ -129,4 +127,3 @@ public class AdminRecommendControllerTest {
                 .andExpect(status().isOk());
     }
 }
-*/

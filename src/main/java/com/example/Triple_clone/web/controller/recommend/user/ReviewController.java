@@ -36,7 +36,7 @@ public class ReviewController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @PostMapping("/admin/recommend/image")
+    @PostMapping("/recommendation/review/image")
     public ResponseEntity<Long> setMainImageOfRecommendation(
             @Parameter(description = "이미지를 추가할 리뷰 ID", required = true)
             @RequestParam Long recommendationId,
@@ -51,7 +51,7 @@ public class ReviewController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @GetMapping("/recommendation/image")
+    @GetMapping("/recommendation/review/image")
     public ResponseEntity<byte[]> readImage(
             @Parameter(description = "이미지를 로딩할 리뷰 ID", required = true)
             @RequestParam long reviewId) {

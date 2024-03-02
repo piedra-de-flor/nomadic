@@ -52,7 +52,7 @@ public class RecommendControllerTest {
         when(recommendService.findAll("name", pageable)).thenReturn(placePage());
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recommend/places")
+                        .get("/recommendations")
                         .param("sort","name"))
                 .andReturn();
 
@@ -62,14 +62,14 @@ public class RecommendControllerTest {
     @Test
     void Controller_레이어_장소_전체_조회_날짜순_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recommend/places"))
+                        .get("/recommendations"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void Controller_레이어_장소_단일_조회_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recommend/place")
+                        .get("/recommendation")
                         .param("placeId", "1")
                         .param("userId", "1"))
                 .andExpect(status().isOk());
@@ -78,7 +78,7 @@ public class RecommendControllerTest {
     @Test
     void Controller_레이어_좋아요_테스트() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/recommend/place/like")
+                        .put("/recommendation/like")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"userId\":\"1\", \"placeId\":\"1\"}"))
@@ -90,7 +90,7 @@ public class RecommendControllerTest {
         String jwtToken = "your_generated_jwt_token_here";
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/recommend/user/plan")
+                        .get("/recommendation/user/plan")
                         .param("target", "1")
                         .param("placeId", "1"))
                 .andExpect(status().is2xxSuccessful());

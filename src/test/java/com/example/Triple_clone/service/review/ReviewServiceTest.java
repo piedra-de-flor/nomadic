@@ -1,4 +1,3 @@
-/*
 package com.example.Triple_clone.service.review;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
@@ -27,7 +26,7 @@ public class ReviewServiceTest {
     void 리뷰_저장_테스트() {
         ReviewRepository mockRepository = mock(ReviewRepository.class);
         ReviewService reviewService = new ReviewService(mockRepository);
-        Review review = new Review(member, recommendation, "test", "test");
+        Review review = new Review(member, recommendation, "test");
 
         reviewService.save(review);
         verify(mockRepository, Mockito.times(1)).save(review);
@@ -38,4 +37,3 @@ public class ReviewServiceTest {
         assertEquals(review, reviewCaptor.getValue());
     }
 }
-*/
