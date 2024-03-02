@@ -7,6 +7,7 @@ import com.example.Triple_clone.repository.RecommendationRepository;
 import com.example.Triple_clone.service.support.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,12 @@ public class RecommendService {
         boolean likeOrNot = recommendation.isLikedBy(userId);
 
         return new RecommendReadDto(recommendation, likeOrNot);
+    }
+
+    public byte[] loadImageAsResource(Long recommendationId) {
+        Recommendation recommendation = findById(recommendationId);
+        String path = recommendation.getMainImage().getStoredFileName();
+        return fileManager.loadImageAsResource(path);
     }
 
     public Recommendation findById(long recommendationId) {

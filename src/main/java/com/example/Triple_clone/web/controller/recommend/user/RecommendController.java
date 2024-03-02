@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -25,7 +26,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @GetMapping("/recommend/places")
+    @GetMapping("/recommendations")
     public ResponseEntity<Page<RecommendReadDto>> readAllOrderBy(
             @Parameter(description = "원하는 정렬순 (날짜별, 이름별)", required = true)
             @RequestParam(required = false, defaultValue = "") String sort,
@@ -37,7 +38,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @GetMapping("/recommend/place")
+    @GetMapping("/recommendation")
     public ResponseEntity<RecommendReadDto> read(
             @Parameter(description = "추천 장소 단일 조회 요청 정보 (추천 장소 ID)", required = true)
             @RequestParam long placeId,
@@ -47,11 +48,25 @@ public class RecommendController {
         return ResponseEntity.ok(recommendReadDto);
     }
 
+    @Operation(summary = "추천 장소 이미지 조회", description = "기존 추천 장소의 이미지를 가져옵니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @GetMapping("/recommendation/image")
+    public ResponseEntity<byte[]> readImage(
+            @Parameter(description = "이미지를 가져올 추천 장소 ID", required = true)
+            @RequestParam long recommendationId) {
+        byte[] response = service.loadImageAsResource(recommendationId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(response);
+    }
+
     @Operation(summary = "추천 장소에 대한 좋아요", description = "기존 추천 장소에 좋아요 혹은 좋아요 취소를 합니다")
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PutMapping("/recommend/place/like")
+    @PutMapping("/recommendation/like")
     public ResponseEntity<RecommendLikeDto> like(
             @Parameter(description = "추천 장소 좋아요 요청 정보", required = true)
             @RequestBody RecommendLikeDto recommendLikeDto) {
@@ -63,7 +78,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @GetMapping("/recommend/user/plan")
+    @GetMapping("/recommendation/user/plan")
     public String redirectToPlanning(
             @Parameter(description = "타겟 계획 ID", required = true)
             @RequestParam long target,

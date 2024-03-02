@@ -21,24 +21,25 @@ public class AdminRecommendService {
     private final RecommendationRepository repository;
     private final FileManager fileManager;
 
-    public Recommendation createRecommendation(AdminRecommendCreateRecommendationDto createRecommendationRequestDto, MultipartFile image) {
+    public Recommendation createRecommendation(AdminRecommendCreateRecommendationDto createRecommendationRequestDto) {
         Recommendation recommendation = createRecommendationRequestDto.toEntity();
-        Image mainImage = fileManager.uploadImage(image);
-        recommendation.setImage(mainImage);
         repository.save(recommendation);
         return recommendation;
     }
 
     @Transactional
-    public Recommendation updateRecommendation(AdminRecommendUpdateRecommendationDto updateRecommendationRequestDto, MultipartFile image) {
+    public Long setMainImageOfRecommendation(Long recommendationId, MultipartFile image) {
+        Recommendation recommendation = repository.findById(recommendationId)
+                .orElseThrow(NoSuchElementException::new);
+        Image mainImage = fileManager.uploadImage(image);
+        recommendation.setImage(mainImage);
+        return recommendationId;
+    }
+
+    @Transactional
+    public Recommendation updateRecommendation(AdminRecommendUpdateRecommendationDto updateRecommendationRequestDto) {
         Recommendation recommendation = repository.findById(updateRecommendationRequestDto.placeId())
                 .orElseThrow(() -> new NoSuchElementException("no place entity for update"));
-
-        if (image != null) {
-            fileManager.deleteExistingImage(recommendation.getMainImage().getStoredFileName());
-            Image updateImage = fileManager.uploadImage(image);
-            recommendation.setImage(updateImage);
-        }
 
         recommendation.update(updateRecommendationRequestDto.title(),
                 updateRecommendationRequestDto.notionUrl(),
@@ -53,9 +54,8 @@ public class AdminRecommendService {
         Recommendation recommendation = repository.findById(recommendationId)
                 .orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
 
-        Image deleteTargetImage = recommendation.getMainImage();
-        fileManager.deleteExistingImage(deleteTargetImage.getStoredFileName());
         repository.delete(recommendation);
+        fileManager.deleteExistingImage(recommendation.getMainImage().getStoredFileName());
         return recommendationId;
     }
 }

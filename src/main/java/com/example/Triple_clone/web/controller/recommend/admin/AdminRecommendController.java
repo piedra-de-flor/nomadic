@@ -27,10 +27,24 @@ public class AdminRecommendController {
     @PostMapping("/admin/recommend")
     public ResponseEntity<Recommendation> createPlace(
             @Parameter(description = "추천 장소 생성 요청 정보", required = true)
-            @RequestBody @Validated AdminRecommendCreateRecommendationDto createPlaceRequestDto,
-            @RequestPart MultipartFile image) {
-        Recommendation createdRecommendation = service.createRecommendation(createPlaceRequestDto, image);
+            @RequestBody @Validated AdminRecommendCreateRecommendationDto createPlaceRequestDto) {
+        Recommendation createdRecommendation = service.createRecommendation(createPlaceRequestDto);
         return ResponseEntity.ok(createdRecommendation);
+    }
+
+    @Operation(summary = "추천 장소 이미지 추가", description = "추천 장소에 이미지를 추가합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
+    @PostMapping("/admin/recommend/image")
+    public ResponseEntity<Long> setMainImageOfRecommendation(
+            @Parameter(description = "이미지를 추가할 추천 장소 ID", required = true)
+            @RequestParam Long recommendationId,
+            @Parameter(description = "추가할 이미지", required = true)
+            @RequestPart MultipartFile image) {
+        Long response = service.setMainImageOfRecommendation(recommendationId, image);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "추천 장소 수정", description = "기존 추천 장소를 수정합니다")
@@ -41,9 +55,8 @@ public class AdminRecommendController {
     @PatchMapping("/admin/recommend")
     public ResponseEntity<Recommendation> updatePlace(
             @Parameter(description = "추천 장소 수정 요청 정보", required = true)
-            @RequestBody @Validated AdminRecommendUpdateRecommendationDto updatePlaceRequestDto,
-            @RequestPart MultipartFile image) {
-        Recommendation updatedRecommendation = service.updateRecommendation(updatePlaceRequestDto, image);
+            @RequestBody @Validated AdminRecommendUpdateRecommendationDto updatePlaceRequestDto) {
+        Recommendation updatedRecommendation = service.updateRecommendation(updatePlaceRequestDto);
         return ResponseEntity.ok(updatedRecommendation);
     }
 

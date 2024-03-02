@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
 @Service
 public class ReviewFacadeService {
@@ -22,17 +24,26 @@ public class ReviewFacadeService {
     private final FileManager fileManager;
 
     @Transactional
-    public void writeReview(RecommendWriteReviewDto writeReviewRequestDto, MultipartFile image) {
+    public void writeReview(RecommendWriteReviewDto writeReviewRequestDto) {
         Recommendation recommendation = recommendService.findById(writeReviewRequestDto.placeId());
         Member member = userService.findById(writeReviewRequestDto.userId());
         Review review = writeReviewRequestDto.toEntity(member, recommendation);
 
-        if (image != null) {
-            Image reviewImage = fileManager.uploadImage(image);
-            review.setImage(reviewImage);
-        }
-
         reviewService.save(review);
         recommendation.addReview(review);
+    }
+
+    @Transactional
+    public Long setImageOfReview(Long reviewId, MultipartFile image) {
+        Review review = reviewService.findById(reviewId);
+        Image reviewImage = fileManager.uploadImage(image);
+        review.setImage(reviewImage);
+        return reviewId;
+    }
+
+    public byte[] loadImageAsResource(Long reviewId) {
+        Review review = reviewService.findById(reviewId);
+        String path = review.getImage().getStoredFileName();
+        return fileManager.loadImageAsResource(path);
     }
 }

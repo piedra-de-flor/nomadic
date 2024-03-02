@@ -54,8 +54,7 @@ public class FileManager {
         return new Image(originName, storedImagePath);
     }
 
-    public void deleteExistingImage(String imageName) {
-        String imagePath = "c:\\images\\" + imageName;
+    public void deleteExistingImage(String imagePath) {
         File existingImage = new File(imagePath);
         if (existingImage.exists()) {
             existingImage.delete();
@@ -70,20 +69,23 @@ public class FileManager {
     }
 
     private String createDirPath(String changedName) {
-        return "c:\\images\\"+changedName;
+        return BASE_PATH + changedName;
     }
 
-    public Resource loadImageAsResource(String imageName) {
+    public byte[] loadImageAsResource(String imageName) {
         try {
-            Path imagePath = Paths.get(createDirPath(imageName)).resolve(imageName).normalize();
+            Path imagePath = Paths.get(imageName).resolve(imageName).normalize();
             Resource resource = new UrlResource(imagePath.toUri());
             if (resource.exists()) {
-                return resource;
+                byte[] imageBytes = Files.readAllBytes(imagePath);
+                return imageBytes;
             } else {
                 throw new FileNotFoundException();
             }
-        } catch (MalformedURLException | FileNotFoundException ex) {
-            throw new IllegalArgumentException("이미지를 찾을 수 없습니다.", ex);
+        } catch (MalformedURLException | FileNotFoundException e) {
+            throw new IllegalArgumentException("이미지를 찾을 수 없습니다.", e);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("이미지 처리하는 과정에서 오류가 발생하였습니다.", e);
         }
     }
 }
