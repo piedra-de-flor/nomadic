@@ -4,12 +4,14 @@ import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.repository.RecommendationRepository;
+import com.example.Triple_clone.service.support.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +25,7 @@ public class RecommendService {
     ConcurrentHashMap<Long, ConcurrentLinkedDeque<Long>> likes = new ConcurrentHashMap<>();
 
     private final RecommendationRepository recommendationRepository;
+    private final FileManager fileManager;
 
 
     @Transactional(readOnly = true)

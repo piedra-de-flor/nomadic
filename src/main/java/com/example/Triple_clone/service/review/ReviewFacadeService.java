@@ -27,8 +27,10 @@ public class ReviewFacadeService {
         Member member = userService.findById(writeReviewRequestDto.userId());
         Review review = writeReviewRequestDto.toEntity(member, recommendation);
 
-        Image reviewImage = fileManager.uploadImage(image);
-        review.setImage(reviewImage);
+        if (image != null) {
+            Image reviewImage = fileManager.uploadImage(image);
+            review.setImage(reviewImage);
+        }
 
         reviewService.save(review);
         recommendation.addReview(review);

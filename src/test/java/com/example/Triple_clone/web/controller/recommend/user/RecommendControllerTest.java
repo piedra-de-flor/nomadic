@@ -40,7 +40,7 @@ public class RecommendControllerTest {
     private Page<RecommendReadDto> placePage() {
         List<RecommendReadDto> placeList = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
-            placeList.add(new RecommendReadDto(i, "test" + i, "test", "test",  new Location(1D, 1D, "location"), "test", LocalDateTime.now(), true));
+            placeList.add(new RecommendReadDto(i, "test" + i, "test", "test",  new Location(1D, 1D, "location"), LocalDateTime.now(), true));
         }
 
         return new PageImpl<>(placeList);

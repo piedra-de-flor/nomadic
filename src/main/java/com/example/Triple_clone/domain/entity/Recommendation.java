@@ -70,14 +70,6 @@ public class Recommendation {
         reviews.add(review);
     }
 
-    public int getLikesNumber() {
-        return likes.size();
-    }
-
-    public int getReviewsNumber() {
-        return reviews.size();
-    }
-
     public String setImage(Image image) {
         this.mainImage = image;
         return image.getStoredFileName();

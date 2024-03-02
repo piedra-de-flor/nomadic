@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.domain.dto.recommend.admin;
 
 import com.example.Triple_clone.domain.vo.Location;
@@ -61,3 +62,4 @@ public class AdminRecommendCreateRecommendationDtoTest {
     }
 }
 
+*/

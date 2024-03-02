@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.domain.entity;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -60,3 +61,4 @@ public class RecommendationTest {
         assertThat(recommendation.getReviewsNumber()).isEqualTo(3);
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.service.review;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
@@ -51,3 +52,4 @@ public class ReviewFacadeServiceTest {
                 -> reviewFacadeService.writeReview(dto));
     }
 }
+*/

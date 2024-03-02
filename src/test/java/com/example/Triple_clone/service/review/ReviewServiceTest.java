@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.service.review;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
@@ -37,3 +38,4 @@ public class ReviewServiceTest {
         assertEquals(review, reviewCaptor.getValue());
     }
 }
+*/

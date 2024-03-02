@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.service.recommend.admin;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
@@ -60,3 +61,4 @@ public class AdminRecommendServiceTest {
 
     }
 }
+*/

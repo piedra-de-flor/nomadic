@@ -29,7 +29,7 @@ public class ReviewController {
     public ResponseEntity<RecommendWriteReviewDto> writeReview(
             @Parameter(description = "추천 장소에 대한 리뷰 생성 정보", required = true)
             @RequestBody @Validated RecommendWriteReviewDto writeReviewRequestDto,
-            @RequestPart MultipartFile image) {
+            @RequestPart(value="image", required = false) MultipartFile image) {
         service.writeReview(writeReviewRequestDto, image);
         return ResponseEntity.ok(writeReviewRequestDto);
     }
