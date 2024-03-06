@@ -1,25 +1,19 @@
-package com.example.Triple_clone.service.planning;
+package com.example.Triple_clone.service.recommend.user;
 
 import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
-import com.example.Triple_clone.dto.yanolja.YanoljaDto;
-import com.example.Triple_clone.service.support.FileManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ReservationService {
     private final EntityManager entityManager;
-    private final FileManager fileManager;
     public List<DetailPlanDto> findAllMyReservation(long userId) {
         String sql = "SELECT dp.* FROM detail_plan dp " +
                 "JOIN plan p ON dp.plan_id = p.id " +
@@ -35,21 +29,5 @@ public class ReservationService {
         }
 
         return response;
-    }
-
-    public List<YanoljaDto> findAllAccommodationsSortByPrice(String local) {
-        return fileManager.readHotelsFromFile(local);
-    }
-
-    public List<YanoljaDto> findAllAccommodations(String local) {
-        return fileManager.readHotelsFromFile(local);
-    }
-
-    private Map<String, Long> convertListToMap(List<Map.Entry<String, Long>> sortedList) {
-        Map<String, Long> sortedMap = new HashMap<>();
-        for (Map.Entry<String, Long> entry : sortedList) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedMap;
     }
 }

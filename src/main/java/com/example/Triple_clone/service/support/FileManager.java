@@ -1,7 +1,7 @@
 package com.example.Triple_clone.service.support;
 
 import com.example.Triple_clone.domain.vo.Image;
-import com.example.Triple_clone.dto.yanolja.YanoljaDto;
+import com.example.Triple_clone.dto.accommodation.AccommodationDto;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ import java.util.*;
 public class FileManager {
     private static final String BASE_PATH = "C:\\Users\\USER\\Desktop\\공부\\";
 
-    public List<YanoljaDto> readHotelsFromFile(String filePath) {
-        List<YanoljaDto> hotelList = new ArrayList<>();
+    public List<AccommodationDto> readHotelsFromFile(String filePath) {
+        List<AccommodationDto> hotelList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(BASE_PATH + filePath + ".txt"))) {
             Queue<String> datas = new LinkedList<>();
             String line;
@@ -29,8 +29,8 @@ public class FileManager {
                     datas.add(line);
                 } else {
                     if (!datas.isEmpty()) {
-                        YanoljaDto yanoljaDto = parseData(datas);
-                        hotelList.add(yanoljaDto);
+                        AccommodationDto accommodationDto = parseData(datas, filePath);
+                        hotelList.add(accommodationDto);
                         datas.clear();
                     }
                 }
@@ -41,7 +41,7 @@ public class FileManager {
         return hotelList;
     }
 
-    private YanoljaDto parseData(Queue<String> datas) {
+    private AccommodationDto parseData(Queue<String> datas, String local) {
         int dataSize = datas.size();
         int lentTime = 0;
         long lentPrice = 0;
@@ -68,7 +68,7 @@ public class FileManager {
                 enterTime = enterTime.substring(2, 7);
             }
 
-            return new YanoljaDto(name, score, category, lentTime, lentPrice, lentStatus, enterTime, discountRate, originPrice, totalPrice);
+            return new AccommodationDto(local, name, score, category, lentTime, lentPrice, lentStatus, enterTime, discountRate, originPrice, totalPrice);
         } else {
             String name = datas.poll();
             double score = Double.parseDouble(datas.poll());
@@ -99,7 +99,7 @@ public class FileManager {
                 lentPrice = Long.parseLong(lentStatusData.replace(",", ""));
                 lentStatus = true;
             }
-            return new YanoljaDto(name, score, category, lentTime, lentPrice, lentStatus, enterTime, discountRate, originPrice, totalPrice);
+            return new AccommodationDto(local, name, score, category, lentTime, lentPrice, lentStatus, enterTime, discountRate, originPrice, totalPrice);
         }
     }
 
