@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class PlanTest {
     @Mock
-    User user;
+    Member member;
 
     @Test
     void 계획_파트너_선택_성공_테스트() {
@@ -51,10 +51,10 @@ public class PlanTest {
 
     @Test
     void 회원의_계획_소유_여부_검증_성공_테스트() {
-        when(user.getId()).thenReturn(1L);
+        when(member.getId()).thenReturn(1L);
         Plan plan = Plan.builder()
                 .place("test")
-                .user(user)
+                .member(member)
                 .partner(null)
                 .styles(null)
                 .startDay(new Date())
@@ -66,10 +66,10 @@ public class PlanTest {
 
     @Test
     void 회원의_계획_소유_여부_검증_실패_테스트() {
-        when(user.getId()).thenReturn(1L);
+        when(member.getId()).thenReturn(1L);
         Plan plan = Plan.builder()
                 .place("test")
-                .user(user)
+                .member(member)
                 .partner(null)
                 .styles(null)
                 .startDay(new Date())

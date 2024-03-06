@@ -1,7 +1,5 @@
 package com.example.Triple_clone.domain.dto.recommend.user;
 
-import com.example.Triple_clone.domain.entity.Place;
-import com.example.Triple_clone.domain.entity.User;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -25,7 +23,7 @@ public class RecommendWriteReviewDtoTest {
     @Test
     void 리뷰_작성_DTO_유효성_성공() {
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(
-                1L, 1L, "test content", "image");
+                1L, 1L, "test content");
 
         Set<ConstraintViolation<RecommendWriteReviewDto>> violations = validator.validate(dto);
         assertThat(violations).isEmpty();
@@ -34,7 +32,7 @@ public class RecommendWriteReviewDtoTest {
     @Test
     void 리뷰_작성_DTO_유효성_실패_내용_null() {
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(
-                1L, 1L, null, "image");
+                1L, 1L, null);
 
         Set<ConstraintViolation<RecommendWriteReviewDto>> violations = validator.validate(dto);
         assertThat(violations).hasSize(1);
@@ -50,7 +48,7 @@ public class RecommendWriteReviewDtoTest {
         }
 
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(
-                1L, 1L, String.valueOf(overContent), "image");
+                1L, 1L, String.valueOf(overContent));
 
         Set<ConstraintViolation<RecommendWriteReviewDto>> violations = validator.validate(dto);
         assertThat(violations).hasSize(1);

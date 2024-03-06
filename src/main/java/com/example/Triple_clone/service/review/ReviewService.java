@@ -5,6 +5,8 @@ import com.example.Triple_clone.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
 @Service
 public class ReviewService {
@@ -12,5 +14,10 @@ public class ReviewService {
 
     public void save(Review review) {
         repository.save(review);
+    }
+
+    public Review findById(Long reviewId) {
+        return repository.findById(reviewId)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

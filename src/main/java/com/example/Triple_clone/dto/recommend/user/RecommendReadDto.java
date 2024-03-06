@@ -1,6 +1,8 @@
 package com.example.Triple_clone.dto.recommend.user;
 
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
+import com.example.Triple_clone.domain.vo.Location;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -9,12 +11,11 @@ public record RecommendReadDto(
     String title,
     String notionUrl,
     String subTitle,
-    String location,
-    String mainImage,
+    Location location,
     LocalDateTime date,
     boolean like) {
 
-    public RecommendReadDto(Place place, boolean like) {
-        this(place.getId(), place.getTitle(), place.getNotionUrl(), place.getSubTitle(), place.getLocation(), place.getMainImage(), place.getDate(), like);
+    public RecommendReadDto(Recommendation recommendation, boolean like) {
+        this(recommendation.getId(), recommendation.getTitle(), recommendation.getNotionUrl(), recommendation.getSubTitle(), recommendation.getLocation(), recommendation.getDate(), like);
     }
 }

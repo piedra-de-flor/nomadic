@@ -1,24 +1,24 @@
 package com.example.Triple_clone.dto.recommend.admin;
 
-import com.example.Triple_clone.domain.entity.Place;
+import com.example.Triple_clone.domain.entity.Recommendation;
+import com.example.Triple_clone.domain.vo.Location;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public record AdminRecommendCreatePlaceDto(
+public record AdminRecommendCreateRecommendationDto(
         @NotBlank(message = "Title can not be null")
         String title,
         @NotBlank(message = "Notion URL can not be null")
         String notionUrl,
         String subTitle,
-        @NotBlank(message = "Location can not be null")
-        String location,
-        String mainImage) {
-    public Place toEntity() {
-        return Place.builder()
+        @NotNull(message = "Location can not be null")
+        Location location) {
+    public Recommendation toEntity() {
+        return Recommendation.builder()
                 .location(location)
                 .notionUrl(notionUrl)
                 .subTitle(subTitle)
                 .title(title)
-                .mainImage(mainImage)
                 .build();
     }
 }

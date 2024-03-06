@@ -1,13 +1,16 @@
 package com.example.Triple_clone.service.recommend.admin;
 
-import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreatePlaceDto;
-import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdatePlaceDto;
-import com.example.Triple_clone.domain.entity.Place;
-import com.example.Triple_clone.repository.PlaceRepository;
+import com.example.Triple_clone.domain.vo.Image;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendCreateRecommendationDto;
+import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.entity.Recommendation;
+import com.example.Triple_clone.repository.RecommendationRepository;
+import com.example.Triple_clone.service.support.FileManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.NoSuchElementException;
 
@@ -15,34 +18,44 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class AdminRecommendService {
-    private final PlaceRepository repository;
+    private final RecommendationRepository repository;
+    private final FileManager fileManager;
 
-    public Place createPlace(AdminRecommendCreatePlaceDto createPlaceRequestDto) {
-        Place place = createPlaceRequestDto.toEntity();
-        repository.save(place);
-        return place;
+    public Recommendation createRecommendation(AdminRecommendCreateRecommendationDto createRecommendationRequestDto) {
+        Recommendation recommendation = createRecommendationRequestDto.toEntity();
+        repository.save(recommendation);
+        return recommendation;
     }
 
     @Transactional
-    public Place updatePlace(AdminRecommendUpdatePlaceDto updatePlaceRequestDto) {
-        Place place = repository.findById(updatePlaceRequestDto.placeId())
+    public Long setMainImageOfRecommendation(Long recommendationId, MultipartFile image) {
+        Recommendation recommendation = repository.findById(recommendationId)
+                .orElseThrow(NoSuchElementException::new);
+        Image mainImage = fileManager.uploadImage(image);
+        recommendation.setImage(mainImage);
+        return recommendationId;
+    }
+
+    @Transactional
+    public Recommendation updateRecommendation(AdminRecommendUpdateRecommendationDto updateRecommendationRequestDto) {
+        Recommendation recommendation = repository.findById(updateRecommendationRequestDto.placeId())
                 .orElseThrow(() -> new NoSuchElementException("no place entity for update"));
 
-        place.update(updatePlaceRequestDto.title(),
-                updatePlaceRequestDto.notionUrl(),
-                updatePlaceRequestDto.subTitle(),
-                updatePlaceRequestDto.location(),
-                updatePlaceRequestDto.mainImage());
+        recommendation.update(updateRecommendationRequestDto.title(),
+                updateRecommendationRequestDto.notionUrl(),
+                updateRecommendationRequestDto.subTitle(),
+                updateRecommendationRequestDto.location());
 
-        return place;
+        return recommendation;
     }
 
     @Transactional
-    public long deletePlace(Long placeId) {
-        Place place = repository.findById(placeId)
+    public long deleteRecommendation(Long recommendationId) {
+        Recommendation recommendation = repository.findById(recommendationId)
                 .orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
 
-        repository.delete(place);
-        return placeId;
+        repository.delete(recommendation);
+        fileManager.deleteExistingImage(recommendation.getMainImage().getStoredFileName());
+        return recommendationId;
     }
 }
