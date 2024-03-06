@@ -1,6 +1,7 @@
 package com.example.Triple_clone.web.controller.reservation;
 
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
+import com.example.Triple_clone.dto.yanolja.YanoljaDto;
 import com.example.Triple_clone.service.planning.ReservationService;
 import com.example.Triple_clone.service.support.FileManager;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ public class ReservationController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @GetMapping("/reservations")
-    public ResponseEntity<Map<String, Long>> readAll(
+    public ResponseEntity<List<YanoljaDto>> readAll(
             @Parameter(description = "원하는 지역 이름", required = true)
             @RequestParam String local) {
         return ResponseEntity.ok(reservationService.findAllAccommodations(local));
@@ -38,7 +39,7 @@ public class ReservationController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @GetMapping("/reservations/price")
-    public ResponseEntity<Map<String, Long>> readAllOrderByPrice(
+    public ResponseEntity<List<YanoljaDto>> readAllOrderByPrice(
             @Parameter(description = "원하는 지역 이름", required = true)
             @RequestParam String local) {
         return ResponseEntity.ok(reservationService.findAllAccommodationsSortByPrice(local));

@@ -2,6 +2,7 @@ package com.example.Triple_clone.service.planning;
 
 import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
+import com.example.Triple_clone.dto.yanolja.YanoljaDto;
 import com.example.Triple_clone.service.support.FileManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -36,14 +37,11 @@ public class ReservationService {
         return response;
     }
 
-    public Map<String, Long> findAllAccommodationsSortByPrice(String local) {
-        return convertListToMap(fileManager.readHotelsFromFile(local)
-                .entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .collect(Collectors.toList()));
+    public List<YanoljaDto> findAllAccommodationsSortByPrice(String local) {
+        return fileManager.readHotelsFromFile(local);
     }
 
-    public Map<String, Long> findAllAccommodations(String local) {
+    public List<YanoljaDto> findAllAccommodations(String local) {
         return fileManager.readHotelsFromFile(local);
     }
 

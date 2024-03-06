@@ -1,6 +1,7 @@
 package com.example.Triple_clone.service.support;
 
 import com.example.Triple_clone.domain.vo.Image;
+import com.example.Triple_clone.dto.yanolja.YanoljaDto;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -18,26 +19,88 @@ import java.util.*;
 public class FileManager {
     private static final String BASE_PATH = "C:\\Users\\USER\\Desktop\\공부\\";
 
-    public Map<String, Long> readHotelsFromFile(String filePath) {
-        Map<String, Long> hotelMap = new HashMap<>();
+    public List<YanoljaDto> readHotelsFromFile(String filePath) {
+        List<YanoljaDto> hotelList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(BASE_PATH + filePath + ".txt"))) {
-            String hotelName = null;
-            long price = 0;
+            Queue<String> datas = new LinkedList<>();
             String line;
-
             while ((line = br.readLine()) != null) {
-                if (hotelName == null) {
-                    hotelName = line;
+                if (!line.isEmpty()) {
+                    datas.add(line);
                 } else {
-                    price = Long.parseLong(line);
-                    hotelMap.put(hotelName, price);
-                    hotelName = null;
+                    if (!datas.isEmpty()) {
+                        YanoljaDto yanoljaDto = parseData(datas);
+                        hotelList.add(yanoljaDto);
+                        datas.clear();
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return hotelMap;
+        return hotelList;
+    }
+
+    private YanoljaDto parseData(Queue<String> datas) {
+        int dataSize = datas.size();
+        int lentTime = 0;
+        long lentPrice = 0;
+        long discountRate = 0;
+        long originPrice = 0;
+
+        if (dataSize < 6) {
+            String name = datas.poll();
+            double score = Double.parseDouble(datas.poll());
+            String category = datas.poll();
+            boolean lentStatus = false;
+            String enterTime = datas.poll();
+            long totalPrice = Long.parseLong(datas.poll().replace(",", ""));
+
+            if (enterTime.length() > 10) {
+                String discountData = enterTime.substring(8);
+                enterTime = enterTime.substring(2, 7);
+                String[] discountDatas = discountData.split("%");
+
+                discountRate = Long.parseLong(discountDatas[0]);
+                String[] discountPrices = discountDatas[1].split(",");
+                originPrice = Long.parseLong(discountPrices[0] + discountPrices[1]);
+            } else {
+                enterTime = enterTime.substring(2, 7);
+            }
+
+            return new YanoljaDto(name, score, category, lentTime, lentPrice, lentStatus, enterTime, discountRate, originPrice, totalPrice);
+        } else {
+            String name = datas.poll();
+            double score = Double.parseDouble(datas.poll());
+            String category = datas.poll();
+            String lentData = datas.poll();
+            String lentStatusData = datas.poll();
+            boolean lentStatus = false;
+            String enterTime = datas.poll();
+            long totalPrice = Long.parseLong(datas.poll().replace(",", ""));
+
+            if (enterTime.length() > 10) {
+                String discountData = enterTime.substring(8);
+                enterTime = enterTime.substring(2, 7);
+                String[] discountDatas = discountData.split("%");
+
+                discountRate = Long.parseLong(discountDatas[0]);
+                String[] discountPrices = discountDatas[1].split(",");
+                originPrice = Long.parseLong(discountPrices[0] + discountPrices[1]);
+            } else {
+                enterTime = enterTime.substring(2, 7);
+            }
+
+            if (lentData.length() > 6) {
+                String lentPriceOfString = lentData.split(" ")[1].replace(",", "").replace("원", "");
+                lentPrice = Long.parseLong(lentPriceOfString);
+            } else {
+                lentTime = Integer.parseInt(lentData.replace("대실", "").replace("시간", ""));
+                lentPrice = Long.parseLong(lentStatusData.replace(",", ""));
+                lentStatus = true;
+            }
+            return new YanoljaDto(name, score, category, lentTime, lentPrice, lentStatus, enterTime, discountRate, originPrice, totalPrice);
+        }
     }
 
     public Image uploadImage(MultipartFile image) {
