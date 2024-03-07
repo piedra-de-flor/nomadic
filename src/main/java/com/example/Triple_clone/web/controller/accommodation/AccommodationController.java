@@ -24,8 +24,28 @@ public class AccommodationController {
     @GetMapping("/accommodations")
     public ResponseEntity<List<AccommodationDto>> readAll(
             @Parameter(description = "원하는 지역 이름", required = true)
-            @RequestParam String local) {
-        return ResponseEntity.ok(service.readAll(local));
+            @RequestParam String local,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String startLentPrice,
+            @RequestParam(required = false) String endLentPrice,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String score,
+            @RequestParam(required = false) String lentStatus,
+            @RequestParam(required = false) String enterTime,
+            @RequestParam(required = false) String discountRate,
+            @RequestParam(required = false) String startTotalPrice,
+            @RequestParam(required = false) String endTotalPrice) {
+        return ResponseEntity.ok(service.readAll(local,
+                name,
+                startLentPrice,
+                endLentPrice,
+                category,
+                score,
+                lentStatus,
+                enterTime,
+                discountRate,
+                startTotalPrice,
+                endTotalPrice));
     }
 
   @Operation(summary = "숙소 리스트 전체 저장", description = "지역별에 맞는 숙소를 text 파일에서 읽어 저장합니다.")

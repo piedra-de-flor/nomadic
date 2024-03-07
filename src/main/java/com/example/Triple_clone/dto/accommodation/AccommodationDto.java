@@ -40,7 +40,7 @@ public record AccommodationDto(
                 accommodation.getLentTime(),
                 accommodation.getLentPrice(),
                 accommodation.isLentStatus(),
-                accommodation.getEnterTime(),
+                String.valueOf(accommodation.getEnterTime()),
                 accommodation.getDiscountRate(),
                 accommodation.getOriginPrice(),
                 accommodation.getTotalPrice()

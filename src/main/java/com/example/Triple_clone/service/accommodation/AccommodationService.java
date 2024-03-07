@@ -27,8 +27,20 @@ public class AccommodationService {
         return response;
     }
 
-    public List<AccommodationDto> readAll(String local) {
-        List<Accommodation> accommodations = repository.readAllByLocal(local);
+    public List<AccommodationDto> readAll(String local,
+                                          String name,
+                                          String startLentPrice,
+                                          String endLentPrice,
+                                          String category,
+                                          String score,
+                                          String lentStatus,
+                                          String enterTime,
+                                          String discountRate,
+                                          String startTotalPrice,
+                                          String endTotalPrice) {
+
+        List<Accommodation> accommodations = repository.findAllByConditions(local, name, startLentPrice, endLentPrice,
+                category, score, lentStatus, enterTime, discountRate, startTotalPrice, endTotalPrice);
         List<AccommodationDto> response = new ArrayList<>();
 
         for (Accommodation accommodation : accommodations) {
