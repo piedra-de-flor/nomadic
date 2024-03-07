@@ -34,15 +34,23 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
         return jpaQueryFactory
                 .selectFrom(accommodation)
                 .where(stringEq(QueryDslStringConditions.LOCAL.name(), local),
-                        stringEq(QueryDslStringConditions.NAME.name(), name),
+                        stringIn(QueryDslStringConditions.NAME.name(), name),
                         priceEq(startLentPrice, endLentPrice, QueryDslPriceConditions.LENT.name()),
-                        stringEq(QueryDslStringConditions.CATEGORY.name(), category),
-                        scoreEq(score),
+                        stringIn(QueryDslStringConditions.CATEGORY.name(), category),
+                        scoreGoe(score),
                         lentStatusEq(lentStatus),
-                        enterTimeEq(enterTime),
-                        discountRateEq(discountRate),
+                        enterTimeGoe(enterTime),
+                        discountRateGoe(discountRate),
                         priceEq(startTotalPrice, endTotalPrice, QueryDslPriceConditions.LODGE.name()))
                 .fetch();
+    }
+
+    private BooleanExpression stringIn(String conditionType, String condition) {
+        if (condition == null) {
+            return null;
+        }
+        QueryDslStringConditions conditions = QueryDslStringConditions.valueOf(conditionType);
+        return conditions.getCondition().in(condition);
     }
 
     private BooleanExpression stringEq(String conditionType, String condition) {
@@ -69,7 +77,7 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
         }
     }
 
-    private BooleanExpression scoreEq(String scoreCondition) {
+    private BooleanExpression scoreGoe(String scoreCondition) {
         if (scoreCondition == null) {
             return null;
         }
@@ -85,7 +93,7 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
         return accommodation.lentStatus.eq(status);
     }
 
-    private BooleanExpression enterTimeEq(String enterTimeCondition) {
+    private BooleanExpression enterTimeGoe(String enterTimeCondition) {
         if (enterTimeCondition == null) {
             return null;
         }
@@ -93,7 +101,7 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
         return accommodation.enterTime.goe(time);
     }
 
-    private BooleanExpression discountRateEq(String discountRateCondition) {
+    private BooleanExpression discountRateGoe(String discountRateCondition) {
         if (discountRateCondition == null) {
             return null;
         }
