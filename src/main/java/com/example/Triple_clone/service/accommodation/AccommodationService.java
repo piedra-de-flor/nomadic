@@ -1,10 +1,15 @@
 package com.example.Triple_clone.service.accommodation;
 
 import com.example.Triple_clone.domain.entity.Accommodation;
+import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import com.example.Triple_clone.dto.accommodation.AccommodationDto;
 import com.example.Triple_clone.repository.AccommodationRepository;
 import com.example.Triple_clone.service.support.FileManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +21,7 @@ import java.util.List;
 public class AccommodationService {
     private final AccommodationRepository repository;
     private final FileManager fileManager;
+    private final static int PAGE_SIZE = 5;
 
     @Transactional
     public List<AccommodationDto> saveAllAccommodations(String local) {
@@ -27,6 +33,7 @@ public class AccommodationService {
         return response;
     }
 
+    @Transactional(readOnly = true)
     public List<AccommodationDto> readAll(String local,
                                           String name,
                                           String startLentPrice,
@@ -37,13 +44,16 @@ public class AccommodationService {
                                           String enterTime,
                                           String discountRate,
                                           String startTotalPrice,
-                                          String endTotalPrice) {
-
-        List<Accommodation> accommodations = repository.findAllByConditions(local, name, startLentPrice, endLentPrice,
-                category, score, lentStatus, enterTime, discountRate, startTotalPrice, endTotalPrice);
+                                          String endTotalPrice,
+                                          Pageable pageable) {
+        Page<Accommodation> accommodationPage;
+        Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.unsorted());
         List<AccommodationDto> response = new ArrayList<>();
 
-        for (Accommodation accommodation : accommodations) {
+        accommodationPage =repository.findAllByConditions(local, name, startLentPrice, endLentPrice,
+                category, score, lentStatus, enterTime, discountRate, startTotalPrice, endTotalPrice, customPageable);
+
+        for (Accommodation accommodation : accommodationPage) {
             AccommodationDto dto = new AccommodationDto(accommodation);
             response.add(dto);
         }

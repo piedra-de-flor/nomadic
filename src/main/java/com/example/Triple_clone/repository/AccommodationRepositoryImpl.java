@@ -4,9 +4,14 @@ import com.example.Triple_clone.domain.entity.Accommodation;
 import com.example.Triple_clone.domain.vo.LentStatus;
 import com.example.Triple_clone.domain.vo.QueryDslPriceConditions;
 import com.example.Triple_clone.domain.vo.QueryDslStringConditions;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;
@@ -20,7 +25,7 @@ import static com.example.Triple_clone.domain.entity.QAccommodation.accommodatio
 public class AccommodationRepositoryImpl implements CustomAccommodationRepository{
     private final JPAQueryFactory jpaQueryFactory;
     @Override
-    public List<Accommodation> findAllByConditions(String local,
+    public Page<Accommodation> findAllByConditions(String local,
                                                    String name,
                                                    String startLentPrice,
                                                    String endLentPrice,
@@ -30,8 +35,9 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
                                                    String enterTime,
                                                    String discountRate,
                                                    String startTotalPrice,
-                                                   String endTotalPrice) {
-        return jpaQueryFactory
+                                                   String endTotalPrice,
+                                                   Pageable pageable) {
+        JPAQuery<Accommodation> query = jpaQueryFactory
                 .selectFrom(accommodation)
                 .where(stringEq(QueryDslStringConditions.LOCAL.name(), local),
                         stringIn(QueryDslStringConditions.NAME.name(), name),
@@ -41,8 +47,28 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
                         lentStatusEq(lentStatus),
                         enterTimeGoe(enterTime),
                         discountRateGoe(discountRate),
-                        priceEq(startTotalPrice, endTotalPrice, QueryDslPriceConditions.LODGE.name()))
+                        priceEq(startTotalPrice, endTotalPrice, QueryDslPriceConditions.LODGE.name()));
+
+        List<Accommodation> content = query.offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        JPAQuery<Long> countQuery = jpaQueryFactory
+                .select(accommodation.count())
+                .from(accommodation)
+                .where(stringEq(QueryDslStringConditions.LOCAL.name(), local),
+                        stringIn(QueryDslStringConditions.NAME.name(), name),
+                        priceEq(startLentPrice, endLentPrice, QueryDslPriceConditions.LENT.name()),
+                        stringIn(QueryDslStringConditions.CATEGORY.name(), category),
+                        scoreGoe(score),
+                        lentStatusEq(lentStatus),
+                        enterTimeGoe(enterTime),
+                        discountRateGoe(discountRate),
+                        priceEq(startTotalPrice, endTotalPrice, QueryDslPriceConditions.LODGE.name()));
+
+        long total = countQuery.fetchOne();
+
+        return PageableExecutionUtils.getPage(content, pageable, () -> total);
     }
 
     private BooleanExpression stringIn(String conditionType, String condition) {

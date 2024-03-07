@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,8 @@ public class AccommodationController {
             @RequestParam(required = false) String enterTime,
             @RequestParam(required = false) String discountRate,
             @RequestParam(required = false) String startTotalPrice,
-            @RequestParam(required = false) String endTotalPrice) {
+            @RequestParam(required = false) String endTotalPrice,
+            Pageable pageable) {
         return ResponseEntity.ok(service.readAll(local,
                 name,
                 startLentPrice,
@@ -45,7 +47,8 @@ public class AccommodationController {
                 enterTime,
                 discountRate,
                 startTotalPrice,
-                endTotalPrice));
+                endTotalPrice,
+                pageable));
     }
 
   @Operation(summary = "숙소 리스트 전체 저장", description = "지역별에 맞는 숙소를 text 파일에서 읽어 저장합니다.")
