@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -59,5 +60,10 @@ public class AccommodationService {
         }
 
         return response;
+    }
+
+    public Accommodation findById(long id) {
+        return repository.findById(id)
+                .orElseThrow(NoSuchElementException::new);
     }
 }
