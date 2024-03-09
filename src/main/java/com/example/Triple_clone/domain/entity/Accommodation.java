@@ -39,7 +39,10 @@ public class Accommodation {
         this.lentTime = lentTime;
         this.lentPrice = lentPrice;
         this.lentStatus = lentStatus;
-        this.enterTime = LocalTime.parse(enterTime, DateTimeFormatter.ofPattern("HH:mm"));
+        this.enterTime = null;
+        if (enterTime != null) {
+            this.enterTime = LocalTime.parse(enterTime, DateTimeFormatter.ofPattern("HH:mm"));
+        }
         this.discountRate = discountRate;
         this.originPrice = originPrice;
         this.totalPrice = totalPrice;

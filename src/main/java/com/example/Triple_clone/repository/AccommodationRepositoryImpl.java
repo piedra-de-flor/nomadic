@@ -4,7 +4,6 @@ import com.example.Triple_clone.domain.entity.Accommodation;
 import com.example.Triple_clone.domain.vo.LentStatus;
 import com.example.Triple_clone.domain.vo.QueryDslPriceConditions;
 import com.example.Triple_clone.domain.vo.QueryDslStringConditions;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

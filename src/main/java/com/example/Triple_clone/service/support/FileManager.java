@@ -43,20 +43,31 @@ public class FileManager {
 
     private AccommodationDto parseData(Queue<String> datas, String local) {
         int dataSize = datas.size();
+        String name = null;
+        double score = 0.0;
+        String category = null;
         int lentTime = 0;
         long lentPrice = 0;
         long discountRate = 0;
         long originPrice = 0;
+        long totalPrice = 0;
+        boolean lentStatus = false;
+        String enterTime = null;
+
+        name = datas.poll();
+        System.out.println(name);
+        String temp = datas.poll();
+
+        if (temp.contains(".")) {
+            score = Double.parseDouble(temp);
+            category = datas.poll();
+        } else {
+            category = temp;
+        }
 
         if (dataSize < 6) {
-            String name = datas.poll();
-            double score = Double.parseDouble(datas.poll());
-            String category = datas.poll();
-            boolean lentStatus = false;
-            String enterTime = datas.poll();
-            long totalPrice = Long.parseLong(datas.poll().replace(",", ""));
-
-            if (enterTime.length() > 10) {
+            if (datas.peek().length() > 10 && datas.peek().contains("%")) {
+                enterTime = datas.poll();
                 String discountData = enterTime.substring(8);
                 enterTime = enterTime.substring(2, 7);
                 String[] discountDatas = discountData.split("%");
@@ -64,22 +75,28 @@ public class FileManager {
                 discountRate = Long.parseLong(discountDatas[0]);
                 String[] discountPrices = discountDatas[1].split(",");
                 originPrice = Long.parseLong(discountPrices[0] + discountPrices[1]);
-            } else {
+            } else if (datas.peek().length() > 10 && !datas.peek().contains("%")) {
+                String origin = datas.poll();
+                String[] discountPrices = origin.split(" ")[1].split(",");
+                discountPrices[1] = discountPrices[1].replace("원", "");
+                originPrice = Long.parseLong(discountPrices[0] + discountPrices[1]);
+            } else if (datas.peek().length() > 2 && datas.peek().length() <= 10 && !datas.peek().contains("문의")){
+                enterTime = datas.poll();
                 enterTime = enterTime.substring(2, 7);
+            } else {
+                datas.poll();
+            }
+            if (!datas.peek().equals("예약마감")) {
+                totalPrice = Long.parseLong(datas.poll().replace(",", ""));
             }
 
             return new AccommodationDto(local, name, score, category, lentTime, lentPrice, lentStatus, enterTime, discountRate, originPrice, totalPrice);
         } else {
-            String name = datas.poll();
-            double score = Double.parseDouble(datas.poll());
-            String category = datas.poll();
             String lentData = datas.poll();
             String lentStatusData = datas.poll();
-            boolean lentStatus = false;
-            String enterTime = datas.poll();
-            long totalPrice = Long.parseLong(datas.poll().replace(",", ""));
 
-            if (enterTime.length() > 10) {
+            if (datas.peek().length() > 10 && datas.peek().contains("%")) {
+                enterTime = datas.poll();
                 String discountData = enterTime.substring(8);
                 enterTime = enterTime.substring(2, 7);
                 String[] discountDatas = discountData.split("%");
@@ -87,13 +104,29 @@ public class FileManager {
                 discountRate = Long.parseLong(discountDatas[0]);
                 String[] discountPrices = discountDatas[1].split(",");
                 originPrice = Long.parseLong(discountPrices[0] + discountPrices[1]);
-            } else {
+
+            } else if (datas.peek().length() > 10 && !datas.peek().contains("%")) {
+                String origin = datas.poll();
+                String[] discountPrices = origin.split(" ")[1].split(",");
+                discountPrices[1] = discountPrices[1].replace("원", "");
+                originPrice = Long.parseLong(discountPrices[0] + discountPrices[1]);
+
+            } else if (datas.peek().length() > 2 && datas.peek().length() <= 10 && !datas.peek().contains("문의")){
+                enterTime = datas.poll();
                 enterTime = enterTime.substring(2, 7);
+            } else {
+                datas.poll();
+            }
+
+            if (!datas.peek().equals("예약마감")) {
+                totalPrice = Long.parseLong(datas.poll().replace(",", ""));
             }
 
             if (lentData.length() > 6) {
                 String lentPriceOfString = lentData.split(" ")[1].replace(",", "").replace("원", "");
-                lentPrice = Long.parseLong(lentPriceOfString);
+                if (!lentPriceOfString.equals("문의")) {
+                    lentPrice = Long.parseLong(lentPriceOfString);
+                }
             } else {
                 lentTime = Integer.parseInt(lentData.replace("대실", "").replace("시간", ""));
                 lentPrice = Long.parseLong(lentStatusData.replace(",", ""));
