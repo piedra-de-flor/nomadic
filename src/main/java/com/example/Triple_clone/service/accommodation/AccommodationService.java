@@ -1,7 +1,6 @@
 package com.example.Triple_clone.service.accommodation;
 
 import com.example.Triple_clone.domain.entity.Accommodation;
-import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import com.example.Triple_clone.dto.accommodation.AccommodationDto;
 import com.example.Triple_clone.repository.AccommodationRepository;
 import com.example.Triple_clone.service.support.FileManager;
@@ -21,12 +20,12 @@ import java.util.NoSuchElementException;
 @Service
 public class AccommodationService {
     private final AccommodationRepository repository;
-    private final FileManager fileManager;
+    private final AccommodationDataParsingService parsingService;
     private final static int PAGE_SIZE = 5;
 
     @Transactional
     public List<AccommodationDto> saveAllAccommodations(String local) {
-        List<AccommodationDto> response = fileManager.readHotelsFromFile(local);
+        List<AccommodationDto> response = parsingService.parseDatas(local);
         for (AccommodationDto dto : response) {
             Accommodation accommodation = dto.toEntity();
             repository.save(accommodation);

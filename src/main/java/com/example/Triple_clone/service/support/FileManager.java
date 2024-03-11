@@ -1,7 +1,7 @@
 package com.example.Triple_clone.service.support;
 
 import com.example.Triple_clone.domain.vo.Image;
-import com.example.Triple_clone.dto.accommodation.AccommodationDto;
+import com.example.Triple_clone.dto.support.FileDataDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,28 +20,27 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FileManager {
     private static final String BASE_PATH = "C:\\Users\\USER\\Desktop\\공부\\";
-    private final YanoljaScrapingManager yanoljaScrapingManager;
 
-    public List<AccommodationDto> readHotelsFromFile(String filePath) {
-        List<AccommodationDto> hotelList = new ArrayList<>();
+    public FileDataDto readFile(String filePath) {
+        Queue<String> datas = new LinkedList<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader(BASE_PATH + filePath + ".txt"))) {
-            Queue<String> datas = new LinkedList<>();
             String line;
             while ((line = br.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    datas.add(line);
-                } else {
-                    if (!datas.isEmpty()) {
-                        AccommodationDto accommodationDto = yanoljaScrapingManager.parseData(datas, filePath);
-                        hotelList.add(accommodationDto);
-                        datas.clear();
-                    }
-                }
+                datas.add(isBlank(line));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return hotelList;
+        return new FileDataDto(datas);
+    }
+
+    private String isBlank(String line) {
+        if (!line.isEmpty()) {
+            return line;
+        } else {
+            return "/n";
+        }
     }
 
     public Image uploadImage(MultipartFile image) {
