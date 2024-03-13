@@ -1,16 +1,16 @@
 package com.example.Triple_clone.domain.entity;
 
 import com.example.Triple_clone.domain.vo.Location;
+import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn()
+@RequiredArgsConstructor
 @Entity
 public class DetailPlan {
     @Id
@@ -35,5 +35,14 @@ public class DetailPlan {
         this.location = location;
         this.date = date;
         this.time = time;
+    }
+
+    public DetailPlanDto toDto() {
+        return new DetailPlanDto(
+                this.plan.getId(),
+                this.location,
+                this.date,
+                this.time
+        );
     }
 }

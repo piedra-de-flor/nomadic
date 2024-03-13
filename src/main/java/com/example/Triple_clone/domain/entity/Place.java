@@ -1,81 +1,18 @@
 package com.example.Triple_clone.domain.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import com.example.Triple_clone.domain.vo.Location;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-@Table(name = "place")
 @Entity
-public class Place {
-    private static final long LIKE_INITIAL_NUMBER = 0;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NonNull
-    private String title;
-    private String notionUrl;
-    private String subTitle;
-    private String location;
-    private String mainImage;
-    private LocalDateTime date;
-
-    @ElementCollection
-    @CollectionTable(name = "place_like", joinColumns = @JoinColumn(name = "place_id"))
-    private List<Long> likes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "place")
-    private List<Review> reviews = new ArrayList<>();
-
-    @Builder
-    public Place(@NonNull String title, String notionUrl, String subTitle, String location, String mainImage) {
-        this.title = title;
-        this.notionUrl = notionUrl;
-        this.subTitle = subTitle;
-        this.location = location;
-        this.mainImage = mainImage;
-        this.date = LocalDateTime.now();
-    }
-
-    public void update(String title, String notionUrl, String subTitle, String location, String mainImage) {
-        if (title.isEmpty()) {
-            throw new IllegalArgumentException("there is no title");
-        }
-        this.title = title;
-        this.notionUrl = notionUrl;
-        this.subTitle = subTitle;
-        this.location = location;
-        this.mainImage = mainImage;
-        this.date = LocalDateTime.now();
-    }
-
-    public void like(long userId) {
-        if (isLikedBy(userId)) {
-            likes.remove(userId);
-            return;
-        }
-        likes.add(userId);
-    }
-
-    public boolean isLikedBy(long userId) {
-        return likes.contains(userId);
-    }
-
-    public void addReview(Review review) {
-        reviews.add(review);
-    }
-
-    public int getLikesNumber() {
-        return likes.size();
-    }
-
-    public int getReviewsNumber() {
-        return reviews.size();
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DiscriminatorValue("P")
+public class Place extends DetailPlan{
+    public Place(Plan plan, Location location, Date date, String time) {
+        super(plan, location, date, time);
     }
 }

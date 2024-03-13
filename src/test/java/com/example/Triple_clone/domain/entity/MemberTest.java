@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class UserTest {
+public class MemberTest {
     @Test
     void 회원_업데이트_테스트() {
-        User user = new User();
-        user.update("test", "test");
+        Member member = new Member();
+        member.update("test", "test");
 
-        assertThat(user.getName()).isEqualTo("test");
-        assertThat(user.getPassword()).isEqualTo("test");
+        assertThat(member.getName()).isEqualTo("test");
+        assertThat(member.getPassword()).isEqualTo("test");
     }
 }

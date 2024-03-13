@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserJoinRequestDtoTest {
+public class MemberJoinRequestDtoTest {
 
     private Validator validator;
 

@@ -19,20 +19,29 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private String place;
+
+    @Enumerated(EnumType.STRING)
     private Partner partner;
+
+    @ElementCollection
+    @CollectionTable(name = "plan_styles", joinColumns = @JoinColumn(name = "plan_id"))
+    @Enumerated(EnumType.STRING)
     private List<Style> styles;
+
     private Date startDay;
+
     private Date endDay;
+
     @OneToMany(mappedBy = "plan")
     private List<DetailPlan> plans;
 
     @Builder
-    public Plan(User user, String place, Partner partner, Date startDay, Date endDay, List<Style> styles) {
-        this.user = user;
+    public Plan(Member member, String place, Partner partner, Date startDay, Date endDay, List<Style> styles) {
+        this.member = member;
         this.place = place;
         this.partner = partner;
         this.startDay = startDay;
@@ -49,6 +58,6 @@ public class Plan {
     }
 
     public boolean isMine(long userId) {
-        return this.user.getId() == userId;
+        return this.member.getId() == userId;
     }
 }

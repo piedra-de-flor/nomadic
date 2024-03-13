@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.vo.Image;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,20 +15,24 @@ public class Review {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "place_id")
-    private Place place;
+    @JoinColumn(name = "recommendation_id")
+    private Recommendation recommendation;
 
     private String content;
-    private String image;
+    private Image image;
 
-    public Review(User user, Place place, String content, String image) {
-        this.user = user;
-        this.place = place;
+    public Review(Member member, Recommendation recommendation, String content) {
+        this.member = member;
+        this.recommendation = recommendation;
         this.content = content;
+    }
+
+    public String setImage(Image image) {
         this.image = image;
+        return image.getStoredFileName();
     }
 }
