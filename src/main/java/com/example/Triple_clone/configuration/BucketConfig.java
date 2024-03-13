@@ -10,7 +10,6 @@ import java.time.Duration;
 
 @Configuration
 public class BucketConfig {
-
     @Bean
     public Bucket bucket() {
 
