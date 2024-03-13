@@ -24,7 +24,7 @@ public class ReservationController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @GetMapping("/myReservations")
+    @GetMapping("/my-reservations")
     public ResponseEntity<List<DetailPlanDto>> findAllMyReservations(
             @Parameter(description = "내 예약 조회 요청 정보 (내 USER ID)", required = true)
             @RequestParam long userId) {
