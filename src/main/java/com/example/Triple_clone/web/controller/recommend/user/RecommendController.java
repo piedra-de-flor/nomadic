@@ -2,6 +2,7 @@ package com.example.Triple_clone.web.controller.recommend.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendLikeDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendReadTop10Dto;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -72,6 +75,16 @@ public class RecommendController {
             @RequestBody RecommendLikeDto recommendLikeDto) {
         service.like(recommendLikeDto.placeId(), recommendLikeDto.userId());
         return ResponseEntity.ok(recommendLikeDto);
+    }
+
+    @Operation(summary = "인기가 많은 상위 10개의 추천 장소 보기", description = "좋아요 상위 10개의 추천 장소들에 대해 조회를 합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @PutMapping("/recommendations/top10")
+    public ResponseEntity<List<RecommendReadTop10Dto>> readTop10() {
+        List<RecommendReadTop10Dto> response = service.findTop10();
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "추천 장소를 내 계획에 포함", description = "기존 추천 장소를 내 기존 계획에 포함합니다")

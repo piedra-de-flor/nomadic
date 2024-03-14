@@ -3,6 +3,7 @@ package com.example.Triple_clone.service.recommend.user;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
+import com.example.Triple_clone.dto.recommend.user.RecommendReadTop10Dto;
 import com.example.Triple_clone.repository.RecommendationRepository;
 import com.example.Triple_clone.service.support.FileManager;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -65,6 +67,23 @@ public class RecommendService {
                 .toList();
 
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
+    }
+
+    public List<RecommendReadTop10Dto> findTop10() {
+        List<RecommendReadTop10Dto> response = new ArrayList<>();
+        List<Recommendation> sortedList = recommendationRepository.findAll().stream()
+                .sorted(Comparator.comparingInt(value -> value.getLikes().size()))
+                .toList();
+
+        for (int i = 0; i < 10; i++) {
+            RecommendReadTop10Dto dto = new RecommendReadTop10Dto(sortedList.get(i).getId(),
+                    sortedList.get(i).getMainImage(),
+                    sortedList.get(i).getTitle());
+
+            response.add(dto);
+        }
+
+        return response;
     }
 
     public void like(Long recommendationId, Long userId) {
