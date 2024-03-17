@@ -59,6 +59,7 @@ public class AccommodationController {
     public ResponseEntity<List<AccommodationDto>> saveAll(
           @Parameter(description = "원하는 지역 이름", required = true)
             @RequestBody AccommodationsSaveDto accommodationsSaveDto) {
+        System.out.println("CI test");
         return ResponseEntity.ok(service.saveAllAccommodations(accommodationsSaveDto.local()));
     }
 }
