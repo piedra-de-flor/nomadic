@@ -26,7 +26,7 @@ public class DetailPlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PostMapping("/detailPlan")
+    @PostMapping("/detail-plan")
     public ResponseEntity<DetailPlanDto> create(
             @Parameter(description = "세부 계획 생성 요청 정보", required = true)
             @RequestBody DetailPlanDto detailPlanDto) {
@@ -38,7 +38,7 @@ public class DetailPlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PostMapping("/detailPlan/redirect")
+    @PostMapping("/detail-plan/redirect")
     public ResponseEntity<DetailPlanDto> create(
             @Parameter(description = "추가할 추천 장소 ID", required = true)
             @RequestParam long target,
@@ -52,7 +52,7 @@ public class DetailPlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PostMapping("/detailPlan/reservation")
+    @PostMapping("/detail-plan/reservation")
     public ResponseEntity<ReservationCreateDto> create(
             @Parameter(description = "예약 생성 요청 정보", required = true)
             @RequestBody ReservationCreateDto reservationCreateDto) {
@@ -64,7 +64,7 @@ public class DetailPlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @GetMapping("/detailPlans")
+    @GetMapping("/detail-plans")
     public ResponseEntity<List<DetailPlanDto>> readAll(
             @Parameter(description = "세부 계획 전체 조회 요청 정보", required = true)
             @RequestParam long planId) {
@@ -76,7 +76,7 @@ public class DetailPlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PatchMapping("/detailPlan")
+    @PatchMapping("/detail-plan")
     public ResponseEntity<DetailPlanDto> update(
             @Parameter(description = "세부 계획 수정 요청 정보", required = true)
             @RequestBody DetailPlanUpdateDto updateDto) {

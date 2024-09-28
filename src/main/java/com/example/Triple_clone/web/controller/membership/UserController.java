@@ -28,7 +28,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PostMapping("/signUp")
+    @PostMapping("/sign-up")
     public ResponseEntity<UserResponseDto> signUp(
             @Parameter(description = "회원 가입 요청 정보", required = true)
             @RequestBody @Validated final UserJoinRequestDto userJoinRequestDto) {
@@ -40,7 +40,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PostMapping("/signIn")
+    @PostMapping("/sign-in")
     public JwtToken signIn(
             @Parameter(description = "로그인 요청 정보", required = true)
             @RequestBody @Validated LoginDto signInDto) {

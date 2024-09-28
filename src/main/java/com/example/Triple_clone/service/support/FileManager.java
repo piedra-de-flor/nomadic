@@ -1,6 +1,8 @@
 package com.example.Triple_clone.service.support;
 
 import com.example.Triple_clone.domain.vo.Image;
+import com.example.Triple_clone.dto.support.FileDataDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -15,29 +17,30 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class FileManager {
     private static final String BASE_PATH = "C:\\Users\\USER\\Desktop\\공부\\";
 
-    public Map<String, Long> readHotelsFromFile(String filePath) {
-        Map<String, Long> hotelMap = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(BASE_PATH + filePath + ".txt"))) {
-            String hotelName = null;
-            long price = 0;
-            String line;
+    public FileDataDto readFile(String filePath) {
+        Queue<String> datas = new LinkedList<>();
 
+        try (BufferedReader br = new BufferedReader(new FileReader(BASE_PATH + filePath + ".txt"))) {
+            String line;
             while ((line = br.readLine()) != null) {
-                if (hotelName == null) {
-                    hotelName = line;
-                } else {
-                    price = Long.parseLong(line);
-                    hotelMap.put(hotelName, price);
-                    hotelName = null;
-                }
+                datas.add(isBlank(line));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return hotelMap;
+        return new FileDataDto(datas);
+    }
+
+    private String isBlank(String line) {
+        if (!line.isEmpty()) {
+            return line;
+        } else {
+            return "/n";
+        }
     }
 
     public Image uploadImage(MultipartFile image) {

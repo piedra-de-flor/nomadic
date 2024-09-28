@@ -1,11 +1,13 @@
 package com.example.Triple_clone.service.planning;
 
+import com.example.Triple_clone.domain.entity.Accommodation;
 import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
 import com.example.Triple_clone.dto.planning.ReservationCreateDto;
+import com.example.Triple_clone.service.accommodation.AccommodationService;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class DetailPlanFacadeService {
     private final PlanService planService;
     private final DetailPlanService detailPlanService;
     private final RecommendService recommendService;
+    private final AccommodationService accommodationService;
 
     public DetailPlanDto create(DetailPlanDto detailPlanDto) {
         Plan plan = planService.findById(detailPlanDto.planId());
@@ -42,7 +45,8 @@ public class DetailPlanFacadeService {
 
     public ReservationCreateDto createReservation(ReservationCreateDto reservationCreateDto) {
         Plan plan = planService.findById(reservationCreateDto.planId());
-        DetailPlan detailPlan = reservationCreateDto.toEntity(plan);
+        Accommodation accommodation = accommodationService.findById(reservationCreateDto.accommodationId());
+        DetailPlan detailPlan = reservationCreateDto.toEntity(plan, accommodation);
 
         detailPlanService.save(detailPlan);
 

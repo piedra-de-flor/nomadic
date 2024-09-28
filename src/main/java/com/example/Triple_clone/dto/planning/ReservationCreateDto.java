@@ -1,5 +1,6 @@
 package com.example.Triple_clone.dto.planning;
 
+import com.example.Triple_clone.domain.entity.Accommodation;
 import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.entity.Reservation;
@@ -10,16 +11,18 @@ import java.util.Date;
 
 public record ReservationCreateDto(
         long planId,
+        long accommodationId,
         @NotNull(message = "Location can not be null")
         Location location,
         @NotNull(message = "Date can not be null")
         Date date,
         String time
 ){
-        public DetailPlan toEntity(Plan plan) {
+        public DetailPlan toEntity(Plan plan, Accommodation accommodation) {
                 return new Reservation(plan,
                         location,
                         date,
-                        time);
+                        time,
+                        accommodation);
         }
 }
