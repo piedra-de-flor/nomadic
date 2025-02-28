@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.service.accommodation;
 
 import com.example.Triple_clone.domain.vo.DataForYanoljaScraping;
@@ -20,9 +21,9 @@ public class AccommodationDataParsingService {
     private String category = null;
     private int lentTime = DataForYanoljaScraping.INITIAL_DATA_FOR_INTEGER.getValue();
     private long lentPrice = DataForYanoljaScraping.INITIAL_DATA_FOR_INTEGER.getValue();
-    private long discountRate = DataForYanoljaScraping.INITIAL_DATA_FOR_INTEGER.getValue();
-    private long originPrice = DataForYanoljaScraping.INITIAL_DATA_FOR_INTEGER.getValue();
-    private long totalPrice = DataForYanoljaScraping.INITIAL_DATA_FOR_INTEGER.getValue();
+    private long lodgmentDiscountRate = DataForYanoljaScraping.INITIAL_DATA_FOR_INTEGER.getValue();
+    private long lodgmentOriginPrice = DataForYanoljaScraping.INITIAL_DATA_FOR_INTEGER.getValue();
+    private long lodgmentPrice = DataForYanoljaScraping.INITIAL_DATA_FOR_INTEGER.getValue();
     private boolean lentStatus = false;
     private String lentData = null;
     private String lentStatusData = null;
@@ -60,7 +61,7 @@ public class AccommodationDataParsingService {
             extractTotalPrice(Objects.requireNonNull(data.poll()));
             extractLentData();
         }
-        return new AccommodationDto(local, name, score, category, lentTime, lentPrice, lentStatus, enterTime, discountRate, originPrice, totalPrice);
+        return new AccommodationDto(local, name, score, category, lentDiscountRate, lentTime, lentOriginPrice, lentPrice, lentStatus, enterTime, lodgmentDiscountRate, lodgmentOriginPrice, lodgmentPrice, lodgmentStatus);
     }
 
     private void extractEnterTimeAndDiscountData(String data) {
@@ -136,3 +137,4 @@ public class AccommodationDataParsingService {
         }
     }
 }
+*/

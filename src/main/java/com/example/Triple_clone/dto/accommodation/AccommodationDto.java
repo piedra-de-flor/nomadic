@@ -25,9 +25,9 @@ public record AccommodationDto(
                 .lentPrice(lentPrice)
                 .lentStatus(lentStatus)
                 .enterTime(enterTime)
-                .discountRate(discountRate)
-                .originPrice(originPrice)
-                .totalPrice(totalPrice)
+                .lodgmentDiscountRate(discountRate)
+                .lodgmentOriginPrice(originPrice)
+                .lodgmentPrice(totalPrice)
                 .build();
     }
 
@@ -41,9 +41,9 @@ public record AccommodationDto(
                 accommodation.getLentPrice(),
                 accommodation.isLentStatus(),
                 String.valueOf(accommodation.getEnterTime()),
-                accommodation.getDiscountRate(),
-                accommodation.getOriginPrice(),
-                accommodation.getTotalPrice()
+                accommodation.getLodgmentDiscountRate(),
+                accommodation.getLodgmentOriginPrice(),
+                accommodation.getLodgmentPrice()
         );
     }
 }

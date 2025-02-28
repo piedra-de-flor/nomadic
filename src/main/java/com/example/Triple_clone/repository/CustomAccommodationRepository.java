@@ -6,15 +6,17 @@ import org.springframework.data.domain.Pageable;
 
 public interface CustomAccommodationRepository {
     Page<Accommodation> findAllByConditions(String local,
-                                            String name,
-                                            String startLentPrice,
-                                            String endLentPrice,
-                                            String category,
-                                            String score,
-                                            String lentStatus,
-                                            String enterTime,
-                                            String discountRate,
-                                            String startTotalPrice,
-                                            String endTotalPrice,
-                                            Pageable pageable);
+                                                   String name,
+                                                   String lentDiscountRate,
+                                                   String startLentPrice,
+                                                   String endLentPrice,
+                                                   String category,
+                                                   String score,
+                                                   String lentStatus,
+                                                   String enterTime,
+                                                   String lodgmentDiscountRate,
+                                                   String startLodgmentPrice,
+                                                   String endLodgmentPrice,
+                                                   String lodgementStatus,
+                                                   Pageable pageable);
 }

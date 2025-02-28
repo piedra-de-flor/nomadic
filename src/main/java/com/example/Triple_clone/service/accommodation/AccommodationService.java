@@ -20,12 +20,12 @@ import java.util.NoSuchElementException;
 @Service
 public class AccommodationService {
     private final AccommodationRepository repository;
-    private final AccommodationDataParsingService parsingService;
+    //private final AccommodationDataParsingService parsingService;
     private final static int PAGE_SIZE = 5;
 
     @Transactional
     public List<AccommodationDto> saveAllAccommodations(String local) {
-        List<AccommodationDto> response = parsingService.parseDatas(local);
+        List<AccommodationDto> response = new ArrayList<>();//parsingService.parseDatas(local);
         for (AccommodationDto dto : response) {
             Accommodation accommodation = dto.toEntity();
             repository.save(accommodation);
@@ -36,22 +36,24 @@ public class AccommodationService {
     @Transactional(readOnly = true)
     public List<AccommodationDto> readAll(String local,
                                           String name,
+                                          String lentDiscountRate,
                                           String startLentPrice,
                                           String endLentPrice,
                                           String category,
                                           String score,
                                           String lentStatus,
                                           String enterTime,
-                                          String discountRate,
-                                          String startTotalPrice,
-                                          String endTotalPrice,
+                                          String lodgmentDiscountRate,
+                                          String startLodgmentPrice,
+                                          String endLodgmentPrice,
+                                          String lodgmentStatus,
                                           Pageable pageable) {
         Page<Accommodation> accommodationPage;
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.unsorted());
         List<AccommodationDto> response = new ArrayList<>();
 
-        accommodationPage =repository.findAllByConditions(local, name, startLentPrice, endLentPrice,
-                category, score, lentStatus, enterTime, discountRate, startTotalPrice, endTotalPrice, customPageable);
+        accommodationPage =repository.findAllByConditions(local, name, lentDiscountRate, startLentPrice, endLentPrice,
+                category, score, lentStatus, enterTime, lodgmentDiscountRate, startLodgmentPrice, endLodgmentPrice, lodgmentStatus, customPageable);
 
         for (Accommodation accommodation : accommodationPage) {
             AccommodationDto dto = new AccommodationDto(accommodation);

@@ -26,15 +26,17 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
     @Override
     public Page<Accommodation> findAllByConditions(String local,
                                                    String name,
+                                                   String lentDiscountRate,
                                                    String startLentPrice,
                                                    String endLentPrice,
                                                    String category,
                                                    String score,
                                                    String lentStatus,
                                                    String enterTime,
-                                                   String discountRate,
-                                                   String startTotalPrice,
-                                                   String endTotalPrice,
+                                                   String lodgmentDiscountRate,
+                                                   String startLodgmentPrice,
+                                                   String endLodgmentPrice,
+                                                   String lodgmentStatus,
                                                    Pageable pageable) {
         JPAQuery<Accommodation> query = jpaQueryFactory
                 .selectFrom(accommodation)
@@ -45,8 +47,8 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
                         scoreGoe(score),
                         lentStatusEq(lentStatus),
                         enterTimeGoe(enterTime),
-                        discountRateGoe(discountRate),
-                        priceEq(startTotalPrice, endTotalPrice, QueryDslPriceConditions.LODGE.name()));
+                        //discountRateGoe(lodgmentDiscountRate),
+                        priceEq(startLodgmentPrice, endLodgmentPrice, QueryDslPriceConditions.LODGE.name()));
 
         List<Accommodation> content = query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -62,8 +64,8 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
                         scoreGoe(score),
                         lentStatusEq(lentStatus),
                         enterTimeGoe(enterTime),
-                        discountRateGoe(discountRate),
-                        priceEq(startTotalPrice, endTotalPrice, QueryDslPriceConditions.LODGE.name()));
+                        //discountRateGoe(lodgmentDiscountRate),
+                        priceEq(startLodgmentPrice, endLodgmentPrice, QueryDslPriceConditions.LODGE.name()));
 
         long total = countQuery.fetchOne();
 
@@ -126,13 +128,13 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
         return accommodation.enterTime.goe(time);
     }
 
-    private BooleanExpression discountRateGoe(String discountRateCondition) {
+  /*  private BooleanExpression discountRateGoe(String discountRateCondition) {
         if (discountRateCondition == null) {
             return null;
         }
         Long discountRate = stringToLong(discountRateCondition);
         return accommodation.discountRate.goe(discountRate);
-    }
+    }*/
 
     private Long stringToLong(String string) {
         if (string == null) {
