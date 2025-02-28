@@ -54,16 +54,4 @@ public class AccommodationController {
                 lodgmentStatus,
                 pageable));
     }
-
-    @Operation(summary = "숙소 리스트 전체 저장", description = "지역별에 맞는 숙소를 text 파일에서 읽어 저장합니다.")
-    @ApiResponse(responseCode = "200", description = "성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
-    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @PostMapping("/accommodations")
-    public ResponseEntity<List<AccommodationDto>> saveAll(
-          @Parameter(description = "원하는 지역 이름", required = true)
-            @RequestBody AccommodationsSaveDto accommodationsSaveDto) {
-        System.out.println("CI test");
-        return ResponseEntity.ok(service.saveAllAccommodations(accommodationsSaveDto.local()));
-    }
 }

@@ -20,18 +20,7 @@ import java.util.NoSuchElementException;
 @Service
 public class AccommodationService {
     private final AccommodationRepository repository;
-    //private final AccommodationDataParsingService parsingService;
     private final static int PAGE_SIZE = 5;
-
-    @Transactional
-    public List<AccommodationDto> saveAllAccommodations(String local) {
-        List<AccommodationDto> response = new ArrayList<>();//parsingService.parseDatas(local);
-        for (AccommodationDto dto : response) {
-            Accommodation accommodation = dto.toEntity();
-            repository.save(accommodation);
-        }
-        return response;
-    }
 
     @Transactional(readOnly = true)
     public List<AccommodationDto> readAll(String local,
