@@ -21,59 +21,79 @@ import static com.example.Triple_clone.domain.entity.QAccommodation.accommodatio
 
 @RequiredArgsConstructor
 @Repository
-public class AccommodationRepositoryImpl implements CustomAccommodationRepository{
+public class AccommodationRepositoryImpl implements CustomAccommodationRepository {
     private final JPAQueryFactory jpaQueryFactory;
+
     @Override
-    public Page<Accommodation> findAllByConditions(String local,
-                                                   String name,
-                                                   String lentDiscountRate,
-                                                   String startLentPrice,
-                                                   String endLentPrice,
-                                                   String category,
-                                                   String score,
-                                                   String lentStatus,
-                                                   String enterTime,
-                                                   String lodgmentDiscountRate,
-                                                   String startLodgmentPrice,
-                                                   String endLodgmentPrice,
-                                                   String lodgmentStatus,
-                                                   Pageable pageable) {
+    public Page<Accommodation> findAllByConditions(
+            String local,
+            String name,
+            String discountRate,
+            String startLentPrice,
+            String endLentPrice,
+            String category,
+            String score,
+            String lentStatus,
+            String enterTime,
+            String startLodgmentPrice,
+            String endLodgmentPrice,
+            String lodgmentStatus,
+            Pageable pageable) {
+
+        BooleanExpression predicate = buildPredicate(
+                local, name, discountRate, startLentPrice, endLentPrice, category, score,
+                lentStatus, enterTime, startLodgmentPrice, endLodgmentPrice, lodgmentStatus);
+
         JPAQuery<Accommodation> query = jpaQueryFactory
                 .selectFrom(accommodation)
-                .where(stringEq(QueryDslStringConditions.LOCAL.name(), local),
-                        stringIn(QueryDslStringConditions.NAME.name(), name),
-                        priceEq(startLentPrice, endLentPrice, QueryDslPriceConditions.LENT.name()),
-                        stringIn(QueryDslStringConditions.CATEGORY.name(), category),
-                        scoreGoe(score),
-                        lentStatusEq(lentStatus),
-                        enterTimeGoe(enterTime),
-                        //discountRateGoe(lodgmentDiscountRate),
-                        priceEq(startLodgmentPrice, endLodgmentPrice, QueryDslPriceConditions.LODGE.name()));
+                .where(predicate);
 
-        List<Accommodation> content = query.offset(pageable.getOffset())
+        List<Accommodation> content = query
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(accommodation.count())
                 .from(accommodation)
-                .where(stringEq(QueryDslStringConditions.LOCAL.name(), local),
-                        stringIn(QueryDslStringConditions.NAME.name(), name),
-                        priceEq(startLentPrice, endLentPrice, QueryDslPriceConditions.LENT.name()),
-                        stringIn(QueryDslStringConditions.CATEGORY.name(), category),
-                        scoreGoe(score),
-                        lentStatusEq(lentStatus),
-                        enterTimeGoe(enterTime),
-                        //discountRateGoe(lodgmentDiscountRate),
-                        priceEq(startLodgmentPrice, endLodgmentPrice, QueryDslPriceConditions.LODGE.name()));
+                .where(predicate);
 
-        long total = countQuery.fetchOne();
+        long total = countQuery.fetchCount();
 
         return PageableExecutionUtils.getPage(content, pageable, () -> total);
     }
 
+    private BooleanExpression buildPredicate(
+            String local, String name, String discountRate, String startLentPrice, String endLentPrice,
+            String category, String score, String lentStatus, String enterTime,
+            String startLodgmentPrice, String endLodgmentPrice, String lodgmentStatus) {
+
+        return stringEq(QueryDslStringConditions.LOCAL.name(), local)
+                .and(stringIn(QueryDslStringConditions.NAME.name(), name))
+                .and(priceEq(startLentPrice, endLentPrice, QueryDslPriceConditions.LENT.name()))
+                .and(stringIn(QueryDslStringConditions.CATEGORY.name(), category))
+                .and(scoreGoe(score))
+                .and(lentStatusEq(lentStatus))
+                .and(enterTimeGoe(enterTime))
+                .and(priceEq(startLodgmentPrice, endLodgmentPrice, QueryDslPriceConditions.LODGE.name()))
+                .and(discountRateGoe(discountRate)); // 할인율 필터 추가
+    }
+
+    private BooleanExpression discountRateGoe(String discountRateCondition) {
+        if (discountRateCondition == null || discountRateCondition.isEmpty()) {
+            return null;
+        }
+        try {
+            Long discountRate = Long.parseLong(discountRateCondition);
+            return accommodation.lodgmentDiscountRate.goe(discountRate)
+                    .or(accommodation.lentDiscountRate.goe(discountRate)); // OR 조건으로 둘 중 하나 이상이면 검색
+        } catch (NumberFormatException e) {
+            return null; // 숫자 변환 실패 시 필터 적용 안 함
+        }
+    }
+
     private BooleanExpression stringIn(String conditionType, String condition) {
-        if (condition == null) {
+        if (condition == null || condition.isEmpty()) {
             return null;
         }
         QueryDslStringConditions conditions = QueryDslStringConditions.valueOf(conditionType);
@@ -81,7 +101,7 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
     }
 
     private BooleanExpression stringEq(String conditionType, String condition) {
-        if (condition == null) {
+        if (condition == null || condition.isEmpty()) {
             return null;
         }
         QueryDslStringConditions conditions = QueryDslStringConditions.valueOf(conditionType);
@@ -93,11 +113,11 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
         Long endPrice = stringToLong(endPriceCondition);
         QueryDslPriceConditions prices = QueryDslPriceConditions.valueOf(priceType);
 
-        if (startPriceCondition == null && endPriceCondition == null) {
+        if (startPrice == null && endPrice == null) {
             return null;
-        } else if (startPriceCondition != null && endPriceCondition == null) {
+        } else if (startPrice != null && endPrice == null) {
             return prices.getCondition().goe(startPrice);
-        } else if (startPriceCondition == null) {
+        } else if (startPrice == null) {
             return prices.getCondition().loe(endPrice);
         } else {
             return prices.getCondition().between(startPrice, endPrice);
@@ -105,45 +125,49 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
     }
 
     private BooleanExpression scoreGoe(String scoreCondition) {
-        if (scoreCondition == null) {
+        if (scoreCondition == null || scoreCondition.isEmpty()) {
             return null;
         }
-        Double score = Double.parseDouble(scoreCondition);
-        return accommodation.score.goe(score);
+        try {
+            Double score = Double.parseDouble(scoreCondition);
+            return accommodation.score.goe(score);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     private BooleanExpression lentStatusEq(String lentStatusCondition) {
-        if (lentStatusCondition == null) {
+        if (lentStatusCondition == null || lentStatusCondition.isEmpty()) {
             return null;
         }
-        boolean status = LentStatus.valueOf(lentStatusCondition).isStatus();
-        return accommodation.lentStatus.eq(status);
+        try {
+            boolean status = LentStatus.valueOf(lentStatusCondition).isStatus();
+            return accommodation.lentStatus.eq(status);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private BooleanExpression enterTimeGoe(String enterTimeCondition) {
-        if (enterTimeCondition == null) {
+        if (enterTimeCondition == null || enterTimeCondition.isEmpty()) {
             return null;
         }
-        LocalTime time = LocalTime.parse(enterTimeCondition, DateTimeFormatter.ofPattern("HH:mm"));
-        return accommodation.enterTime.goe(time);
+        try {
+            LocalTime time = LocalTime.parse(enterTimeCondition, DateTimeFormatter.ofPattern("HH:mm"));
+            return accommodation.enterTime.goe(time);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-  /*  private BooleanExpression discountRateGoe(String discountRateCondition) {
-        if (discountRateCondition == null) {
-            return null;
-        }
-        Long discountRate = stringToLong(discountRateCondition);
-        return accommodation.discountRate.goe(discountRate);
-    }*/
-
     private Long stringToLong(String string) {
-        if (string == null) {
+        if (string == null || string.isEmpty()) {
             return null;
         }
         try {
             return Long.parseLong(string);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("QueryDsl : 문자열을 숫자로 변경하는데 오류가 발생했습니다.");
+            return null;
         }
     }
 }

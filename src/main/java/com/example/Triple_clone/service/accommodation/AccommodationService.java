@@ -25,14 +25,13 @@ public class AccommodationService {
     @Transactional(readOnly = true)
     public List<AccommodationDto> readAll(String local,
                                           String name,
-                                          String lentDiscountRate,
+                                          String discountRate,
                                           String startLentPrice,
                                           String endLentPrice,
                                           String category,
                                           String score,
                                           String lentStatus,
                                           String enterTime,
-                                          String lodgmentDiscountRate,
                                           String startLodgmentPrice,
                                           String endLodgmentPrice,
                                           String lodgmentStatus,
@@ -41,8 +40,8 @@ public class AccommodationService {
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.unsorted());
         List<AccommodationDto> response = new ArrayList<>();
 
-        accommodationPage =repository.findAllByConditions(local, name, lentDiscountRate, startLentPrice, endLentPrice,
-                category, score, lentStatus, enterTime, lodgmentDiscountRate, startLodgmentPrice, endLodgmentPrice, lodgmentStatus, customPageable);
+        accommodationPage =repository.findAllByConditions(local, name, discountRate, startLentPrice, endLentPrice,
+                category, score, lentStatus, enterTime, startLodgmentPrice, endLodgmentPrice, lodgmentStatus, customPageable);
 
         for (Accommodation accommodation : accommodationPage) {
             AccommodationDto dto = new AccommodationDto(accommodation);
