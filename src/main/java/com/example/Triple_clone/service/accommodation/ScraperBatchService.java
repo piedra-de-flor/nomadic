@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @Service
 public class ScraperBatchService {
-    private final WebClient webClient = WebClient.create("http://localhost:8000");
+    private final WebClient webClient = WebClient.create("http://fastapi-container:8000");
 
     @Scheduled(fixedRate = 6000000)
     public void scrapeAllLocations() {
