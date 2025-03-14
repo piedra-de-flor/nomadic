@@ -1,5 +1,3 @@
-import tempfile
-
 from fastapi import FastAPI, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
 from selenium import webdriver
@@ -77,17 +75,12 @@ def extract_lodgment_price_info(price_elements):
 def sync_selenium_task(location: str, db: Session):
     """ 야놀자 크롤링 & MySQL 저장 """
     try:
+        logging.info(f"[START] 크롤링 시작 - 지역: {location}")
         chrome_options = Options()
         chrome_options.add_argument("--no-sandbox")
-
         chrome_options.add_argument("--disable-dev-shm-usage")
 
-        # ✅ 실행할 때마다 새로운 디렉토리 생성
-        user_data_dir = tempfile.mkdtemp()
-        chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
-        logging.info(f"[START] 크롤링 시작 - 지역: {location}")
-
-        service = Service("/usr/local/bin/chromedriver")
+        service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
         keyword = urllib.parse.quote(location)
@@ -95,8 +88,8 @@ def sync_selenium_task(location: str, db: Session):
         logging.info(f"[INFO] 요청 URL: {url}")
 
         driver.get(url)
-        time.sleep(10)  # 페이지 로딩 대기
-        print(driver.page_source)
+        time.sleep(5)  # 페이지 로딩 대기
+
         soup = BeautifulSoup(driver.page_source, "html.parser")
         driver.quit()
 
@@ -188,9 +181,8 @@ async def run_selenium(location: str, db: Session):
 
 
 @app.get("/scrape/{location}")
-async def scrape_endpoint(location: str, db: Session = Depends(get_db)):
-    """크롤링 실행"""
+async def scrape_endpoint(location: str, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    """비동기 크롤링 실행"""
     logging.info(f"크롤링 요청 받음: {location}")
-    result = await run_selenium(location, db)  # 백그라운드 실행 없이 직접 실행
-    return result
-
+    background_tasks.add_task(run_selenium, location, db)
+    return {"status": "scraping started", "location": location}
