@@ -79,7 +79,7 @@ def sync_selenium_task(location: str, db: Session):
     try:
         chrome_options = Options()
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")  # 백그라운드 실행
+
         chrome_options.add_argument("--disable-dev-shm-usage")
 
         # ✅ 실행할 때마다 새로운 디렉토리 생성
