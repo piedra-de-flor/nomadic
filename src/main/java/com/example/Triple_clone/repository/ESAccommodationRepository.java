@@ -1,13 +1,13 @@
 package com.example.Triple_clone.repository;
 
 import com.example.Triple_clone.domain.entity.AccommodationDocument;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public interface ESAccommodationRepository extends ElasticsearchRepository<AccommodationDocument, Long> {
-    List<AccommodationDocument> findByLocal(String local);
-
-    List<AccommodationDocument> findByLocalAndCategory(String local, String category);
-
-    List<AccommodationDocument> findByLentPriceBetween(Long minPrice, Long maxPrice);
+public interface ESAccommodationRepository {
+    Page<AccommodationDocument> searchByConditionsFromES(
+            String local, String name, String category, String discountRate,
+            String startLentPrice, String endLentPrice, String score,
+            String lentStatus, String startLodgmentPrice, String endLodgmentPrice,
+            String enterTime,String lodgmentStatus, Pageable pageable);
 }

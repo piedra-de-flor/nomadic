@@ -38,7 +38,7 @@ public class AccommodationController {
             @RequestParam(required = false) String endLodgmentPrice,
             @RequestParam(required = false) String lodgmentStatus,
             Pageable pageable) {
-        return ResponseEntity.ok(service.readAll(local,
+        return ResponseEntity.ok(service.searchES(local,
                 name,
                 discountRate,
                 startLentPrice,

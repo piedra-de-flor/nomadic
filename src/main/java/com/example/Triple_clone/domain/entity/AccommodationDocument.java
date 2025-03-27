@@ -27,6 +27,9 @@ public class AccommodationDocument {
     @Field(type = FieldType.Double)
     private Double score;
 
+    @Field(type = FieldType.Text)
+    private String enterTime;
+
     @Field(type = FieldType.Long)
     private Long lentDiscountRate;
 

@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CustomAccommodationRepository {
-    Page<Accommodation> findAllByConditions(String local,
+    Page<Accommodation> searchByConditionsFromDB(String local,
                                                    String name,
                                                    String discountRate,
                                                    String startLentPrice,

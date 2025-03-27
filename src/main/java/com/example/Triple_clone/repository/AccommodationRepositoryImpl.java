@@ -25,7 +25,7 @@ public class AccommodationRepositoryImpl implements CustomAccommodationRepositor
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Accommodation> findAllByConditions(
+    public Page<Accommodation> searchByConditionsFromDB(
             String local,
             String name,
             String discountRate,
