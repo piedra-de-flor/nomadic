@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "레포지토리위치")
+@EnableElasticsearchRepositories(basePackages = "com.example.Triple_clone.repository")
 public class ElasticSearchConfig {
     @Value("${elasticsearch.host}")
     private String host;

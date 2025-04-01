@@ -4,7 +4,7 @@ import com.example.Triple_clone.domain.entity.Accommodation;
 import com.example.Triple_clone.domain.entity.AccommodationDocument;
 import com.example.Triple_clone.dto.accommodation.AccommodationDto;
 import com.example.Triple_clone.repository.AccommodationRepository;
-import com.example.Triple_clone.repository.ESAccommodationRepositoryImpl;
+import com.example.Triple_clone.repository.ESRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +21,7 @@ import java.util.NoSuchElementException;
 @Service
 public class AccommodationService {
     private final AccommodationRepository repository;
+    private final ESRepository esRepository;
     private final static int PAGE_SIZE = 5;
 
     @Transactional(readOnly = true)
@@ -69,7 +70,7 @@ public class AccommodationService {
         Pageable customPageable = PageRequest.of(pageable.getPageNumber(), PAGE_SIZE, Sort.unsorted());
         List<AccommodationDto> response = new ArrayList<>();
 
-        Page<AccommodationDocument> documents = repository.searchByConditionsFromES(
+        Page<AccommodationDocument> documents = esRepository.searchByConditionsFromES(
                 local, name, category, discountRate, startLentPrice, endLentPrice,
                 score, lentStatus, startLodgmentPrice, endLodgmentPrice,enterTime, lodgmentStatus, customPageable);
 
