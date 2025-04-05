@@ -1,21 +1,22 @@
 package com.example.Triple_clone.repository;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.JsonData;
 import com.example.Triple_clone.domain.entity.AccommodationDocument;
 import lombok.RequiredArgsConstructor;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.client.erhlc.NativeSearchQuery;
-import org.springframework.data.elasticsearch.client.erhlc.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
-
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Repository
 public class ESAccommodationRepositoryImpl implements ESAccommodationRepository {
 
-    private final ElasticsearchOperations elasticsearchOperations;
+    private final ElasticsearchClient elasticsearchClient;
 
     @Override
     public Page<AccommodationDocument> searchByConditionsFromES(
@@ -32,59 +33,72 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
             String lentStatus, String startLodgmentPrice, String endLodgmentPrice,
             String enterTime, String lodgmentStatus, Pageable pageable) {
 
-        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+        List<Query> mustQueries = new ArrayList<>();
 
         if (local != null && !local.isEmpty()) {
-            boolQuery.must(QueryBuilders.matchQuery("local", local));
+            mustQueries.add(QueryBuilders.match(m -> m.field("local").query(local)));
         }
         if (name != null && !name.isEmpty()) {
-            boolQuery.must(QueryBuilders.matchQuery("name", name));
+            mustQueries.add(QueryBuilders.match(m -> m.field("name").query(name)));
         }
         if (category != null && !category.isEmpty()) {
-            boolQuery.must(QueryBuilders.matchQuery("category", category));
+            mustQueries.add(QueryBuilders.match(m -> m.field("category").query(category)));
         }
         if (score != null && !score.isEmpty()) {
-            boolQuery.must(QueryBuilders.rangeQuery("score").gte(Double.parseDouble(score)));
+            mustQueries.add(QueryBuilders.range(r -> r.field("score").gte(JsonData.of(Double.parseDouble(score)))));
         }
-        if (enterTime != null && !enterTime.isEmpty() && endLodgmentPrice != null && !endLodgmentPrice.isEmpty()) {
-            boolQuery.must(QueryBuilders.rangeQuery("enterTime")
-                    .gte(enterTime)
-                    .lte(endLodgmentPrice));
+        if (enterTime != null && !enterTime.isEmpty()) {
+            mustQueries.add(QueryBuilders.range(r -> r.field("enterTime").gte(JsonData.of(enterTime))));
         }
         if (discountRate != null && !discountRate.isEmpty()) {
-            boolQuery.must(QueryBuilders.rangeQuery("lodgmentDiscountRate").gte(Long.parseLong(discountRate)));
-            boolQuery.should(QueryBuilders.rangeQuery("lentDiscountRate").gte(Long.parseLong(discountRate)));
+            long dr = Long.parseLong(discountRate);
+            mustQueries.add(QueryBuilders.bool(b -> b.should(
+                    QueryBuilders.range(r -> r.field("lodgmentDiscountRate").gte(JsonData.of(dr))),
+                    QueryBuilders.range(r -> r.field("lentDiscountRate").gte(JsonData.of(dr)))
+            )));
         }
         if (startLentPrice != null && !startLentPrice.isEmpty()) {
-            boolQuery.must(QueryBuilders.rangeQuery("lentPrice").gte(Long.parseLong(startLentPrice)));
+            mustQueries.add(QueryBuilders.range(r -> r.field("lentPrice").gte(JsonData.of(Long.parseLong(startLentPrice)))));
         }
         if (endLentPrice != null && !endLentPrice.isEmpty()) {
-            boolQuery.must(QueryBuilders.rangeQuery("lentPrice").lte(Long.parseLong(endLentPrice)));
+            mustQueries.add(QueryBuilders.range(r -> r.field("lentPrice").lte(JsonData.of(Long.parseLong(endLentPrice)))));
         }
         if (lentStatus != null && !lentStatus.isEmpty()) {
-            boolQuery.must(QueryBuilders.termQuery("lentStatus", Boolean.parseBoolean(lentStatus)));
+            mustQueries.add(QueryBuilders.term(t -> t.field("lentStatus").value(Boolean.parseBoolean(lentStatus))));
         }
         if (startLodgmentPrice != null && !startLodgmentPrice.isEmpty()) {
-            boolQuery.must(QueryBuilders.rangeQuery("lodgmentPrice").gte(Long.parseLong(startLodgmentPrice)));
+            mustQueries.add(QueryBuilders.range(r -> r.field("lodgmentPrice").gte(JsonData.of(Long.parseLong(startLodgmentPrice)))));
         }
         if (endLodgmentPrice != null && !endLodgmentPrice.isEmpty()) {
-            boolQuery.must(QueryBuilders.rangeQuery("lodgmentPrice").lte(Long.parseLong(endLodgmentPrice)));
+            mustQueries.add(QueryBuilders.range(r -> r.field("lodgmentPrice").lte(JsonData.of(Long.parseLong(endLodgmentPrice)))));
         }
         if (lodgmentStatus != null && !lodgmentStatus.isEmpty()) {
-            boolQuery.must(QueryBuilders.termQuery("lodgmentStatus", Boolean.parseBoolean(lodgmentStatus)));
+            mustQueries.add(QueryBuilders.term(t -> t.field("lodgmentStatus").value(Boolean.parseBoolean(lodgmentStatus))));
         }
 
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(boolQuery)
-                .withPageable(pageable)
+        BoolQuery boolQuery = new BoolQuery.Builder()
+                .must(mustQueries)
                 .build();
 
-        SearchHits<AccommodationDocument> searchHits = elasticsearchOperations.search(searchQuery, AccommodationDocument.class);
+        try {
+            SearchResponse<AccommodationDocument> response = elasticsearchClient.search(
+                    s -> s.index("accommodation")
+                            .query(q -> q.bool(boolQuery))
+                            .from((int) pageable.getOffset())
+                            .size(pageable.getPageSize()),
+                    AccommodationDocument.class
+            );
 
-        List<AccommodationDocument> results = searchHits.stream()
-                .map(SearchHit::getContent)
-                .collect(Collectors.toList());
+            List<AccommodationDocument> results = response.hits().hits().stream()
+                    .map(Hit::source)
+                    .collect(Collectors.toList());
 
-        return new PageImpl<>(results, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()), searchHits.getTotalHits());
+            long total = response.hits().total() != null ? response.hits().total().value() : results.size();
+
+            return new PageImpl<>(results, pageable, total);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Elasticsearch 검색 중 오류 발생", e);
+        }
     }
 }

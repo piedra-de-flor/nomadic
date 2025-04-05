@@ -4,6 +4,7 @@ import com.example.Triple_clone.domain.entity.Accommodation;
 import com.example.Triple_clone.domain.entity.AccommodationDocument;
 import com.example.Triple_clone.dto.accommodation.AccommodationDto;
 import com.example.Triple_clone.repository.AccommodationRepository;
+import com.example.Triple_clone.repository.ESAccommodationRepositoryImpl;
 import com.example.Triple_clone.repository.ESRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,7 @@ import java.util.NoSuchElementException;
 @Service
 public class AccommodationService {
     private final AccommodationRepository repository;
-    private final ESRepository esRepository;
+    private final ESAccommodationRepositoryImpl esRepository;
     private final static int PAGE_SIZE = 5;
 
     @Transactional(readOnly = true)
