@@ -7,7 +7,8 @@ public enum ScrapingLocal {
     GWANGJU("광주"),
     DAEJEON("대전"),
     ULSAN("울산"),
-    INCHEON("인천");
+    INCHEON("인천"),
+    SUWON("수원");
 
     private final String koreanName;
 

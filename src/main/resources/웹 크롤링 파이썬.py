@@ -91,7 +91,7 @@ def sync_selenium_task(location: str, db: Session):
         time.sleep(5)  # 페이지 로딩 대기
 
         # 30번 스크롤 다운
-        for _ in range(30):
+        for _ in range(10):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(2)  # 데이터 로딩 대기
 
@@ -99,12 +99,20 @@ def sync_selenium_task(location: str, db: Session):
         driver.quit()
 
         accommodations = []
+        seen = set()
         elements = soup.select("div.PlaceListItemText_contents__2GR73.place-content")
         logging.info(f"[INFO] 총 {len(elements)}개의 숙소 정보 발견")
 
         for element in elements:
             name = element.select_one("div.PlaceListTitle_container__qe7XH").text.strip() if element.select_one(
                 "div.PlaceListTitle_container__qe7XH") else None
+
+            key = (name, location)
+            if key in seen:
+                logging.info(f"[SKIP] 중복 숙소 스킵: {name}")
+                continue
+            seen.add(key)
+
             score = float(element.select_one("span.PlaceListScore_rating__3Glxf").text.strip()) if element.select_one(
                 "span.PlaceListScore_rating__3Glxf") else None
             category = element.select_one("div.PlaceListGrade_container__1oIhJ").text.strip() if element.select_one(
@@ -161,11 +169,13 @@ def sync_selenium_task(location: str, db: Session):
             accommodations.append(accommodation)
 
         for data in accommodations:
-            existing = db.query(Accommodation).filter_by(name=data["name"]).first()
+            existing = db.query(Accommodation).filter_by(name=data["name"], local=data["local"]).first()
             if existing:
                 logging.info(f"[UPDATE] 기존 데이터 업데이트: {data['name']}")
                 for key, value in data.items():
                     setattr(existing, key, value if value is not None else getattr(existing, key))
+
+                db.add(existing)
             else:
                 logging.info(f"[INSERT] 새로운 데이터 추가: {data['name']}")
                 db.add(Accommodation(**data))
