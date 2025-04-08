@@ -64,3 +64,5 @@ services:
       - elasticsearch
     networks:
       - triple
+volumes:
+  elastic_data:
