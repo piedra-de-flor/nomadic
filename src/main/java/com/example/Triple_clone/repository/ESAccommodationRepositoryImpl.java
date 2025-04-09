@@ -4,7 +4,6 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
-import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
@@ -36,44 +35,47 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
         List<Query> mustQueries = new ArrayList<>();
 
         if (local != null && !local.isEmpty()) {
-            mustQueries.add(QueryBuilders.match(m -> m.field("local").query(local)));
+            mustQueries.add(QueryBuilders.term(t -> t.field("local.keyword").value(local)));
         }
         if (name != null && !name.isEmpty()) {
             mustQueries.add(QueryBuilders.match(m -> m.field("name").query(name)));
+            // 정확히 일치하게 하려면 아래 사용
+            // mustQueries.add(QueryBuilders.term(t -> t.field("name.keyword").value(name)));
         }
         if (category != null && !category.isEmpty()) {
-            mustQueries.add(QueryBuilders.match(m -> m.field("category").query(category)));
+            mustQueries.add(QueryBuilders.term(t -> t.field("category.keyword").value(category)));
         }
         if (score != null && !score.isEmpty()) {
             mustQueries.add(QueryBuilders.range(r -> r.field("score").gte(JsonData.of(Double.parseDouble(score)))));
         }
         if (enterTime != null && !enterTime.isEmpty()) {
-            mustQueries.add(QueryBuilders.range(r -> r.field("enterTime").gte(JsonData.of(enterTime))));
+            mustQueries.add(QueryBuilders.range(r -> r.field("enter_time").gte(JsonData.of(enterTime))));
         }
         if (discountRate != null && !discountRate.isEmpty()) {
             long dr = Long.parseLong(discountRate);
-            mustQueries.add(QueryBuilders.bool(b -> b.should(
-                    QueryBuilders.range(r -> r.field("lodgmentDiscountRate").gte(JsonData.of(dr))),
-                    QueryBuilders.range(r -> r.field("lentDiscountRate").gte(JsonData.of(dr)))
-            )));
+            mustQueries.add(QueryBuilders.bool(b -> b
+                    .should(QueryBuilders.range(r -> r.field("lodgment_discount_rate").gte(JsonData.of(dr))))
+                    .should(QueryBuilders.range(r -> r.field("lent_discount_rate").gte(JsonData.of(dr))))
+                    .minimumShouldMatch("1")
+            ));
         }
         if (startLentPrice != null && !startLentPrice.isEmpty()) {
-            mustQueries.add(QueryBuilders.range(r -> r.field("lentPrice").gte(JsonData.of(Long.parseLong(startLentPrice)))));
+            mustQueries.add(QueryBuilders.range(r -> r.field("lent_price").gte(JsonData.of(Long.parseLong(startLentPrice)))));
         }
         if (endLentPrice != null && !endLentPrice.isEmpty()) {
-            mustQueries.add(QueryBuilders.range(r -> r.field("lentPrice").lte(JsonData.of(Long.parseLong(endLentPrice)))));
+            mustQueries.add(QueryBuilders.range(r -> r.field("lent_price").lte(JsonData.of(Long.parseLong(endLentPrice)))));
         }
         if (lentStatus != null && !lentStatus.isEmpty()) {
-            mustQueries.add(QueryBuilders.term(t -> t.field("lentStatus").value(Boolean.parseBoolean(lentStatus))));
+            mustQueries.add(QueryBuilders.term(t -> t.field("lent_status").value(Boolean.parseBoolean(lentStatus))));
         }
         if (startLodgmentPrice != null && !startLodgmentPrice.isEmpty()) {
-            mustQueries.add(QueryBuilders.range(r -> r.field("lodgmentPrice").gte(JsonData.of(Long.parseLong(startLodgmentPrice)))));
+            mustQueries.add(QueryBuilders.range(r -> r.field("lodgment_price").gte(JsonData.of(Long.parseLong(startLodgmentPrice)))));
         }
         if (endLodgmentPrice != null && !endLodgmentPrice.isEmpty()) {
-            mustQueries.add(QueryBuilders.range(r -> r.field("lodgmentPrice").lte(JsonData.of(Long.parseLong(endLodgmentPrice)))));
+            mustQueries.add(QueryBuilders.range(r -> r.field("lodgment_price").lte(JsonData.of(Long.parseLong(endLodgmentPrice)))));
         }
         if (lodgmentStatus != null && !lodgmentStatus.isEmpty()) {
-            mustQueries.add(QueryBuilders.term(t -> t.field("lodgmentStatus").value(Boolean.parseBoolean(lodgmentStatus))));
+            mustQueries.add(QueryBuilders.term(t -> t.field("lodgment_status").value(Boolean.parseBoolean(lodgmentStatus))));
         }
 
         BoolQuery boolQuery = new BoolQuery.Builder()
@@ -98,7 +100,7 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
             return new PageImpl<>(results, pageable, total);
 
         } catch (IOException e) {
-            throw new RuntimeException("Elasticsearch 검색 중 오류 발생", e);
+            throw new RuntimeException("Elasticsearch 검색 중 오류 발생: " + e.getMessage(), e);
         }
     }
 }

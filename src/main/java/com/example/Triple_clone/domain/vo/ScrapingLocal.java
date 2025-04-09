@@ -30,7 +30,6 @@ public enum ScrapingLocal {
     YEOSU("여수"),
     MOKPO("목포"),
     SUNCHEON("순천"),
-    DAEJEON("대전"),
     CHEONGJU("청주"),
     JINCHEON("진천"),
     SEJONG("세종"),

@@ -7,6 +7,7 @@ import com.example.Triple_clone.repository.AccommodationRepository;
 import com.example.Triple_clone.repository.ESAccommodationRepositoryImpl;
 import com.example.Triple_clone.repository.ESRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AccommodationService {
@@ -76,6 +78,7 @@ public class AccommodationService {
                 score, lentStatus, startLodgmentPrice, endLodgmentPrice,enterTime, lodgmentStatus, customPageable);
 
         if (documents.isEmpty()) {
+            log.info("no date in ES, search RDB");
             return searchDB(local, name, category, discountRate, startLentPrice, endLentPrice,
                     score, lentStatus, startLodgmentPrice, endLodgmentPrice,enterTime, lodgmentStatus, pageable);
         }
