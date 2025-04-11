@@ -39,8 +39,6 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
         }
         if (name != null && !name.isEmpty()) {
             mustQueries.add(QueryBuilders.match(m -> m.field("name").query(name)));
-            // 정확히 일치하게 하려면 아래 사용
-            // mustQueries.add(QueryBuilders.term(t -> t.field("name.keyword").value(name)));
         }
         if (category != null && !category.isEmpty()) {
             mustQueries.add(QueryBuilders.term(t -> t.field("category.keyword").value(category)));
