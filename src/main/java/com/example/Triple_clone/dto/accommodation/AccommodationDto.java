@@ -1,6 +1,7 @@
 package com.example.Triple_clone.dto.accommodation;
 
 import com.example.Triple_clone.domain.entity.Accommodation;
+import com.example.Triple_clone.domain.entity.AccommodationDocument;
 
 public record AccommodationDto(
         String local,
@@ -25,9 +26,9 @@ public record AccommodationDto(
                 .lentPrice(lentPrice)
                 .lentStatus(lentStatus)
                 .enterTime(enterTime)
-                .discountRate(discountRate)
-                .originPrice(originPrice)
-                .totalPrice(totalPrice)
+                .lodgmentDiscountRate(discountRate)
+                .lodgmentOriginPrice(originPrice)
+                .lodgmentPrice(totalPrice)
                 .build();
     }
 
@@ -41,9 +42,25 @@ public record AccommodationDto(
                 accommodation.getLentPrice(),
                 accommodation.isLentStatus(),
                 String.valueOf(accommodation.getEnterTime()),
-                accommodation.getDiscountRate(),
-                accommodation.getOriginPrice(),
-                accommodation.getTotalPrice()
+                accommodation.getLodgmentDiscountRate(),
+                accommodation.getLodgmentOriginPrice(),
+                accommodation.getLodgmentPrice()
+        );
+    }
+
+    public AccommodationDto(AccommodationDocument document) {
+        this(
+                document.getLocal(),
+                document.getName(),
+                document.getScore(),
+                document.getCategory(),
+                document.getLentTime(),
+                document.getLentPrice(),
+                document.getLentStatus(),
+                String.valueOf(document.getEnterTime()),
+                document.getLodgmentDiscountRate(),
+                document.getLodgmentOriginPrice(),
+                document.getLodgmentPrice()
         );
     }
 }

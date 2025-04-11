@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.5'
 	id 'io.spring.dependency-management' version '1.1.3'
+    id "jacoco"
 }
 
 group = 'com.example'
@@ -35,6 +36,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0-rc1'
 	implementation 'com.bucket4j:bucket4j-core:8.3.0'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	//Test
 	testImplementation 'junit:junit:4.13.1'
@@ -64,12 +66,19 @@ dependencies {
 	annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:$queryDslVersion:jpa")
 	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// elasticsearch
+	implementation 'co.elastic.clients:elasticsearch-java:8.10.2'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.1.3'
 }
 
 sourceSets {
 	main {
 		java {
-			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+			srcDirs += 'build/generated/sources/annotationProcessor/java/main'
 		}
 	}
 }
@@ -84,10 +93,41 @@ tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
 
-tasks.withType(Test).configureEach {
+/*tasks.withType(Test).configureEach {
 	enabled = false
-}
+}*/
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
+	reports {
+		xml.required = false
+		csv.required = false
+		html.required = true
+		html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+	}
+	finalizedBy(tasks.jacocoTestCoverageVerification)
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true;
+			element = 'CLASS'
+
+			excludes = [
+					'*.XXXApplication'
+			]
+
+			limit {
+				counter = 'METHOD'
+				value = 'COVEREDRATIO'
+				minimum = 0.8
+			}
+		}
+	}
 }

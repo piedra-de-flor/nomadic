@@ -10,7 +10,7 @@ import static com.example.Triple_clone.domain.entity.QAccommodation.accommodatio
 @RequiredArgsConstructor
 public enum QueryDslPriceConditions {
     LENT(accommodation.lentPrice),
-    LODGE(accommodation.totalPrice);
+    LODGE(accommodation.lodgmentPrice);
 
     private final NumberPath<Long> condition;
 }

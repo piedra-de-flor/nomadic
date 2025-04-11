@@ -5,16 +5,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CustomAccommodationRepository {
-    Page<Accommodation> findAllByConditions(String local,
-                                            String name,
-                                            String startLentPrice,
-                                            String endLentPrice,
-                                            String category,
-                                            String score,
-                                            String lentStatus,
-                                            String enterTime,
-                                            String discountRate,
-                                            String startTotalPrice,
-                                            String endTotalPrice,
-                                            Pageable pageable);
+    Page<Accommodation> searchByConditionsFromDB(String local,
+                                                   String name,
+                                                   String discountRate,
+                                                   String startLentPrice,
+                                                   String endLentPrice,
+                                                   String category,
+                                                   String score,
+                                                   String lentStatus,
+                                                   String enterTime,
+                                                   String startLodgmentPrice,
+                                                   String endLodgmentPrice,
+                                                   String lodgementStatus,
+                                                   Pageable pageable);
 }
