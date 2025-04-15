@@ -78,9 +78,10 @@ public class AccommodationService {
                 score, lentStatus, startLodgmentPrice, endLodgmentPrice,enterTime, lodgmentStatus, customPageable);
 
         if (documents.isEmpty()) {
-            log.info("no date in ES, search RDB");
+            return response;
+            /*log.info("no date in ES, search RDB");
             return searchDB(local, name, category, discountRate, startLentPrice, endLentPrice,
-                    score, lentStatus, startLodgmentPrice, endLodgmentPrice,enterTime, lodgmentStatus, pageable);
+                    score, lentStatus, startLodgmentPrice, endLodgmentPrice,enterTime, lodgmentStatus, pageable);*/
         }
 
         for (AccommodationDocument document : documents) {

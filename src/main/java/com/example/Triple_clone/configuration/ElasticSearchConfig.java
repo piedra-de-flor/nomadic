@@ -28,7 +28,11 @@ public class ElasticSearchConfig {
         RestClientBuilder builder = RestClient.builder(new HttpHost("elasticsearch", 9200))
                 .setDefaultHeaders(new BasicHeader[]{authHeader});
 
-        return builder.build();
+        return builder.setHttpClientConfigCallback(httpClientBuilder ->
+                httpClientBuilder
+                        .setMaxConnTotal(1000)
+                        .setMaxConnPerRoute(500))
+                .build();
     }
 
     @Bean
