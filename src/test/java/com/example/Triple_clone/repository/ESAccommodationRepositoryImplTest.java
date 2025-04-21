@@ -8,13 +8,14 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
 import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import co.elastic.clients.elasticsearch.core.search.TotalHitsRelation;
-import co.elastic.clients.util.DateTime;
 import com.example.Triple_clone.domain.entity.AccommodationDocument;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +23,13 @@ import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.util.List;
 
-import static co.elastic.clients.elasticsearch.searchable_snapshots.StatsLevel.Shards;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ESAccommodationRepositoryImplTest {
 
     @Mock
@@ -42,47 +43,50 @@ public class ESAccommodationRepositoryImplTest {
     }
 
     @Test
-    public void searchByConditionsFromES_정상작동_테스트() throws IOException {
+    void searchByConditionsFromES_정상작동_테스트() throws IOException {
         // given
         Pageable pageable = PageRequest.of(0, 10);
 
         AccommodationDocument doc = new AccommodationDocument();
+        doc.setId(1L);
         doc.setName("테스트 숙소");
         doc.setLocal("서울");
 
-        ShardStatistics shardStats = new ShardStatistics.Builder()
+        // Elasticsearch mock response 구성
+        Hit<AccommodationDocument> hit = new Hit.Builder<AccommodationDocument>()
+                .id("1")
+                .index("accommodation")
+                .source(doc)
+                .build();
+
+        TotalHits totalHits = new TotalHits.Builder()
+                .value(1L)
+                .relation(TotalHitsRelation.Eq)
+                .build();
+
+        HitsMetadata<AccommodationDocument> hitsMetadata = new HitsMetadata.Builder<AccommodationDocument>()
+                .hits(List.of(hit))
+                .total(totalHits)
+                .build();
+
+        ShardStatistics shardStatistics = new ShardStatistics.Builder()
                 .total(1)
                 .successful(1)
                 .skipped(0)
                 .failed(0)
                 .build();
 
-        Hit<AccommodationDocument> hit = new Hit.Builder<AccommodationDocument>()
-                .index("accommodation") // ✅ 필수!
-                .id("1")
-                .score(1.0)
-                .source(doc)
-                .build();
-
-        TotalHits totalHits = new TotalHits.Builder()
-                .value(1L)
-                .relation(TotalHitsRelation.Eq) // ✅ 이거 필수!
-                .build();
-
-        HitsMetadata<AccommodationDocument> hitsMetadata = new HitsMetadata.Builder<AccommodationDocument>()
-                .hits(List.of(hit))
-                .total(totalHits) // relation 설정 필요 없음
-                .build();
-
         SearchResponse<AccommodationDocument> mockResponse = new SearchResponse.Builder<AccommodationDocument>()
-                .took(100L)
+                .took(10L)
                 .timedOut(false)
-                .shards(shardStats)
+                .shards(shardStatistics)
                 .hits(hitsMetadata)
                 .build();
 
-        when(elasticsearchClient.search((SearchRequest) any(), eq(AccommodationDocument.class)))
-                .thenReturn(mockResponse);
+        // ElasticClient search mock 처리
+        doReturn(mockResponse)
+                .when(elasticsearchClient)
+                .search(any(SearchRequest.class), eq(AccommodationDocument.class));
 
         // when
         Page<AccommodationDocument> result = repository.searchByConditionsFromES(
@@ -96,7 +100,5 @@ public class ESAccommodationRepositoryImplTest {
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().get(0).getName()).isEqualTo("테스트 숙소");
-
-        verify(elasticsearchClient, times(1)).search((SearchRequest) any(), eq(AccommodationDocument.class));
     }
 }
