@@ -7,7 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+@SpringBootApplication(
+		exclude = {
+				org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchClientAutoConfiguration.class,
+				org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration.class
+		}
+)
 @ServletComponentScan
 @EnableScheduling
 public class TripleCloneApplication {
