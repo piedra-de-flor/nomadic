@@ -15,8 +15,7 @@ public class RateLimitAspect {
     private final Bucket bucket;
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping) && execution(* com.example.Triple_clone.web.controller.recommend.user.RecommendController.like(..))")
-    public void likeMethod() {
-    }
+    public void likeMethod() {}
 
     @Around("likeMethod()")
     public Object rateLimiting(ProceedingJoinPoint joinPoint) throws Throwable {
