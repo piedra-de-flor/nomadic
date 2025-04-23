@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 public enum GlobalErrorCode implements ErrorCode{
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Invalid parameter included"),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "Resource not exists"),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "un authorized error");
 
     private final HttpStatus httpStatus;
     private final String message;
