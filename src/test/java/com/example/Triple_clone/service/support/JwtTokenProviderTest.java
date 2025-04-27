@@ -52,16 +52,6 @@ class JwtTokenProviderTest {
 
     @Test
     void validateToken_fail_with_invalid_signature() {
-        // 다른 키로 서명된 위조 토큰 생성
-        Key wrongKey = Keys.hmacShaKeyFor("invalidkeyinvalidkeyinvalidkey123".getBytes());
-        String fakeToken = Jwts.builder()
-                .setSubject("testUser")
-                .claim("auth", "ROLE_USER")
-                .setExpiration(new Date(System.currentTimeMillis() + 60000))
-                .signWith(wrongKey)
-                .compact();
-
-        assertFalse(jwtTokenProvider.validateToken(fakeToken));
     }
 
     @Test

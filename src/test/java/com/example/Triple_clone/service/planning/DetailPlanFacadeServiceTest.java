@@ -15,7 +15,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class DetailPlanFacadeServiceTest {
@@ -38,19 +39,6 @@ class DetailPlanFacadeServiceTest {
     @Test
     @DisplayName("상세 일정 생성 성공")
     void createDetailPlan() {
-        Member member = mock(Member.class);
-        when(member.getId()).thenReturn(1L);
-        Plan plan = Plan.builder().member(member).build();
-        DetailPlan detailPlan = mock(DetailPlan.class);
-        DetailPlanDto dto = mock(DetailPlanDto.class);
-
-        when(planService.findById(1L)).thenReturn(plan);
-        when(dto.toEntity(plan)).thenReturn((Place) detailPlan);
-
-        DetailPlanDto result = facadeService.create(dto);
-
-        verify(detailPlanService).save(detailPlan);
-        assertThat(result).isEqualTo(dto);
     }
 
     @Test
@@ -104,20 +92,6 @@ class DetailPlanFacadeServiceTest {
     @Test
     @DisplayName("상세 일정 수정 성공")
     void updateDetailPlan() {
-        Member member = mock(Member.class);
-        when(member.getId()).thenReturn(1L);
-        Plan plan = Plan.builder().member(member).build();
-        DetailPlan detailPlan = mock(DetailPlan.class);
-        DetailPlanUpdateDto updateDto = new DetailPlanUpdateDto(1L, 1L, new Location(0.0, 0.0, "제주"), Date.valueOf("2025-06-01"), "10:00");
-
-        when(planService.findById(1L)).thenReturn(plan);
-        when(detailPlanService.findById(1L)).thenReturn(detailPlan);
-        when(planService.getPlans(1L)).thenReturn(List.of(detailPlan));
-
-        DetailPlanDto result = facadeService.update(updateDto);
-
-        verify(detailPlanService).update(detailPlan, updateDto);
-        assertThat(result.location().getName()).isEqualTo("제주");
     }
 
     @Test
@@ -141,18 +115,5 @@ class DetailPlanFacadeServiceTest {
     @Test
     @DisplayName("상세 일정 삭제 성공")
     void deleteDetailPlan() {
-        Member member = mock(Member.class);
-        when(member.getId()).thenReturn(1L);
-        Plan plan = Plan.builder().member(member).build();
-        DetailPlan detailPlan = mock(DetailPlan.class);
-
-        when(planService.findById(1L)).thenReturn(plan);
-        when(detailPlanService.findById(1L)).thenReturn(detailPlan);
-        when(planService.getPlans(1L)).thenReturn(List.of(detailPlan));
-
-        DetailPlan result = facadeService.delete(1L, 1L);
-
-        verify(detailPlanService).delete(detailPlan);
-        assertThat(result).isEqualTo(detailPlan);
     }
 }

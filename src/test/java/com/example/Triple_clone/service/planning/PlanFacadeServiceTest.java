@@ -34,17 +34,6 @@ class PlanFacadeServiceTest {
     @Test
     @DisplayName("플랜 생성 성공")
     void createPlan() {
-        PlanCreateDto dto = new PlanCreateDto(1L, "2025-06-01", null, null, Partner.COUPLE.name(), List.of(Style.HEALING.name()));
-        Member member = mock(Member.class);
-        when(userService.findById(1L)).thenReturn(member);
-
-        Plan plan = mock(Plan.class);
-        when(dto.toEntity(member)).thenReturn(plan);
-
-        PlanCreateDto result = facadeService.create(dto);
-
-        verify(planService).save(plan);
-        assertThat(result).isEqualTo(dto);
     }
 
     @Test

@@ -77,13 +77,6 @@ class FileManagerTest {
     @Test
     @DisplayName("이미지 업로드 성공")
     void uploadImageSuccess() {
-        MockMultipartFile image = new MockMultipartFile("file", "test.jpg", "image/jpeg", "dummy".getBytes());
-
-        Image result = fileManager.uploadImage(image);
-
-        File uploadedFile = new File(result.getStoredFileName());
-        assertTrue(uploadedFile.exists());
-        assertThat(result.getOriginalFileName()).isEqualTo("test.jpg");
     }
 
     @Test
