@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -24,6 +27,13 @@ public class Review {
 
     private String content;
     private Image image;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Review parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> children = new ArrayList<>();
 
     public Review(Member member, Recommendation recommendation, String content) {
         this.member = member;
