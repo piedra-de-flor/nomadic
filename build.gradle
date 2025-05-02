@@ -71,7 +71,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// elasticsearch
-	implementation 'co.elastic.clients:elasticsearch-java:8.10.2'
+	implementation 'co.elastic.clients:elasticsearch-java:8.11.1'
+	implementation 'org.elasticsearch.client:elasticsearch-rest-client:8.11.1'
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.1.3'
 }
 

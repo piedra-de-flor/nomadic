@@ -1,56 +1,89 @@
 package com.example.Triple_clone.service.review;
 
+import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.entity.Recommendation;
+import com.example.Triple_clone.domain.entity.Review;
+import com.example.Triple_clone.domain.vo.Image;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.service.membership.UserService;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import com.example.Triple_clone.service.support.FileManager;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.NoSuchElementException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-import static org.mockito.Mockito.when;
+class ReviewFacadeServiceTest {
 
-@ExtendWith(MockitoExtension.class)
-public class ReviewFacadeServiceTest {
-    @MockBean
-    ReviewFacadeService reviewFacadeService;
-    @Mock
-    UserService userService;
-    @Mock
-    RecommendService recommendService;
-    @Mock
-    ReviewService reviewService;
-    @Mock
-    FileManager fileManager;
-    @Mock
-    Recommendation recommendation;
+    private UserService userService;
+    private ReviewService reviewService;
+    private RecommendService recommendService;
+    private FileManager fileManager;
+    private ReviewFacadeService facadeService;
 
-    @Test
-    void 리뷰_작성_실패_유저_없음_테스트() {
-        when(userService.findById(2)).thenThrow(NoSuchElementException.class);
-        when(recommendService.findById(1)).thenReturn(recommendation);
-
-        reviewFacadeService = new ReviewFacadeService(userService, reviewService, recommendService, fileManager);
-        RecommendWriteReviewDto dto = new RecommendWriteReviewDto(2, 1, "test");
-
-        Assertions.assertThrows(NoSuchElementException.class, ()
-                -> reviewFacadeService.writeReview(dto));
+    @BeforeEach
+    void setUp() {
+        userService = mock(UserService.class);
+        reviewService = mock(ReviewService.class);
+        recommendService = mock(RecommendService.class);
+        fileManager = mock(FileManager.class);
+        facadeService = new ReviewFacadeService(userService, reviewService, recommendService, fileManager);
     }
 
     @Test
-    void 리뷰_작성_실패_장소_없음_테스트() {
-        when(recommendService.findById(2)).thenThrow(NoSuchElementException.class);
+    @DisplayName("리뷰 작성 성공")
+    void writeReviewSuccess() {
+        RecommendWriteReviewDto dto = mock(RecommendWriteReviewDto.class);
+        Member member = mock(Member.class);
+        Recommendation recommendation = mock(Recommendation.class);
+        Review review = mock(Review.class);
 
-        reviewFacadeService = new ReviewFacadeService(userService, reviewService, recommendService, fileManager);
-        RecommendWriteReviewDto dto = new RecommendWriteReviewDto(1, 2, "test");
+        when(dto.userId()).thenReturn(1L);
+        when(dto.placeId()).thenReturn(100L);
+        when(userService.findById(1L)).thenReturn(member);
+        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(dto.toEntity(member, recommendation)).thenReturn(review);
 
-        Assertions.assertThrows(NoSuchElementException.class, ()
-                -> reviewFacadeService.writeReview(dto));
+        facadeService.writeReview(dto);
+
+        verify(reviewService).save(review);
+        verify(recommendation).addReview(review);
+    }
+
+    @Test
+    @DisplayName("리뷰 이미지 저장 성공")
+    void setImageOfReview() {
+        Long reviewId = 1L;
+        MultipartFile file = mock(MultipartFile.class);
+        Review review = mock(Review.class);
+        Image image = new Image("original.jpg", "stored.jpg");
+
+        when(reviewService.findById(reviewId)).thenReturn(review);
+        when(fileManager.uploadImage(file)).thenReturn(image);
+
+        Long result = facadeService.setImageOfReview(reviewId, file);
+
+        verify(review).setImage(image);
+        assertThat(result).isEqualTo(reviewId);
+    }
+
+    @Test
+    @DisplayName("리뷰 이미지 로딩 성공")
+    void loadImageAsResource() {
+        Long reviewId = 1L;
+        Review review = mock(Review.class);
+        Image image = new Image("original.jpg", "stored.jpg");
+        byte[] data = new byte[]{1, 2, 3};
+
+        when(reviewService.findById(reviewId)).thenReturn(review);
+        when(review.getImage()).thenReturn(image);
+        when(fileManager.loadImageAsResource("stored.jpg")).thenReturn(data);
+
+        byte[] result = facadeService.loadImageAsResource(reviewId);
+
+        assertThat(result).isEqualTo(data);
     }
 }

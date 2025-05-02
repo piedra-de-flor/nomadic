@@ -8,13 +8,16 @@ public record AccommodationDto(
         String name,
         double score,
         String category,
+        long lentDiscountRate,
         int lentTime,
+        long lentOriginPrice,
         long lentPrice,
         boolean lentStatus,
         String enterTime,
-        long discountRate,
-        long originPrice,
-        long totalPrice
+        long lodgmentDiscountRate,
+        long lodgmentOriginPrice,
+        long lodgmentPrice,
+        boolean lodgmentStatus
 ) {
     public Accommodation toEntity() {
         return Accommodation.builder()
@@ -24,11 +27,14 @@ public record AccommodationDto(
                 .category(category)
                 .lentTime(lentTime)
                 .lentPrice(lentPrice)
+                .lentOriginPrice(lentOriginPrice)
                 .lentStatus(lentStatus)
+                .lentDiscountRate(lentDiscountRate)
+                .lodgmentPrice(lodgmentPrice)
+                .lodgmentStatus(lodgmentStatus)
+                .lodgmentOriginPrice(lodgmentOriginPrice)
+                .lodgmentDiscountRate(lodgmentDiscountRate)
                 .enterTime(enterTime)
-                .lodgmentDiscountRate(discountRate)
-                .lodgmentOriginPrice(originPrice)
-                .lodgmentPrice(totalPrice)
                 .build();
     }
 
@@ -38,13 +44,16 @@ public record AccommodationDto(
                 accommodation.getName(),
                 accommodation.getScore(),
                 accommodation.getCategory(),
+                accommodation.getLentDiscountRate(),
                 accommodation.getLentTime(),
+                accommodation.getLentOriginPrice(),
                 accommodation.getLentPrice(),
                 accommodation.isLentStatus(),
                 String.valueOf(accommodation.getEnterTime()),
                 accommodation.getLodgmentDiscountRate(),
                 accommodation.getLodgmentOriginPrice(),
-                accommodation.getLodgmentPrice()
+                accommodation.getLodgmentPrice(),
+                accommodation.isLodgmentStatus()
         );
     }
 
@@ -52,15 +61,18 @@ public record AccommodationDto(
         this(
                 document.getLocal(),
                 document.getName(),
-                document.getScore(),
+                document.getScore() != null ? document.getScore() : 0.0,
                 document.getCategory(),
-                document.getLentTime(),
-                document.getLentPrice(),
-                document.getLentStatus(),
-                String.valueOf(document.getEnterTime()),
-                document.getLodgmentDiscountRate(),
-                document.getLodgmentOriginPrice(),
-                document.getLodgmentPrice()
+                document.getLentDiscountRate() != null ? document.getLentDiscountRate() : 0L,
+                document.getLentTime() != null ? document.getLentTime() : 0,
+                document.getLentOriginPrice() != null ? document.getLentOriginPrice() : 0L,
+                document.getLentPrice() != null ? document.getLentPrice() : 0L,
+                document.getLentStatus() != null ? document.getLentStatus() : false,
+                document.getEnterTime() != null ? document.getEnterTime() : "",
+                document.getLodgmentDiscountRate() != null ? document.getLodgmentDiscountRate() : 0L,
+                document.getLodgmentOriginPrice() != null ? document.getLodgmentOriginPrice() : 0L,
+                document.getLodgmentPrice() != null ? document.getLodgmentPrice() : 0L,
+                document.getLodgmentStatus() != null ? document.getLodgmentStatus() : false
         );
     }
 }
