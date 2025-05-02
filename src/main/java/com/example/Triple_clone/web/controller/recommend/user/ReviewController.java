@@ -1,6 +1,8 @@
 package com.example.Triple_clone.web.controller.recommend.user;
 
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
+import com.example.Triple_clone.dto.review.ReviewResponseDto;
+import com.example.Triple_clone.dto.review.ReviewUpdateDto;
 import com.example.Triple_clone.service.review.ReviewFacadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -59,5 +61,31 @@ public class ReviewController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
                 .body(response);
+    }
+
+    @Operation(summary = "리뷰 수정", description = "리뷰의 내용을 수정합니다.")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
+    @PutMapping("/recommendation/review")
+    public ResponseEntity<ReviewResponseDto> updateReview(
+            @Parameter(description = "이미지를 로딩할 리뷰 ID", required = true)
+            @RequestBody ReviewUpdateDto updateDto, @RequestParam long memberId) {
+        ReviewResponseDto response = service.updateReview(updateDto, memberId);
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @Operation(summary = "리뷰 사진 조회", description = "리뷰를 삭제합니다.")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
+    @GetMapping("/recommendation/review/image")
+    public ResponseEntity<Void> deleteReview(
+            @Parameter(description = "삭제할 리뷰 ID", required = true)
+            @RequestParam long reviewId, @RequestParam long memberId) {
+        service.deleteReview(reviewId, memberId);
+        return ResponseEntity.ok().build();
     }
 }
