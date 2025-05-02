@@ -3,12 +3,15 @@ package com.example.Triple_clone.service.review;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.vo.AuthErrorCode;
 import com.example.Triple_clone.domain.vo.Image;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.dto.review.ReviewResponseDto;
+import com.example.Triple_clone.dto.review.ReviewUpdateDto;
 import com.example.Triple_clone.service.membership.UserService;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import com.example.Triple_clone.service.support.FileManager;
+import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,11 +49,12 @@ public class ReviewFacadeService {
 
     @Transactional
     public ReviewResponseDto updateReview(ReviewUpdateDto updateDto, Long memberId) {
-        Review review = reviewService.findById(updateDto.reviewId);
+        Review review = reviewService.findById(updateDto.reviewId());
         Member member = userService.findById(memberId);
 
         if (review.getMember().getId() == member.getId()) {
-            reviewService.update(updateDto.reviewId, updateDto.content);
+            reviewService.update(updateDto.reviewId(), updateDto.content());
+            return new ReviewResponseDto(review);
         }
     }
 
