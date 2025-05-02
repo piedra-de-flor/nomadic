@@ -45,6 +45,8 @@ public class ReviewFacadeService {
         if (review.getMember().getId() == member.getId()) {
             reviewService.delete(reviewId);
         }
+
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
     @Transactional
@@ -56,6 +58,8 @@ public class ReviewFacadeService {
             reviewService.update(updateDto.reviewId(), updateDto.content());
             return new ReviewResponseDto(review);
         }
+
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
     @Transactional
