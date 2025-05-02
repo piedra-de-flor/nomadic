@@ -16,13 +16,11 @@ public class ReviewService {
         repository.save(review);
     }
 
-    public void delete(Long reviewId) {
-        Review review = findById(reviewId);
+    public void delete(Review review) {
         repository.delete(review);
     }
 
-    public void update(Long reviewId, String content) {
-        Review review = findById(reviewId);
+    public void update(Review review, String content) {
         review.update(content);
     }
 

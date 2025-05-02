@@ -43,7 +43,7 @@ public class ReviewFacadeService {
         Review review = reviewService.findById(reviewId);
 
         if (review.getMember().getId() == member.getId()) {
-            reviewService.delete(reviewId);
+            reviewService.delete(review);
         }
 
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
@@ -55,7 +55,7 @@ public class ReviewFacadeService {
         Member member = userService.findById(memberId);
 
         if (review.getMember().getId() == member.getId()) {
-            reviewService.update(updateDto.reviewId(), updateDto.content());
+            reviewService.update(review, updateDto.content());
             return new ReviewResponseDto(review);
         }
 
