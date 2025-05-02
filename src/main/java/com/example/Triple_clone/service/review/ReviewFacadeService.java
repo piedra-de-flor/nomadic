@@ -45,6 +45,16 @@ public class ReviewFacadeService {
     }
 
     @Transactional
+    public ReviewResponseDto updateReview(ReviewUpdateDto updateDto, Long memberId) {
+        Review review = reviewService.findById(updateDto.reviewId);
+        Member member = userService.findById(memberId);
+
+        if (review.getMember().getId() == member.getId()) {
+            reviewService.update(updateDto.reviewId, updateDto.content);
+        }
+    }
+
+    @Transactional
     public Long setImageOfReview(Long reviewId, MultipartFile image) {
         Review review = reviewService.findById(reviewId);
         Image reviewImage = fileManager.uploadImage(image);

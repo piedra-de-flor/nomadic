@@ -21,6 +21,11 @@ public class ReviewService {
         repository.delete(review);
     }
 
+    public void update(Long reviewId, String content) {
+        Review review = findById(reviewId);
+        review.update(content);
+    }
+
     public Review findById(Long reviewId) {
         return repository.findById(reviewId)
                 .orElseThrow(NoSuchElementException::new);
