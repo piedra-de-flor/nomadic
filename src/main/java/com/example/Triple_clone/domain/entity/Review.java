@@ -46,6 +46,10 @@ public class Review {
         return image.getStoredFileName();
     }
 
+    public void update(String content) {
+        this.content = content;
+    }
+
     public void addChildReview(Review child) {
         children.add(child);
         child.parent = this;
