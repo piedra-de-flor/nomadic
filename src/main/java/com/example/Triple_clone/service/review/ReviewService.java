@@ -16,6 +16,11 @@ public class ReviewService {
         repository.save(review);
     }
 
+    public void delete(Long reviewId) {
+        Review review = findById(reviewId);
+        repository.delete(review);
+    }
+
     public Review findById(Long reviewId) {
         return repository.findById(reviewId)
                 .orElseThrow(NoSuchElementException::new);
