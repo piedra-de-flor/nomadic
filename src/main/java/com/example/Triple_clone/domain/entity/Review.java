@@ -45,4 +45,13 @@ public class Review {
         this.image = image;
         return image.getStoredFileName();
     }
+
+    public void addChildReview(Review child) {
+        children.add(child);
+        child.parent = this;
+    }
+
+    public boolean isRoot() {
+        return parent == null;
+    }
 }
