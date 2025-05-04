@@ -44,6 +44,7 @@ public class ReviewFacadeService {
 
         if (review.getMember().getId() == member.getId()) {
             reviewService.delete(review);
+            return;
         }
 
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
