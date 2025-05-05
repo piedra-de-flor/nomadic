@@ -27,7 +27,13 @@ public class ReviewFacadeService {
     public void writeReview(RecommendWriteReviewDto writeReviewRequestDto) {
         Recommendation recommendation = recommendService.findById(writeReviewRequestDto.placeId());
         Member member = userService.findById(writeReviewRequestDto.userId());
-        Review review = writeReviewRequestDto.toEntity(member, recommendation);
+
+        Review parent = null;
+        if (writeReviewRequestDto.parentId() != null) {
+            parent = reviewService.findById(writeReviewRequestDto.parentId());
+        }
+
+        Review review = writeReviewRequestDto.toEntity(member, recommendation, parent);
 
         reviewService.save(review);
         recommendation.addReview(review);
