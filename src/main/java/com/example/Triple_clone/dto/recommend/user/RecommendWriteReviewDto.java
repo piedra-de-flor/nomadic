@@ -13,7 +13,11 @@ public record RecommendWriteReviewDto(
         @Size(max = 3000, message = "maximum contents size is 3000 words")
         String content,
         Long parentId) {
-    public Review toEntity(Member member, Recommendation recommendation) {
-        return new Review(member, recommendation, this.content);
+    public Review toEntity(Member member, Recommendation recommendation, Review parent) {
+        Review review = new Review(member, recommendation, this.content);
+        if (parent != null) {
+            parent.addChildReview(review);
+        }
+        return review;
     }
 }
