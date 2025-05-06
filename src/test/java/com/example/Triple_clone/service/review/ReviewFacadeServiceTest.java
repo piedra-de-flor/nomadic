@@ -45,7 +45,7 @@ class ReviewFacadeServiceTest {
         when(dto.placeId()).thenReturn(100L);
         when(userService.findById(1L)).thenReturn(member);
         when(recommendService.findById(100L)).thenReturn(recommendation);
-        when(dto.toEntity(member, recommendation)).thenReturn(review);
+        when(dto.toEntity(member, recommendation, null)).thenReturn(review);
 
         facadeService.writeReview(dto);
 
