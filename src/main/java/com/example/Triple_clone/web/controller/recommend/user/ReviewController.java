@@ -76,15 +76,15 @@ public class ReviewController {
                 .body(response);
     }
 
-    @Operation(summary = "리뷰 사진 조회", description = "리뷰를 삭제합니다.")
+    @Operation(summary = "리뷰를 삭제합니다.", description = "리뷰를 삭제합니다.")
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @GetMapping("/recommendation/review/image")
+    @DeleteMapping("/recommendation/review/{reviewId}")
     public ResponseEntity<Void> deleteReview(
             @Parameter(description = "삭제할 리뷰 ID", required = true)
-            @RequestParam long reviewId, @RequestParam long memberId) {
+            @PathVariable long reviewId, @RequestParam long memberId) {
         service.deleteReview(reviewId, memberId);
         return ResponseEntity.ok().build();
     }
