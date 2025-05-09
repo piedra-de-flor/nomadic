@@ -31,6 +31,10 @@ public class ReviewFacadeService {
         Review parent = null;
         if (writeReviewRequestDto.parentId() != null) {
             parent = reviewService.findById(writeReviewRequestDto.parentId());
+
+            if (parent.getParent() != null) {
+                throw new IllegalArgumentException("대댓글은 depth가 2이상 허용되지 않습니다.");
+            }
         }
 
         Review review = writeReviewRequestDto.toEntity(member, recommendation, parent);
