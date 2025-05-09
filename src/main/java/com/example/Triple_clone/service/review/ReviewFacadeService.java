@@ -8,11 +8,14 @@ import com.example.Triple_clone.domain.vo.Image;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.dto.review.ReviewResponseDto;
 import com.example.Triple_clone.dto.review.ReviewUpdateDto;
+import com.example.Triple_clone.dto.review.RootReviewResponseDto;
 import com.example.Triple_clone.service.membership.UserService;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import com.example.Triple_clone.service.support.FileManager;
 import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +48,14 @@ public class ReviewFacadeService {
 
         reviewService.save(review);
         recommendation.addReview(review);
+    }
+
+    public Page<RootReviewResponseDto> getRootReviews(Long recommendationId, Pageable pageable) {
+        return reviewService.getRootReviews(recommendationId, pageable);
+    }
+
+    public Page<ReviewResponseDto> getReplies(Long parentId, Pageable pageable) {
+        return reviewService.getReplies(parentId, pageable);
     }
 
     @Transactional

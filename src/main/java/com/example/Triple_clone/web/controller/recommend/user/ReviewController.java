@@ -3,12 +3,16 @@ package com.example.Triple_clone.web.controller.recommend.user;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.dto.review.ReviewResponseDto;
 import com.example.Triple_clone.dto.review.ReviewUpdateDto;
+import com.example.Triple_clone.dto.review.RootReviewResponseDto;
 import com.example.Triple_clone.service.review.ReviewFacadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +35,28 @@ public class ReviewController {
             @RequestBody @Validated RecommendWriteReviewDto writeReviewRequestDto) {
         service.writeReview(writeReviewRequestDto);
         return ResponseEntity.ok(writeReviewRequestDto);
+    }
+
+    @Operation(summary = "Root 리뷰 조회", description = "최상위 리뷰들을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @GetMapping("/recommendation/review/{recommendationId}")
+    public ResponseEntity<Page<RootReviewResponseDto>> readReview(
+            @Parameter(description = "해당 게시물 ID", required = true)
+            @PathVariable Long recommendationId, @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(service.getRootReviews(recommendationId, pageable));
+    }
+
+    @Operation(summary = "대댓글 조회", description = "대댓글을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @GetMapping("/recommendation/reply/{parentId}")
+    public ResponseEntity<Page<ReviewResponseDto>> readReply(
+            @Parameter(description = "해당 게시물 ID", required = true)
+            @PathVariable Long parentId, @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(service.getReplies(parentId, pageable));
     }
 
     @Operation(summary = "리뷰 사진 추가", description = "리뷰에 사진을 추가합니다")
