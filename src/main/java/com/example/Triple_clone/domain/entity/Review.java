@@ -1,6 +1,7 @@
 package com.example.Triple_clone.domain.entity;
 
 import com.example.Triple_clone.domain.vo.Image;
+import com.example.Triple_clone.domain.vo.ReviewStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,6 +36,9 @@ public class Review {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> children = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status = ReviewStatus.ACTIVE;
+
     public Review(Member member, Recommendation recommendation, String content) {
         this.member = member;
         this.recommendation = recommendation;
@@ -57,5 +61,13 @@ public class Review {
 
     public boolean isRoot() {
         return parent == null;
+    }
+
+    public void softDelete() {
+        this.status = ReviewStatus.DELETED;
+    }
+
+    public boolean isDeleted() {
+        return this.status == ReviewStatus.DELETED;
     }
 }
