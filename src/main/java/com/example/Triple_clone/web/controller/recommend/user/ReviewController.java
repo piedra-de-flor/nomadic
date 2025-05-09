@@ -76,7 +76,7 @@ public class ReviewController {
                 .body(response);
     }
 
-    @Operation(summary = "리뷰를 삭제합니다.", description = "리뷰를 삭제합니다.")
+    @Operation(summary = "리뷰 삭제", description = "리뷰를 삭제합니다.")
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
