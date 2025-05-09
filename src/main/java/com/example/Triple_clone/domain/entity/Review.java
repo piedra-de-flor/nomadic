@@ -59,6 +59,10 @@ public class Review {
         child.parent = this;
     }
 
+    public String getWriter() {
+        return member.getName();
+    }
+
     public boolean isRoot() {
         return parent == null;
     }
