@@ -143,6 +143,7 @@ class ReviewFacadeServiceTest {
         when(member.getId()).thenReturn(memberId);
         when(review.getMember()).thenReturn(member);
         when(review.getId()).thenReturn(reviewId);
+        when(review.getContent()).thenReturn(newContent);
         when(userService.findById(memberId)).thenReturn(member);
         when(reviewService.findById(reviewId)).thenReturn(review);
 
@@ -150,6 +151,7 @@ class ReviewFacadeServiceTest {
 
         verify(reviewService).update(review, newContent);
         assertThat(response.getId()).isEqualTo(reviewId);
+        assertThat(response.getContent()).isEqualTo(newContent);
     }
 
     @Test
