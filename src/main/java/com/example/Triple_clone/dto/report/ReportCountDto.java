@@ -1,5 +1,8 @@
 package com.example.Triple_clone.dto.report;
 
+import lombok.Getter;
+
+@Getter
 public class ReportCountDto {
     private Long targetId;
     private String targetType;
