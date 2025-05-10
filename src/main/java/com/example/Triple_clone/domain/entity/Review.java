@@ -1,6 +1,7 @@
 package com.example.Triple_clone.domain.entity;
 
 import com.example.Triple_clone.domain.vo.Image;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReviewStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -76,7 +77,12 @@ public class Review implements Reportable {
     }
 
     @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
     public String getType() {
-        return this.getClass().getName();
+        return ReportTargetType.REVIEW.name();
     }
 }

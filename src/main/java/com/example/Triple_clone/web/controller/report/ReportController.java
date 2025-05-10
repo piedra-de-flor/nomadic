@@ -20,7 +20,7 @@ public class ReportController {
             @PathVariable Long reviewId,
             @RequestBody ReportRequestDto request
     ) {
-        reportService.reportReview(reviewId, request.getReporterId(), request.getReason(), request.getDetail());
+        reportService.reportReview(reviewId, request.reporterId(), request.reason(), request.detail());
         return ResponseEntity.ok("신고가 접수되었습니다.");
     }
 }
