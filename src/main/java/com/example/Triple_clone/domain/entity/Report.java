@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.vo.ReportStatus;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,6 +34,13 @@ public class Report {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReportStatus status = ReportStatus.PENDING;
+
+    @Column
+    private LocalDateTime processedAt;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -55,5 +63,15 @@ public class Report {
                 .reason(reason)
                 .detail(detail)
                 .build();
+    }
+
+    public void approve() {
+        this.status = ReportStatus.APPROVED;
+        this.processedAt = LocalDateTime.now();
+    }
+
+    public void reject() {
+        this.status = ReportStatus.REJECTED;
+        this.processedAt = LocalDateTime.now();
     }
 }
