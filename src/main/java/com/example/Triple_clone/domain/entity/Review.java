@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Review {
+public class Review implements Reportable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -73,5 +73,10 @@ public class Review {
 
     public boolean isDeleted() {
         return this.status == ReviewStatus.DELETED;
+    }
+
+    @Override
+    public String getType() {
+        return this.getClass().getName();
     }
 }
