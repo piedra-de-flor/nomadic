@@ -5,6 +5,7 @@ import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import com.example.Triple_clone.repository.MemberRepository;
+import com.example.Triple_clone.repository.ReportCountRepository;
 import com.example.Triple_clone.repository.ReportRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,9 @@ public class ReportServiceTest {
 
     @Mock
     private ReviewRepository reviewRepository;
+
+    @Mock
+    private ReportCountRepository reportCountRepository;
 
     @InjectMocks
     private ReportService reportService;

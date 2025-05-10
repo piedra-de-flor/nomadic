@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 class ReviewFacadeServiceTest {
@@ -42,23 +43,72 @@ class ReviewFacadeServiceTest {
     }
 
     @Test
-    @DisplayName("리뷰 작성 성공")
-    void writeReviewSuccess() {
+    @DisplayName("부모 없는 리뷰 작성 성공")
+    void writeReview_success() {
         RecommendWriteReviewDto dto = mock(RecommendWriteReviewDto.class);
-        Member member = mock(Member.class);
         Recommendation recommendation = mock(Recommendation.class);
+        Member member = mock(Member.class);
         Review review = mock(Review.class);
 
-        when(dto.userId()).thenReturn(1L);
         when(dto.placeId()).thenReturn(100L);
-        when(userService.findById(1L)).thenReturn(member);
-        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(dto.userId()).thenReturn(1L);
+        when(dto.parentId()).thenReturn(null);
         when(dto.toEntity(member, recommendation, null)).thenReturn(review);
+
+        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(userService.findById(1L)).thenReturn(member);
 
         facadeService.writeReview(dto);
 
         verify(reviewService).save(review);
         verify(recommendation).addReview(review);
+    }
+
+    @Test
+    @DisplayName("대댓글 작성 성공 (depth 1까지 허용)")
+    void writeReply_success() {
+        RecommendWriteReviewDto dto = mock(RecommendWriteReviewDto.class);
+        Recommendation recommendation = mock(Recommendation.class);
+        Member member = mock(Member.class);
+        Review parent = mock(Review.class);
+        Review child = mock(Review.class);
+
+        when(dto.placeId()).thenReturn(100L);
+        when(dto.userId()).thenReturn(1L);
+        when(dto.parentId()).thenReturn(10L);
+        when(dto.toEntity(member, recommendation, parent)).thenReturn(child);
+
+        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(userService.findById(1L)).thenReturn(member);
+        when(reviewService.findById(10L)).thenReturn(parent);
+        when(parent.getParent()).thenReturn(null);
+
+        facadeService.writeReview(dto);
+
+        verify(reviewService).save(child);
+        verify(recommendation).addReview(child);
+    }
+
+    @Test
+    @DisplayName("대댓글의 대댓글은 예외 발생 (depth 2 제한)")
+    void writeReply_depthLimitExceeded_throwsException() {
+        RecommendWriteReviewDto dto = mock(RecommendWriteReviewDto.class);
+        Recommendation recommendation = mock(Recommendation.class);
+        Member member = mock(Member.class);
+        Review parent = mock(Review.class);
+
+        Review grandParent = mock(Review.class);
+
+        when(dto.placeId()).thenReturn(100L);
+        when(dto.userId()).thenReturn(1L);
+        when(dto.parentId()).thenReturn(10L);
+
+        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(userService.findById(1L)).thenReturn(member);
+        when(reviewService.findById(10L)).thenReturn(parent);
+        when(parent.getParent()).thenReturn(grandParent);
+
+        assertThrows(IllegalArgumentException.class, () -> facadeService.writeReview(dto));
     }
 
     @Test
