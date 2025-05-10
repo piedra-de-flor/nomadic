@@ -64,10 +64,6 @@ public class Review implements Reportable {
         return member.getName();
     }
 
-    public boolean isRoot() {
-        return parent == null;
-    }
-
     public void softDelete() {
         this.status = ReviewStatus.DELETED;
     }
