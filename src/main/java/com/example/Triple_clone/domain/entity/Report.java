@@ -35,4 +35,12 @@ public class Report {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    @Builder
+    public Report(Review review, Member reporter, ReportingReason reason, String detail) {
+        this.review = review;
+        this.detail = detail;
+        this.reporter = reporter;
+        this.reason = reason;
+    }
 }
