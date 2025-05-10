@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface ReportAdminRepository {
     Page<ReportResponseDto> searchReports(ReportSearchDto condition, Pageable pageable);
+    Page<ReportResponseDto> searchReportsByTarget(String targetType, Long targetId, Pageable pageable);
 }

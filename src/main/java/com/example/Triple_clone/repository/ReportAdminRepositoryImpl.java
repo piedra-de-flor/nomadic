@@ -6,6 +6,8 @@ import com.example.Triple_clone.dto.report.QReportResponseDto;
 import com.example.Triple_clone.dto.report.ReportSearchDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -67,4 +69,42 @@ public class ReportAdminRepositoryImpl implements ReportAdminRepository {
 
         return new PageImpl<>(results, pageable, total);
     }
+
+    @Override
+    public Page<ReportResponseDto> searchReportsByTarget(String targetType, Long targetId, Pageable pageable) {
+        QReport report = QReport.report;
+
+        JPAQuery<ReportResponseDto> query = queryFactory
+                .select(Projections.constructor(
+                        ReportResponseDto.class,
+                        report.id,
+                        report.reason,
+                        report.createdAt,
+                        report.status,
+                        report.targetId,
+                        report.targetType
+                ))
+                .from(report)
+                .where(
+                        report.targetType.eq(targetType),
+                        report.targetId.eq(targetId)
+                );
+
+        List<ReportResponseDto> content = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = queryFactory
+                .select(report.count())
+                .from(report)
+                .where(
+                        report.targetType.eq(targetType),
+                        report.targetId.eq(targetId)
+                )
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total == null ? 0 : total);
+    }
+
 }

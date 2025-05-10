@@ -1,5 +1,6 @@
 package com.example.Triple_clone.web.controller.report;
 
+import com.example.Triple_clone.dto.report.ReportCountDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.dto.report.ReportSearchDto;
 import com.example.Triple_clone.service.report.ReportAdminService;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +24,31 @@ public class ReportAdminController {
             ReportSearchDto condition,
             @PageableDefault(size = 10) Pageable pageable) {
         return reportService.getReports(condition, pageable);
+    }
+
+    @GetMapping("/report-counts")
+    public List<ReportCountDto> getReportCountsByCondition(
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        return reportService.getReportCounts(pageable);
+    }
+
+    @GetMapping("/report-counts/conditions")
+    public List<ReportCountDto> getReportCountsByCondition(
+            @RequestParam(required = false) String targetType,
+            @RequestParam(required = false) Long minReportCount,
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        return reportService.getReportCountsByCondition(targetType, minReportCount, pageable);
+    }
+
+    @GetMapping("/reports/by-target")
+    public Page<ReportResponseDto> getReportsByTarget(
+            @RequestParam String targetType,
+            @RequestParam Long targetId,
+            Pageable pageable
+    ) {
+        return reportService.getReportsByTarget(targetType, targetId, pageable);
     }
 
     @PostMapping("/{reportId}/approve")
