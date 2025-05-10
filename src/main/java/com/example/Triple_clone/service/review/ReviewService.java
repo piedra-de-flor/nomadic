@@ -21,7 +21,7 @@ public class ReviewService {
     }
 
     public void delete(Review review) {
-        repository.delete(review);
+        review.softDelete();
     }
 
     public void update(Review review, String content) {
