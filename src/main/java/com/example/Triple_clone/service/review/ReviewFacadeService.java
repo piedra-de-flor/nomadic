@@ -58,7 +58,6 @@ public class ReviewFacadeService {
         return reviewService.getReplies(parentId, pageable);
     }
 
-    @Transactional
     public void deleteReview(Long reviewId, Long memberId) {
         Member member = userService.findById(memberId);
         Review review = reviewService.findById(reviewId);
@@ -71,7 +70,6 @@ public class ReviewFacadeService {
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
-    @Transactional
     public ReviewResponseDto updateReview(ReviewUpdateDto updateDto, Long memberId) {
         Review review = reviewService.findById(updateDto.reviewId());
         Member member = userService.findById(memberId);
