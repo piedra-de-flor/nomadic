@@ -1,6 +1,7 @@
 package com.example.Triple_clone.domain.entity;
 
 import com.example.Triple_clone.domain.vo.ReportStatus;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,8 +23,9 @@ public class Report {
     @Column(nullable = false)
     private Long targetId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String targetType;
+    private ReportTargetType targetType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,7 +52,7 @@ public class Report {
     public Report(Member reporter, Long targetId, String targetType, ReportingReason reason, String detail) {
         this.reporter = reporter;
         this.targetId = targetId;
-        this.targetType = targetType;
+        this.targetType = ReportTargetType.from(targetType);
         this.reason = reason;
         this.detail = detail;
     }
