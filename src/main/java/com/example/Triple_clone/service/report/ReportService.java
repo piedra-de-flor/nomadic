@@ -36,7 +36,7 @@ public class ReportService {
         reportRepository.save(report);
 
         ReportCount reportCount = reportCountRepository.findByTargetIdAndTargetType(
-                        report.getTargetId(), report.getTargetType())
+                        report.getTargetId(), String.valueOf(report.getTargetType()))
                 .orElse(new ReportCount(report.getTargetId(), report.getTargetType(), 0L));
 
         reportCount.incrementCount();

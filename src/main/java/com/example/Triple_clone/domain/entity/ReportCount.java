@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,8 +19,9 @@ public class ReportCount {
     @Column(nullable = false)
     private Long targetId;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String targetType;
+    private ReportTargetType targetType;
 
     @Column(nullable = false)
     private Long count;
@@ -29,7 +31,7 @@ public class ReportCount {
     }
 
     @Builder
-    public ReportCount(Long targetId, String targetType, Long count) {
+    public ReportCount(Long targetId, ReportTargetType targetType, Long count) {
         this.targetId = targetId;
         this.targetType = targetType;
         this.count = count;

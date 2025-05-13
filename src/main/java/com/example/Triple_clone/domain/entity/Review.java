@@ -78,7 +78,7 @@ public class Review implements Reportable {
     }
 
     @Override
-    public String getType() {
-        return ReportTargetType.REVIEW.name();
+    public ReportTargetType getReportType() {
+        return ReportTargetType.REVIEW;
     }
 }
