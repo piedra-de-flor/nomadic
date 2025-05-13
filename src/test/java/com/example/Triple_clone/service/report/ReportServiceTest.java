@@ -49,7 +49,7 @@ public class ReportServiceTest {
         when(memberRepository.findById(reporterId)).thenReturn(java.util.Optional.of(reporter));
         when(reviewRepository.findById(reviewId)).thenReturn(java.util.Optional.of(review));
         when(review.getId()).thenReturn(reviewId);
-        when(review.getType()).thenReturn("REVIEW");
+        when(review.getReportType()).thenReturn("REVIEW");
 
         reportService.reportReview(reviewId, reporterId, reason, detail);
 

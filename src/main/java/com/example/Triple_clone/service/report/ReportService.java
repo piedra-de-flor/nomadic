@@ -1,10 +1,12 @@
 package com.example.Triple_clone.service.report;
 
 import com.example.Triple_clone.domain.entity.Member;
-import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.entity.Report;
+import com.example.Triple_clone.domain.entity.ReportCount;
+import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import com.example.Triple_clone.repository.MemberRepository;
+import com.example.Triple_clone.repository.ReportCountRepository;
 import com.example.Triple_clone.repository.ReportRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
+    private final ReportCountRepository reportCountRepository;
 
     public void reportReview(Long reviewId, Long reporterId, ReportingReason reason, String detail) {
         Review review = reviewRepository.findById(reviewId)
@@ -31,5 +34,12 @@ public class ReportService {
 
         Report report = Report.of(review, reporter, reason, detail);
         reportRepository.save(report);
+
+        ReportCount reportCount = reportCountRepository.findByTargetIdAndTargetType(
+                        report.getTargetId(), String.valueOf(report.getTargetType()))
+                .orElse(new ReportCount(report.getTargetId(), report.getTargetType(), 0L));
+
+        reportCount.incrementCount();
+        reportCountRepository.save(reportCount);
     }
 }

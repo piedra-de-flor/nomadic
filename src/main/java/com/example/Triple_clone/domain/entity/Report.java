@@ -49,10 +49,10 @@ public class Report {
     }
 
     @Builder
-    public Report(Member reporter, Long targetId, String targetType, ReportingReason reason, String detail) {
+    public Report(Member reporter, Long targetId, ReportTargetType targetType, ReportingReason reason, String detail) {
         this.reporter = reporter;
         this.targetId = targetId;
-        this.targetType = ReportTargetType.from(targetType);
+        this.targetType = targetType;
         this.reason = reason;
         this.detail = detail;
     }
@@ -61,7 +61,7 @@ public class Report {
         return Report.builder()
                 .reporter(reporter)
                 .targetId(target.getId())
-                .targetType(target.getType())
+                .targetType(target.getReportType())
                 .reason(reason)
                 .detail(detail)
                 .build();
