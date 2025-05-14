@@ -1,6 +1,7 @@
 package com.example.Triple_clone.dto.report;
 
 import com.example.Triple_clone.domain.vo.ReportStatus;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ReportSearchDto {
-    private String targetType;
+    private ReportTargetType targetType;
     private ReportStatus status;
     private ReportingReason reason;
 

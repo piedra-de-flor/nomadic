@@ -2,6 +2,7 @@ package com.example.Triple_clone.repository;
 
 import com.example.Triple_clone.domain.entity.QMember;
 import com.example.Triple_clone.domain.entity.QReport;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.dto.report.QReportResponseDto;
 import com.example.Triple_clone.dto.report.ReportSearchDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
@@ -46,7 +47,7 @@ public class ReportAdminRepositoryImpl implements ReportAdminRepository {
         List<ReportResponseDto> results = queryFactory
                 .select(new QReportResponseDto(
                         report.id,
-                        report.targetType,
+                        report.targetType.stringValue(),
                         report.targetId,
                         member.name,
                         report.reason,
@@ -71,7 +72,7 @@ public class ReportAdminRepositoryImpl implements ReportAdminRepository {
     }
 
     @Override
-    public Page<ReportResponseDto> searchReportsByTarget(String targetType, Long targetId, Pageable pageable) {
+    public Page<ReportResponseDto> searchReportsByTarget(ReportTargetType targetType, Long targetId, Pageable pageable) {
         QReport report = QReport.report;
 
         JPAQuery<ReportResponseDto> query = queryFactory

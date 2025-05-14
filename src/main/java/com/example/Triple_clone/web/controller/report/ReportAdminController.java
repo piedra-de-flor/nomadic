@@ -1,5 +1,6 @@
 package com.example.Triple_clone.web.controller.report;
 
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.dto.report.ReportCountDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.dto.report.ReportSearchDto;
@@ -39,7 +40,7 @@ public class ReportAdminController {
             @RequestParam(required = false) Long minReportCount,
             @PageableDefault(size = 10) Pageable pageable
     ) {
-        return reportService.getReportCountsByCondition(targetType, minReportCount, pageable);
+        return reportService.getReportCountsByCondition(ReportTargetType.valueOf(targetType), minReportCount, pageable);
     }
 
     @GetMapping("/reports/by-target")
@@ -48,7 +49,7 @@ public class ReportAdminController {
             @RequestParam Long targetId,
             Pageable pageable
     ) {
-        return reportService.getReportsByTarget(targetType, targetId, pageable);
+        return reportService.getReportsByTarget(ReportTargetType.valueOf(targetType), targetId, pageable);
     }
 
     @PostMapping("/{reportId}/approve")

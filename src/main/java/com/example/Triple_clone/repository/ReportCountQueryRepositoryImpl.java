@@ -1,6 +1,7 @@
 package com.example.Triple_clone.repository;
 
 import com.example.Triple_clone.domain.entity.QReportCount;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.dto.report.ReportCountDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -21,7 +22,7 @@ public class ReportCountQueryRepositoryImpl implements ReportCountQueryRepositor
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<ReportCountDto> searchReportCounts(String targetType, Long minReportCount, Pageable pageable) {
+    public Page<ReportCountDto> searchReportCounts(ReportTargetType targetType, Long minReportCount, Pageable pageable) {
         QReportCount reportCount = QReportCount.reportCount;
 
         JPAQuery<ReportCountDto> query = queryFactory
@@ -33,7 +34,7 @@ public class ReportCountQueryRepositoryImpl implements ReportCountQueryRepositor
                 ))
                 .from(reportCount)
                 .where(
-                        eqTargetType(targetType),
+                        eqTargetType(targetType.name()),
                         goeMinReportCount(minReportCount)
                 );
 
@@ -46,7 +47,7 @@ public class ReportCountQueryRepositoryImpl implements ReportCountQueryRepositor
                 .select(reportCount.count())
                 .from(reportCount)
                 .where(
-                        eqTargetType(targetType),
+                        eqTargetType(targetType.name()),
                         goeMinReportCount(minReportCount)
                 )
                 .fetchOne();
@@ -55,7 +56,7 @@ public class ReportCountQueryRepositoryImpl implements ReportCountQueryRepositor
     }
 
     private BooleanExpression eqTargetType(String targetType) {
-        return targetType != null ? QReportCount.reportCount.targetType.eq(targetType) : null;
+        return targetType != null ? QReportCount.reportCount.targetType.eq(ReportTargetType.valueOf(targetType)) : null;
     }
 
     private BooleanExpression goeMinReportCount(Long minReportCount) {

@@ -2,6 +2,7 @@ package com.example.Triple_clone.service.report;
 
 import com.example.Triple_clone.domain.entity.Report;
 import com.example.Triple_clone.domain.entity.ReportCount;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.dto.report.ReportCountDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.dto.report.ReportSearchDto;
@@ -34,18 +35,18 @@ public class ReportAdminService {
         Page<ReportCount> reportCounts = reportCountRepository.findAll(pageable);
 
         return reportCounts.stream()
-                .map(reportCount -> new ReportCountDto(reportCount.getTargetId(), reportCount.getTargetType(), reportCount.getCount()))
+                .map(reportCount -> new ReportCountDto(reportCount.getTargetId(), reportCount.getTargetType().name(), reportCount.getCount()))
                 .collect(Collectors.toList());
     }
 
-    public List<ReportCountDto> getReportCountsByCondition(String targetType, Long minReportCount, Pageable pageable) {
+    public List<ReportCountDto> getReportCountsByCondition(ReportTargetType targetType, Long minReportCount, Pageable pageable) {
         Page<ReportCountDto> reportCounts = reportCountQueryRepository.searchReportCounts(targetType, minReportCount, pageable);
 
         return reportCounts.stream()
                 .collect(Collectors.toList());
     }
 
-    public Page<ReportResponseDto> getReportsByTarget(String targetType, Long targetId, Pageable pageable) {
+    public Page<ReportResponseDto> getReportsByTarget(ReportTargetType targetType, Long targetId, Pageable pageable) {
         return reportAdminRepository.searchReportsByTarget(targetType, targetId, pageable);
     }
 

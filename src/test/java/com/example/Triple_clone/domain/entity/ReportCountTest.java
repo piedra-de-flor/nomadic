@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,12 +13,12 @@ class ReportCountTest {
     void buildReportCount() {
         ReportCount reportCount = ReportCount.builder()
                 .targetId(1L)
-                .targetType("REVIEW")
+                .targetType(ReportTargetType.REVIEW)
                 .count(3L)
                 .build();
 
         assertThat(reportCount.getTargetId()).isEqualTo(1L);
-        assertThat(reportCount.getTargetType()).isEqualTo("REVIEW");
+        assertThat(reportCount.getTargetType()).isEqualTo(ReportTargetType.REVIEW);
         assertThat(reportCount.getCount()).isEqualTo(3L);
     }
 
@@ -26,7 +27,7 @@ class ReportCountTest {
     void incrementReportCount() {
         ReportCount reportCount = ReportCount.builder()
                 .targetId(2L)
-                .targetType("COMMENT")
+                .targetType(ReportTargetType.COMMENT)
                 .count(5L)
                 .build();
 

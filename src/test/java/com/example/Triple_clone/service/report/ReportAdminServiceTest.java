@@ -2,6 +2,7 @@ package com.example.Triple_clone.service.report;
 
 import com.example.Triple_clone.domain.entity.Report;
 import com.example.Triple_clone.domain.entity.ReportCount;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.dto.report.ReportCountDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.dto.report.ReportSearchDto;
@@ -76,7 +77,7 @@ class ReportAdminServiceTest {
     @DisplayName("신고 누적 목록 조회 성공")
     void getReportCounts_success() {
         Pageable pageable = PageRequest.of(0, 10);
-        ReportCount entity = ReportCount.builder().targetId(1L).targetType("REVIEW").count(5L).build();
+        ReportCount entity = ReportCount.builder().targetId(1L).targetType(ReportTargetType.REVIEW).count(5L).build();
         when(reportCountRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(entity)));
 
         List<ReportCountDto> result = reportAdminService.getReportCounts(pageable);
@@ -89,25 +90,25 @@ class ReportAdminServiceTest {
     @DisplayName("신고 누적 조건별 조회 성공")
     void getReportCountsByCondition_success() {
         Pageable pageable = PageRequest.of(0, 10);
-        ReportCountDto dto = new ReportCountDto(1L, "REVIEW", 10L);
+        ReportCountDto dto = new ReportCountDto(1L, ReportTargetType.REVIEW.name(), 10L);
 
-        when(reportCountQueryRepository.searchReportCounts("REVIEW", 5L, pageable))
+        when(reportCountQueryRepository.searchReportCounts(ReportTargetType.REVIEW, 5L, pageable))
                 .thenReturn(new PageImpl<>(List.of(dto)));
 
-        List<ReportCountDto> result = reportAdminService.getReportCountsByCondition("REVIEW", 5L, pageable);
+        List<ReportCountDto> result = reportAdminService.getReportCountsByCondition(ReportTargetType.REVIEW, 5L, pageable);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getTargetType()).isEqualTo("REVIEW");
+        assertThat(result.get(0).getTargetType()).isEqualTo(ReportTargetType.REVIEW.name());
     }
 
     @Test
     @DisplayName("특정 대상의 신고 조회 성공")
     void getReportsByTarget_success() {
         Pageable pageable = PageRequest.of(0, 10);
-        when(reportAdminRepository.searchReportsByTarget("REVIEW", 1L, pageable))
+        when(reportAdminRepository.searchReportsByTarget(ReportTargetType.REVIEW, 1L, pageable))
                 .thenReturn(new PageImpl<>(List.of(mock(ReportResponseDto.class))));
 
-        Page<ReportResponseDto> result = reportAdminService.getReportsByTarget("REVIEW", 1L, pageable);
+        Page<ReportResponseDto> result = reportAdminService.getReportsByTarget(ReportTargetType.REVIEW, 1L, pageable);
 
         assertThat(result).hasSize(1);
     }
