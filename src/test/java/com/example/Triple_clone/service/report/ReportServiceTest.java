@@ -2,6 +2,7 @@ package com.example.Triple_clone.service.report;
 
 import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.entity.Review;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.ReportRepository;
@@ -49,7 +50,7 @@ public class ReportServiceTest {
         when(memberRepository.findById(reporterId)).thenReturn(java.util.Optional.of(reporter));
         when(reviewRepository.findById(reviewId)).thenReturn(java.util.Optional.of(review));
         when(review.getId()).thenReturn(reviewId);
-        when(review.getReportType()).thenReturn("REVIEW");
+        when(review.getReportType()).thenReturn(ReportTargetType.REVIEW);
 
         reportService.reportReview(reviewId, reporterId, reason, detail);
 

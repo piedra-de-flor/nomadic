@@ -1,6 +1,7 @@
 package com.example.Triple_clone.web.controller.report;
 
 import com.example.Triple_clone.dto.report.ReportRequestDto;
+import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.service.report.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,11 @@ public class ReportController {
     private final ReportService reportService;
 
     @PostMapping("/{reviewId}/report")
-    public ResponseEntity<String> reportReview(
+    public ResponseEntity<ReportResponseDto> reportReview(
             @PathVariable Long reviewId,
             @RequestBody ReportRequestDto request
     ) {
-        reportService.reportReview(reviewId, request.reporterId(), request.reason(), request.detail());
-        return ResponseEntity.ok("신고가 접수되었습니다.");
+        ReportResponseDto response = reportService.reportReview(reviewId, request.reporterId(), request.reason(), request.detail());
+        return ResponseEntity.ok(response);
     }
 }
