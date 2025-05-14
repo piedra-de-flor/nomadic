@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -20,10 +21,12 @@ public class ReviewService {
         repository.save(review);
     }
 
+    @Transactional
     public void delete(Review review) {
-        repository.delete(review);
+        review.softDelete();
     }
 
+    @Transactional
     public void update(Review review, String content) {
         review.update(content);
     }

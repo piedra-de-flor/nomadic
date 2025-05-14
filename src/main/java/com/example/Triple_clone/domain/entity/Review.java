@@ -1,6 +1,7 @@
 package com.example.Triple_clone.domain.entity;
 
 import com.example.Triple_clone.domain.vo.Image;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReviewStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Review {
+public class Review implements Reportable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -63,15 +64,21 @@ public class Review {
         return member.getName();
     }
 
-    public boolean isRoot() {
-        return parent == null;
-    }
-
     public void softDelete() {
         this.status = ReviewStatus.DELETED;
     }
 
     public boolean isDeleted() {
         return this.status == ReviewStatus.DELETED;
+    }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public ReportTargetType getReportType() {
+        return ReportTargetType.REVIEW;
     }
 }
