@@ -4,6 +4,7 @@ import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.entity.Report;
 import com.example.Triple_clone.domain.vo.ReportingReason;
+import com.example.Triple_clone.domain.vo.ReviewStatus;
 import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.ReportRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
@@ -21,6 +22,10 @@ public class ReportService {
     public void reportReview(Long reviewId, Long reporterId, ReportingReason reason, String detail) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
+
+        if (review.getStatus() == ReviewStatus.DELETED) {
+            throw new IllegalArgumentException("삭제된 리뷰는 신고할 수 없습니다.");
+        }
 
         Member reporter = memberRepository.findById(reporterId)
                 .orElseThrow(() -> new IllegalArgumentException("신고자가 존재하지 않습니다."));
