@@ -6,6 +6,7 @@ import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
 import com.example.Triple_clone.dto.membership.UserResponseDto;
 import com.example.Triple_clone.dto.membership.UserUpdateDto;
 import com.example.Triple_clone.service.membership.UserService;
+import com.example.Triple_clone.web.support.MemberEmailAspect;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -66,7 +67,7 @@ public class UserController {
     @PatchMapping("/user")
     public ResponseEntity<UserUpdateDto> update(
             @Parameter(description = "회원 수정 요청 정보", required = true)
-            @RequestBody @Validated UserUpdateDto userUpdateDto) {
+            @RequestBody @Validated UserUpdateDto userUpdateDto, @MemberEmailAspect String email) {
         service.update(userUpdateDto);
         return ResponseEntity.ok(userUpdateDto);
     }
