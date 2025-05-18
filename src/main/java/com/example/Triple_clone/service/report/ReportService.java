@@ -6,12 +6,14 @@ import com.example.Triple_clone.domain.entity.ReportCount;
 import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import com.example.Triple_clone.domain.vo.ReviewStatus;
+import com.example.Triple_clone.dto.report.ReportCreatedEvent;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.ReportCountRepository;
 import com.example.Triple_clone.repository.ReportRepository;
 import com.example.Triple_clone.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +24,7 @@ public class ReportService {
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
     private final ReportCountRepository reportCountRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public ReportResponseDto reportReview(Long reviewId, String email, ReportingReason reason, String detail) {
         Review review = reviewRepository.findById(reviewId)
@@ -47,6 +50,8 @@ public class ReportService {
 
         reportCount.incrementCount();
         reportCountRepository.save(reportCount);
+
+        eventPublisher.publishEvent(new ReportCreatedEvent(report, reportCount.getCount()));
         return ReportResponseDto.from(report);
     }
 }

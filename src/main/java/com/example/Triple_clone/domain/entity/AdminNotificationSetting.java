@@ -1,7 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
 import com.example.Triple_clone.domain.vo.NotificationChannel;
-import com.example.Triple_clone.domain.vo.NotificationChannelType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

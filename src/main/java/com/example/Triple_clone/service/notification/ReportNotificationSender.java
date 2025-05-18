@@ -2,14 +2,15 @@ package com.example.Triple_clone.service.notification;
 
 import com.example.Triple_clone.domain.entity.AdminNotificationSetting;
 import com.example.Triple_clone.domain.entity.Report;
-import com.example.Triple_clone.domain.entity.ReportCount;
 import com.example.Triple_clone.domain.vo.NotificationChannelType;
 import com.example.Triple_clone.domain.vo.NotificationType;
 import com.example.Triple_clone.dto.notification.NotificationDto;
 import com.example.Triple_clone.dto.notification.NotificationMessage;
+import com.example.Triple_clone.dto.report.ReportCreatedEvent;
 import com.example.Triple_clone.repository.AdminNotificationSettingRepository;
-import com.example.Triple_clone.repository.ReportCountRepository;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
+import com.example.Triple_clone.service.notification.channel.EmailNotificationSender;
+import com.example.Triple_clone.service.notification.channel.SlackNotificationSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,6 @@ import java.util.Map;
 public class ReportNotificationSender implements NotificationSender {
 
     private final AdminNotificationSettingRepository settingRepository;
-    private final ReportCountRepository reportCountRepository;
     private final List<ChannelNotificationSender> channelSenders;
 
     @Override
@@ -30,36 +30,36 @@ public class ReportNotificationSender implements NotificationSender {
     }
 
     @Override
-    public void send(NotificationDto event) {
-        Report report = (Report) event.payload();
-
-        ReportCount reportCount = reportCountRepository.findByTargetIdAndTargetType(
-                report.getTargetId(), report.getTargetType().name()
-        ).orElse(null);
-
-        long currentCount = reportCount != null ? reportCount.getCount() : 1L;
+    public void send(NotificationDto dto) {
+        ReportCreatedEvent event = (ReportCreatedEvent) dto.payload();
+        Report report = event.report();
+        long count = event.reportCount();
 
         List<AdminNotificationSetting> settings = settingRepository.findAll();
 
         for (AdminNotificationSetting setting : settings) {
-            boolean shouldSend = setting.isNotifyEveryReport() || currentCount >= setting.getThresholdCount();
-            if (!shouldSend) continue;
+            boolean shouldNotify = setting.isNotifyEveryReport() || count >= setting.getThresholdCount();
+            if (!shouldNotify) continue;
 
             NotificationMessage message = new NotificationMessage(
-                    setting.getAdmin().getName(),
-                    "[신고 알림] 신고 ID: " + report.getId(),
-                    "대상: " + report.getTargetType() + " (ID: " + report.getTargetId() + ")\n"
-                            + "사유: " + report.getReason() + "\n"
-                            + "내용: " + report.getDetail(),
-                    Map.of("reportId", report.getId(), "reportCount", currentCount)
+                    setting.getAdmin().getEmail(),
+                    "[신고 알림] 새로운 신고 발생",
+                    String.format("신고 대상: %s (%d)\n사유: %s", report.getTargetType(), report.getTargetId(), report.getReason()),
+                    Map.of("reportId", report.getId())
             );
 
-            for (NotificationChannelType channelType : setting.getChannel().getTypes()) {
-                channelSenders.stream()
-                        .filter(sender -> sender.supports(channelType))
-                        .findFirst()
-                        .ifPresent(sender -> sender.send(message));
+            for (ChannelNotificationSender sender : channelSenders) {
+                NotificationChannelType type = resolveChannelType(sender);
+                if (setting.getChannel().includes(type)) {
+                    sender.send(message);
+                }
             }
         }
+    }
+
+    private NotificationChannelType resolveChannelType(ChannelNotificationSender sender) {
+        if (sender instanceof EmailNotificationSender) return NotificationChannelType.EMAIL;
+        if (sender instanceof SlackNotificationSender) return NotificationChannelType.SLACK;
+        throw new IllegalArgumentException("지원하지 않는 채널 타입입니다: " + sender.getClass().getSimpleName());
     }
 }
