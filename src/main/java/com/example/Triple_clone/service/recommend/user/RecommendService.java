@@ -1,9 +1,11 @@
 package com.example.Triple_clone.service.recommend.user;
 
+import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadTop10Dto;
+import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.RecommendationRepository;
 import com.example.Triple_clone.service.support.FileManager;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +30,19 @@ public class RecommendService {
     ConcurrentHashMap<Long, ConcurrentLinkedDeque<Long>> likes = new ConcurrentHashMap<>();
 
     private final RecommendationRepository recommendationRepository;
+    private final MemberRepository memberRepository;
     private final FileManager fileManager;
 
 
     @Transactional(readOnly = true)
-    public RecommendReadDto findById(long recommendationId, long userId) {
+    public RecommendReadDto findById(long recommendationId, String email) {
         Recommendation recommendation = recommendationRepository.findById(recommendationId)
                 .orElseThrow(() -> new NoSuchElementException("no place entity"));
 
-        boolean likeOrNot = recommendation.isLikedBy(userId);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+
+        boolean likeOrNot = recommendation.isLikedBy(member.getId());
 
         return new RecommendReadDto(recommendation, likeOrNot);
     }

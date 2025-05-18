@@ -4,6 +4,7 @@ import com.example.Triple_clone.dto.recommend.user.RecommendLikeDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadTop10Dto;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
+import com.example.Triple_clone.web.support.MemberEmailAspect;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -45,9 +46,8 @@ public class RecommendController {
     public ResponseEntity<RecommendReadDto> read(
             @Parameter(description = "추천 장소 단일 조회 요청 정보 (추천 장소 ID)", required = true)
             @RequestParam long placeId,
-            @Parameter(description = "추천 장소 단일 조회 요청 정보 (유저 ID)", required = true)
-            @RequestParam long userId) {
-        RecommendReadDto recommendReadDto = service.findById(placeId, userId);
+            @MemberEmailAspect String email) {
+        RecommendReadDto recommendReadDto = service.findById(placeId, email);
         return ResponseEntity.ok(recommendReadDto);
     }
 

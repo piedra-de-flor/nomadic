@@ -2,6 +2,7 @@ package com.example.Triple_clone.web.controller.planning;
 
 import com.example.Triple_clone.dto.planning.*;
 import com.example.Triple_clone.service.planning.PlanFacadeService;
+import com.example.Triple_clone.web.support.MemberEmailAspect;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,8 +24,8 @@ public class PlanController {
     @PostMapping("/plan")
     public ResponseEntity<PlanCreateDto> createPlan(
             @Parameter(description = "계획 생성 요청 정보", required = true)
-            @RequestBody PlanCreateDto createDto) {
-        PlanCreateDto responseDto = service.create(createDto);
+            @RequestBody PlanCreateDto createDto, @MemberEmailAspect String email) {
+        PlanCreateDto responseDto = service.create(createDto, email);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -35,8 +36,8 @@ public class PlanController {
     @GetMapping("/plan")
     public ResponseEntity<PlanReadResponseDto> readPlan(
             @Parameter(description = "계획 단일 조회 요청 정보", required = true)
-            @RequestBody PlanDto readRequestDto) {
-        PlanReadResponseDto responseDto = service.findPlan(readRequestDto);
+            @RequestBody PlanDto readRequestDto, @MemberEmailAspect String email) {
+        PlanReadResponseDto responseDto = service.findPlan(readRequestDto, email);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -47,8 +48,8 @@ public class PlanController {
     @GetMapping("/plans")
     public ResponseEntity<PlanReadAllResponseDto> readAllPlan(
             @Parameter(description = "누구의 계획을 조회할 것인지에 대한 user ID", required = true)
-            @RequestParam long userId) {
-        PlanReadAllResponseDto responseDto = service.findAllPlan(userId);
+            , @MemberEmailAspect String email) {
+        PlanReadAllResponseDto responseDto = service.findAllPlan(email);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -59,8 +60,8 @@ public class PlanController {
     @PutMapping("/plan/style")
     public ResponseEntity<PlanStyleUpdateDto> updateStyle(
             @Parameter(description = "계획 스타일 수정 요청 정보", required = true)
-            @RequestBody PlanStyleUpdateDto updateDto) {
-        PlanStyleUpdateDto responseDto = service.updateStyle(updateDto);
+            @RequestBody PlanStyleUpdateDto updateDto, @MemberEmailAspect String email) {
+        PlanStyleUpdateDto responseDto = service.updateStyle(updateDto, email);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -71,8 +72,8 @@ public class PlanController {
     @PutMapping("/plan/partner")
     public ResponseEntity<PlanPartnerUpdateDto> updatePartner(
             @Parameter(description = "계획 파트너 수정 요청 정보", required = true)
-            @RequestBody PlanPartnerUpdateDto updateDto) {
-        PlanPartnerUpdateDto responseDto = service.updatePartner(updateDto);
+            @RequestBody PlanPartnerUpdateDto updateDto, @MemberEmailAspect String email) {
+        PlanPartnerUpdateDto responseDto = service.updatePartner(updateDto, email);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -83,8 +84,8 @@ public class PlanController {
     @DeleteMapping("/plan")
     public ResponseEntity<PlanDto> deletePlan(
             @Parameter(description = "계획 삭제 요청 정보", required = true)
-            @RequestBody PlanDto deleteDto) {
-        PlanDto responseDto = service.deletePlan(deleteDto);
+            @RequestBody PlanDto deleteDto, @MemberEmailAspect String email) {
+        PlanDto responseDto = service.deletePlan(deleteDto, email);
         return ResponseEntity.ok(responseDto);
     }
 }

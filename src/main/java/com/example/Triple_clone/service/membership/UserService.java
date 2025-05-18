@@ -68,16 +68,21 @@ public class UserService {
         member.update(userUpdateDto.name(), userUpdateDto.password());
     }
 
-    public long delete(long userId) {
-        Member member = repository.findById(userId)
+    public long delete(String email) {
+        Member member = repository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("no user entity"));
 
         repository.delete(member);
-        return userId;
+        return member.getId();
     }
 
     public Member findById(long userId) {
         return repository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
+    }
+
+    public Member findByEmail(String email) {
+        return repository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("no user Entity"));
     }
 }

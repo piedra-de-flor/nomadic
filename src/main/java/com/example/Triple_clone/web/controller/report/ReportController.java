@@ -3,6 +3,7 @@ package com.example.Triple_clone.web.controller.report;
 import com.example.Triple_clone.dto.report.ReportRequestDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.service.report.ReportService;
+import com.example.Triple_clone.web.support.MemberEmailAspect;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,9 +20,10 @@ public class ReportController {
     @PostMapping("/{reviewId}/report")
     public ResponseEntity<ReportResponseDto> reportReview(
             @PathVariable Long reviewId,
-            @RequestBody ReportRequestDto request
+            @RequestBody ReportRequestDto request,
+            @MemberEmailAspect String email
     ) {
-        ReportResponseDto response = reportService.reportReview(reviewId, request.reporterId(), request.reason(), request.detail());
+        ReportResponseDto response = reportService.reportReview(reviewId, email, request.reason(), request.detail());
         return ResponseEntity.ok(response);
     }
 }

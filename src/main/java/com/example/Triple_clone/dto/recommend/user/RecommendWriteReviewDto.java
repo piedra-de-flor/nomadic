@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record RecommendWriteReviewDto(
-        long userId,
         long placeId,
         @NotBlank(message = "There is no contents")
         @Size(max = 3000, message = "maximum contents size is 3000 words")

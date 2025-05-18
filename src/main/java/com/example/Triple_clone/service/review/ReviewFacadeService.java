@@ -31,9 +31,9 @@ public class ReviewFacadeService {
     private final FileManager fileManager;
 
     @Transactional
-    public void writeReview(RecommendWriteReviewDto writeReviewRequestDto) {
+    public void writeReview(RecommendWriteReviewDto writeReviewRequestDto, String email) {
         Recommendation recommendation = recommendService.findById(writeReviewRequestDto.placeId());
-        Member member = userService.findById(writeReviewRequestDto.userId());
+        Member member = userService.findByEmail(email);
 
         Review parent = null;
         if (writeReviewRequestDto.parentId() != null) {
@@ -58,8 +58,8 @@ public class ReviewFacadeService {
         return reviewService.getReplies(parentId, pageable);
     }
 
-    public void deleteReview(Long reviewId, Long memberId) {
-        Member member = userService.findById(memberId);
+    public void deleteReview(Long reviewId, String email) {
+        Member member = userService.findByEmail(email);
         Review review = reviewService.findById(reviewId);
 
         if (review.getMember().getId() == member.getId()) {
@@ -70,9 +70,9 @@ public class ReviewFacadeService {
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
-    public ReviewResponseDto updateReview(ReviewUpdateDto updateDto, Long memberId) {
+    public ReviewResponseDto updateReview(ReviewUpdateDto updateDto, String email) {
         Review review = reviewService.findById(updateDto.reviewId());
-        Member member = userService.findById(memberId);
+        Member member = userService.findByEmail(email);
 
         if (review.getMember().getId() == member.getId()) {
             reviewService.update(review, updateDto.content());

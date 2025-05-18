@@ -23,7 +23,7 @@ public class ReportService {
     private final ReviewRepository reviewRepository;
     private final ReportCountRepository reportCountRepository;
 
-    public ReportResponseDto reportReview(Long reviewId, Long reporterId, ReportingReason reason, String detail) {
+    public ReportResponseDto reportReview(Long reviewId, String email, ReportingReason reason, String detail) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
 
@@ -31,10 +31,10 @@ public class ReportService {
             throw new IllegalArgumentException("삭제된 리뷰는 신고할 수 없습니다.");
         }
 
-        Member reporter = memberRepository.findById(reporterId)
+        Member reporter = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("신고자가 존재하지 않습니다."));
 
-        if (reportRepository.existsByTargetTypeAndTargetIdAndReporterId("REVIEW", review.getId(), reporterId)) {
+        if (reportRepository.existsByTargetTypeAndTargetIdAndReporterId("REVIEW", review.getId(), reporter.getId())) {
             throw new IllegalArgumentException("이미 신고한 리뷰입니다.");
         }
 

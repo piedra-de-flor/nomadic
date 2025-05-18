@@ -21,20 +21,20 @@ public class PlanFacadeService {
     private Member member;
     private Plan plan;
 
-    public PlanCreateDto create(PlanCreateDto createDto) {
-        member = userService.findById(createDto.userId());
+    public PlanCreateDto create(PlanCreateDto createDto, String email) {
+        member = userService.findByEmail(email);
         Plan plan = createDto.toEntity(member);
         planService.save(plan);
         return createDto;
     }
 
-    private void isExist(PlanDto dto) {
-        member = userService.findById(dto.userId());
+    private void isExist(PlanDto dto, String email) {
+        member = userService.findByEmail(email);
         plan = planService.findById(dto.planId());
     }
 
-    public PlanReadResponseDto findPlan(PlanDto readRequestDto) {
-        isExist(readRequestDto);
+    public PlanReadResponseDto findPlan(PlanDto readRequestDto, String email) {
+        isExist(readRequestDto, email);
         if (plan.isMine(member.getId())) {
             return new PlanReadResponseDto(plan);
         }
@@ -42,8 +42,8 @@ public class PlanFacadeService {
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
-    public PlanReadAllResponseDto findAllPlan(long userId) {
-        Member member = userService.findById(userId);
+    public PlanReadAllResponseDto findAllPlan(String email) {
+        Member member = userService.findByEmail(email);
         List<PlanReadResponseDto> plans = new ArrayList<>();
 
         for (Plan plan : member.getPlans()) {
@@ -52,8 +52,8 @@ public class PlanFacadeService {
         return new PlanReadAllResponseDto(plans);
     }
 
-    public PlanStyleUpdateDto updateStyle(PlanStyleUpdateDto updateDto) {
-        isExist(updateDto.planDto());
+    public PlanStyleUpdateDto updateStyle(PlanStyleUpdateDto updateDto, String email) {
+        isExist(updateDto.planDto(), email);
 
         if (plan.isMine(member.getId())) {
             planService.updateStyle(updateDto);
@@ -63,8 +63,8 @@ public class PlanFacadeService {
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
-    public PlanPartnerUpdateDto updatePartner(PlanPartnerUpdateDto updateDto) {
-        isExist(updateDto.planDto());
+    public PlanPartnerUpdateDto updatePartner(PlanPartnerUpdateDto updateDto, String email) {
+        isExist(updateDto.planDto(), email);
 
         if (plan.isMine(member.getId())) {
             planService.updatePartner(updateDto);
@@ -74,8 +74,8 @@ public class PlanFacadeService {
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
-    public PlanDto deletePlan(PlanDto deleteDto) {
-        isExist(deleteDto);
+    public PlanDto deletePlan(PlanDto deleteDto, String email) {
+        isExist(deleteDto, email);
 
         if (plan.isMine(member.getId())) {
             planService.delete(plan);

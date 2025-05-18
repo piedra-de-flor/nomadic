@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 public record PlanCreateDto(
-        long userId,
         @NotBlank(message = "Place can not be null")
         String place,
         @NotNull(message = "Start day can not be null")

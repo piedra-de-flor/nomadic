@@ -79,8 +79,8 @@ public class UserController {
     @DeleteMapping("/user")
     public ResponseEntity<Long> delete(
             @Parameter(description = "회원 삭제 요청 정보", required = true)
-            @RequestParam long userId) {
-        long deletedUserId = service.delete(userId);
+            @MemberEmailAspect String email) {
+        long deletedUserId = service.delete(email);
         return ResponseEntity.ok(deletedUserId);
     }
 }

@@ -2,6 +2,7 @@ package com.example.Triple_clone.web.controller.reservation;
 
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.service.recommend.user.ReservationService;
+import com.example.Triple_clone.web.support.MemberEmailAspect;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,9 +27,8 @@ public class ReservationController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @GetMapping("/my-reservations")
     public ResponseEntity<List<DetailPlanDto>> findAllMyReservations(
-            @Parameter(description = "내 예약 조회 요청 정보 (내 USER ID)", required = true)
-            @RequestParam long userId) {
-        List<DetailPlanDto> response = reservationService.findAllMyReservation(userId);
+            @MemberEmailAspect String email) {
+        List<DetailPlanDto> response = reservationService.findAllMyReservation(email);
         return ResponseEntity.ok(response);
     }
 }

@@ -5,6 +5,7 @@ import com.example.Triple_clone.dto.review.ReviewResponseDto;
 import com.example.Triple_clone.dto.review.ReviewUpdateDto;
 import com.example.Triple_clone.dto.review.RootReviewResponseDto;
 import com.example.Triple_clone.service.review.ReviewFacadeService;
+import com.example.Triple_clone.web.support.MemberEmailAspect;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,8 +33,8 @@ public class ReviewController {
     @PostMapping("/recommendation/review")
     public ResponseEntity<RecommendWriteReviewDto> writeReview(
             @Parameter(description = "추천 장소에 대한 리뷰 생성 정보", required = true)
-            @RequestBody @Validated RecommendWriteReviewDto writeReviewRequestDto) {
-        service.writeReview(writeReviewRequestDto);
+            @RequestBody @Validated RecommendWriteReviewDto writeReviewRequestDto, @MemberEmailAspect String email) {
+        service.writeReview(writeReviewRequestDto, email);
         return ResponseEntity.ok(writeReviewRequestDto);
     }
 
@@ -96,8 +97,8 @@ public class ReviewController {
     @PutMapping("/recommendation/review")
     public ResponseEntity<ReviewResponseDto> updateReview(
             @Parameter(description = "이미지를 로딩할 리뷰 ID", required = true)
-            @RequestBody ReviewUpdateDto updateDto, @RequestParam long memberId) {
-        ReviewResponseDto response = service.updateReview(updateDto, memberId);
+            @RequestBody ReviewUpdateDto updateDto, @MemberEmailAspect String email) {
+        ReviewResponseDto response = service.updateReview(updateDto, email);
         return ResponseEntity.ok()
                 .body(response);
     }
@@ -110,8 +111,8 @@ public class ReviewController {
     @DeleteMapping("/recommendation/review/{reviewId}")
     public ResponseEntity<Void> deleteReview(
             @Parameter(description = "삭제할 리뷰 ID", required = true)
-            @PathVariable long reviewId, @RequestParam long memberId) {
-        service.deleteReview(reviewId, memberId);
+            @PathVariable long reviewId, @MemberEmailAspect String email) {
+        service.deleteReview(reviewId, email);
         return ResponseEntity.ok().build();
     }
 }
