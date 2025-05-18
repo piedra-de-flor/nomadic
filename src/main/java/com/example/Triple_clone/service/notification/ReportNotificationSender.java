@@ -3,6 +3,8 @@ package com.example.Triple_clone.service.notification;
 import com.example.Triple_clone.domain.entity.AdminNotificationSetting;
 import com.example.Triple_clone.domain.entity.Report;
 import com.example.Triple_clone.domain.vo.NotificationChannelType;
+import com.example.Triple_clone.domain.vo.NotificationContentTemplate;
+import com.example.Triple_clone.domain.vo.NotificationSubject;
 import com.example.Triple_clone.domain.vo.NotificationType;
 import com.example.Triple_clone.dto.notification.NotificationDto;
 import com.example.Triple_clone.dto.notification.NotificationMessage;
@@ -43,8 +45,9 @@ public class ReportNotificationSender implements NotificationSender {
 
             NotificationMessage message = new NotificationMessage(
                     setting.getAdmin().getEmail(),
-                    "[신고 알림] 새로운 신고 발생",
-                    String.format("신고 대상: %s (%d)\n사유: %s", report.getTargetType(), report.getTargetId(), report.getReason()),
+                    NotificationSubject.REPORT.getValue(),
+                    NotificationContentTemplate.REPORT.format(
+                            report.getTargetType(), report.getTargetId(), report.getReason()),
                     Map.of("reportId", report.getId())
             );
 
