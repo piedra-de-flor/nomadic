@@ -1,8 +1,10 @@
 package com.example.Triple_clone.domain.entity;
 
 import com.example.Triple_clone.domain.vo.NotificationChannel;
+import com.example.Triple_clone.domain.vo.NotificationChannelType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,8 +21,7 @@ public class AdminNotificationSetting {
     @JoinColumn(name = "admin_id", nullable = false)
     private Member admin;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Embedded
     private NotificationChannel channel;
 
     @Column(nullable = false)
@@ -28,5 +29,13 @@ public class AdminNotificationSetting {
 
     @Column(nullable = false)
     private int thresholdCount;
+
+    @Builder
+    public AdminNotificationSetting(Member admin, NotificationChannel channel, boolean notifyEveryReport, int thresholdCount) {
+        this.admin = admin;
+        this.channel = channel;
+        this.notifyEveryReport = notifyEveryReport;
+        this.thresholdCount = thresholdCount;
+    }
 }
 
