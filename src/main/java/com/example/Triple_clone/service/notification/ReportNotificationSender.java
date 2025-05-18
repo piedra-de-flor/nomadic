@@ -12,7 +12,6 @@ import com.example.Triple_clone.dto.report.ReportCreatedEvent;
 import com.example.Triple_clone.repository.AdminNotificationSettingRepository;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
 import com.example.Triple_clone.service.notification.channel.EmailNotificationSender;
-import com.example.Triple_clone.service.notification.channel.SlackNotificationSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +61,6 @@ public class ReportNotificationSender implements NotificationSender {
 
     private NotificationChannelType resolveChannelType(ChannelNotificationSender sender) {
         if (sender instanceof EmailNotificationSender) return NotificationChannelType.EMAIL;
-        if (sender instanceof SlackNotificationSender) return NotificationChannelType.SLACK;
         throw new IllegalArgumentException("지원하지 않는 채널 타입입니다: " + sender.getClass().getSimpleName());
     }
 }
