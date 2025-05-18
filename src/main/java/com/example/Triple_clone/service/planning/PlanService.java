@@ -40,18 +40,18 @@ public class PlanService {
         repository.delete(plan);
     }
 
-    public void updateStyle(PlanStyleUpdateDto updateDto) {
+    public void updateStyle(PlanStyleUpdateDto updateDto, long memberId) {
         Plan plan = findById(updateDto.planDto().planId());
-        if (plan.isMine(updateDto.planDto().userId())) {
+        if (plan.isMine(memberId)) {
             plan.chooseStyle(Style.toStyles(updateDto.styles()));
             return;
         }
         throw new IllegalArgumentException("this plan is not yours");
     }
 
-    public void updatePartner(PlanPartnerUpdateDto updateDto) {
+    public void updatePartner(PlanPartnerUpdateDto updateDto, long memberId) {
         Plan plan = findById(updateDto.planDto().planId());
-        if (plan.isMine(updateDto.planDto().userId())) {
+        if (plan.isMine(memberId)) {
             plan.choosePartner(Partner.valueOf(updateDto.partner()));
             return;
         }

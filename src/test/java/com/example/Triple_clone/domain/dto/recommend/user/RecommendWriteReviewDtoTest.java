@@ -23,7 +23,7 @@ public class RecommendWriteReviewDtoTest {
     @Test
     void 리뷰_작성_DTO_유효성_성공() {
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(
-                1L, 1L, "test content", null);
+                1L, "test content", null);
 
         Set<ConstraintViolation<RecommendWriteReviewDto>> violations = validator.validate(dto);
         assertThat(violations).isEmpty();
@@ -32,7 +32,7 @@ public class RecommendWriteReviewDtoTest {
     @Test
     void 리뷰_작성_DTO_유효성_실패_내용_null() {
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(
-                1L, 1L, null, null);
+                1L,  null, null);
 
         Set<ConstraintViolation<RecommendWriteReviewDto>> violations = validator.validate(dto);
         assertThat(violations).hasSize(1);
@@ -48,7 +48,7 @@ public class RecommendWriteReviewDtoTest {
         }
 
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(
-                1L, 1L, String.valueOf(overContent), null);
+                1L,  String.valueOf(overContent), null);
 
         Set<ConstraintViolation<RecommendWriteReviewDto>> violations = validator.validate(dto);
         assertThat(violations).hasSize(1);

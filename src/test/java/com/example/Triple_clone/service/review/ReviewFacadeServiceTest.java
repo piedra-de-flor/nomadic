@@ -51,14 +51,13 @@ class ReviewFacadeServiceTest {
         Review review = mock(Review.class);
 
         when(dto.placeId()).thenReturn(100L);
-        when(dto.userId()).thenReturn(1L);
         when(dto.parentId()).thenReturn(null);
         when(dto.toEntity(member, recommendation, null)).thenReturn(review);
 
         when(recommendService.findById(100L)).thenReturn(recommendation);
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail("test")).thenReturn(member);
 
-        facadeService.writeReview(dto);
+        facadeService.writeReview(dto, "test");
 
         verify(reviewService).save(review);
         verify(recommendation).addReview(review);
@@ -74,16 +73,15 @@ class ReviewFacadeServiceTest {
         Review child = mock(Review.class);
 
         when(dto.placeId()).thenReturn(100L);
-        when(dto.userId()).thenReturn(1L);
         when(dto.parentId()).thenReturn(10L);
         when(dto.toEntity(member, recommendation, parent)).thenReturn(child);
 
         when(recommendService.findById(100L)).thenReturn(recommendation);
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail("test")).thenReturn(member);
         when(reviewService.findById(10L)).thenReturn(parent);
         when(parent.getParent()).thenReturn(null);
 
-        facadeService.writeReview(dto);
+        facadeService.writeReview(dto, "test");
 
         verify(reviewService).save(child);
         verify(recommendation).addReview(child);
@@ -100,15 +98,14 @@ class ReviewFacadeServiceTest {
         Review grandParent = mock(Review.class);
 
         when(dto.placeId()).thenReturn(100L);
-        when(dto.userId()).thenReturn(1L);
         when(dto.parentId()).thenReturn(10L);
 
         when(recommendService.findById(100L)).thenReturn(recommendation);
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail("test")).thenReturn(member);
         when(reviewService.findById(10L)).thenReturn(parent);
         when(parent.getParent()).thenReturn(grandParent);
 
-        assertThrows(IllegalArgumentException.class, () -> facadeService.writeReview(dto));
+        assertThrows(IllegalArgumentException.class, () -> facadeService.writeReview(dto, "test"));
     }
 
     @Test
@@ -119,18 +116,16 @@ class ReviewFacadeServiceTest {
         Review parentReview = new Review(member, recommendation, "부모 댓글");
 
         RecommendWriteReviewDto dto = new RecommendWriteReviewDto(
-                1L,
                 100L,
                 "대댓글입니다.",
                 parentReview.getId()
         );
 
-        // mocking
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail(member.getEmail())).thenReturn(member);
         when(recommendService.findById(100L)).thenReturn(recommendation);
         when(reviewService.findById(anyLong())).thenReturn(parentReview);
 
-        facadeService.writeReview(dto);
+        facadeService.writeReview(dto, member.getEmail());
 
         assertEquals(1, parentReview.getChildren().size());
         assertEquals("대댓글입니다.", parentReview.getChildren().get(0).getContent());
@@ -140,18 +135,18 @@ class ReviewFacadeServiceTest {
     @DisplayName("리뷰 삭제 성공")
     void deleteReviewSuccess() {
         Long reviewId = 1L;
-        Long memberId = 10L;
+        String memberEmail = "test";
 
         Member member = mock(Member.class);
         Review review = mock(Review.class);
 
-        when(member.getId()).thenReturn(memberId);
+        when(member.getId()).thenReturn(1L);
         when(review.getMember()).thenReturn(member);
-        when(review.getMember().getId()).thenReturn(memberId);
-        when(userService.findById(memberId)).thenReturn(member);
+        when(review.getMember().getId()).thenReturn(1L);
+        when(userService.findByEmail(memberEmail)).thenReturn(member);
         when(reviewService.findById(reviewId)).thenReturn(review);
 
-        facadeService.deleteReview(reviewId, memberId);
+        facadeService.deleteReview(reviewId, memberEmail);
 
         verify(reviewService).delete(review);
     }
@@ -160,20 +155,20 @@ class ReviewFacadeServiceTest {
     @DisplayName("리뷰 삭제 실패 - 작성자 불일치")
     void deleteReviewFail_Unauthorized() {
         Long reviewId = 1L;
-        Long memberId = 10L;
+        String memberEmail = "test";
         Long otherMemberId = 99L;
 
         Member member = mock(Member.class);
         Member otherMember = mock(Member.class);
         Review review = mock(Review.class);
 
-        when(member.getId()).thenReturn(memberId);
+        when(member.getId()).thenReturn(1L);
         when(otherMember.getId()).thenReturn(otherMemberId);
         when(review.getMember()).thenReturn(otherMember);
-        when(userService.findById(memberId)).thenReturn(member);
+        when(userService.findByEmail(memberEmail)).thenReturn(member);
         when(reviewService.findById(reviewId)).thenReturn(review);
 
-        assertThatThrownBy(() -> facadeService.deleteReview(reviewId, memberId))
+        assertThatThrownBy(() -> facadeService.deleteReview(reviewId, memberEmail))
                 .isInstanceOf(RestApiException.class);
 
         verify(reviewService, never()).delete(any());
@@ -183,21 +178,22 @@ class ReviewFacadeServiceTest {
     @DisplayName("리뷰 수정 성공")
     void updateReviewSuccess() {
         Long reviewId = 1L;
-        Long memberId = 10L;
+        String email = "test";
         String newContent = "Updated content";
 
         Member member = mock(Member.class);
         Review review = mock(Review.class);
         ReviewUpdateDto updateDto = new ReviewUpdateDto(reviewId, newContent);
 
-        when(member.getId()).thenReturn(memberId);
+        when(member.getEmail()).thenReturn(email);
+        when(member.getId()).thenReturn(10L);
         when(review.getMember()).thenReturn(member);
         when(review.getId()).thenReturn(reviewId);
         when(review.getContent()).thenReturn(newContent);
-        when(userService.findById(memberId)).thenReturn(member);
+        when(userService.findByEmail(email)).thenReturn(member);
         when(reviewService.findById(reviewId)).thenReturn(review);
 
-        ReviewResponseDto response = facadeService.updateReview(updateDto, memberId);
+        ReviewResponseDto response = facadeService.updateReview(updateDto, member.getEmail());
 
         verify(reviewService).update(review, newContent);
         assertThat(response.getId()).isEqualTo(reviewId);
@@ -208,6 +204,7 @@ class ReviewFacadeServiceTest {
     @DisplayName("리뷰 수정 실패 - 작성자 불일치")
     void updateReviewFail_Unauthorized() {
         Long reviewId = 1L;
+        String email = "test";
         Long memberId = 10L;
         Long otherMemberId = 99L;
 
@@ -220,10 +217,10 @@ class ReviewFacadeServiceTest {
         when(member.getId()).thenReturn(memberId);
         when(otherMember.getId()).thenReturn(otherMemberId);
         when(review.getMember()).thenReturn(otherMember);
-        when(userService.findById(memberId)).thenReturn(member);
+        when(userService.findByEmail(email)).thenReturn(member);
         when(reviewService.findById(reviewId)).thenReturn(review);
 
-        assertThatThrownBy(() -> facadeService.updateReview(updateDto, memberId))
+        assertThatThrownBy(() -> facadeService.updateReview(updateDto, email))
                 .isInstanceOf(RestApiException.class);
 
         verify(reviewService, never()).update(any(), any());

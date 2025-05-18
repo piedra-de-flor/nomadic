@@ -142,20 +142,20 @@ class MemberServiceTest {
 
     @Test
     void 삭제_성공_테스트() {
-        long userId = 1L;
-        when(memberRepository.findById(userId)).thenReturn(Optional.of(member));
+        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
+        when(member.getId()).thenReturn(1L);
 
-        long result = userService.delete(userId);
+        long result = userService.delete(email);
 
         verify(memberRepository, times(1)).delete(member);
-        assertEquals(userId, result);
+        assertEquals(1L, result);
     }
 
     @Test
     void 삭제_실패_테스트() {
-        long invalidUserId = 999L;
-        when(memberRepository.findById(invalidUserId)).thenReturn(Optional.empty());
+        String invalidEmail = "test";
+        when(memberRepository.findByEmail(invalidEmail)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> userService.delete(invalidUserId));
+        Assertions.assertThrows(NoSuchElementException.class, () -> userService.delete(invalidEmail));
     }
 }

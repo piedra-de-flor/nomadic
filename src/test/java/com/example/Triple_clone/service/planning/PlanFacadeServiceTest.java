@@ -41,15 +41,15 @@ class PlanFacadeServiceTest {
     void findOwnPlan() {
         Member member = mock(Member.class);
         Plan plan = mock(Plan.class);
-        PlanDto dto = new PlanDto(1L, 2L);
+        PlanDto dto = new PlanDto(2L);
 
-        when(userService.findById(1L)).thenReturn(member);
         when(planService.findById(2L)).thenReturn(plan);
+        when(userService.findByEmail("test")).thenReturn(member);
         when(member.getId()).thenReturn(1L);
         when(plan.isMine(1L)).thenReturn(true);
         when(plan.getPlace()).thenReturn("testPlace");
 
-        PlanReadResponseDto result = facadeService.findPlan(dto);
+        PlanReadResponseDto result = facadeService.findPlan(dto, "test");
 
         assertThat(result.place()).isEqualTo(plan.getPlace());
     }
@@ -59,14 +59,14 @@ class PlanFacadeServiceTest {
     void findPlanNotMine() {
         Member member = mock(Member.class);
         Plan plan = mock(Plan.class);
-        PlanDto dto = new PlanDto(1L, 2L);
+        PlanDto dto = new PlanDto(2L);
 
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail("test")).thenReturn(member);
         when(planService.findById(2L)).thenReturn(plan);
         when(member.getId()).thenReturn(1L);
         when(plan.isMine(1L)).thenReturn(false);
 
-        assertThatThrownBy(() -> facadeService.findPlan(dto))
+        assertThatThrownBy(() -> facadeService.findPlan(dto, "test"))
                 .isInstanceOf(RestApiException.class);
     }
 
@@ -77,10 +77,10 @@ class PlanFacadeServiceTest {
         Plan plan1 = mock(Plan.class);
         Plan plan2 = mock(Plan.class);
 
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail("test")).thenReturn(member);
         when(member.getPlans()).thenReturn(List.of(plan1, plan2));
 
-        PlanReadAllResponseDto result = facadeService.findAllPlan(1L);
+        PlanReadAllResponseDto result = facadeService.findAllPlan("test");
 
         assertThat(result.plans()).hasSize(2);
     }
@@ -90,16 +90,16 @@ class PlanFacadeServiceTest {
     void updateStyleSuccess() {
         Member member = mock(Member.class);
         Plan plan = mock(Plan.class);
-        PlanStyleUpdateDto updateDto = new PlanStyleUpdateDto(new PlanDto(1L, 2L), List.of(Style.HEALING.toString()));
+        PlanStyleUpdateDto updateDto = new PlanStyleUpdateDto(new PlanDto(2L), List.of(Style.HEALING.toString()));
 
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail("test")).thenReturn(member);
         when(planService.findById(2L)).thenReturn(plan);
         when(member.getId()).thenReturn(1L);
         when(plan.isMine(1L)).thenReturn(true);
 
-        PlanStyleUpdateDto result = facadeService.updateStyle(updateDto);
+        PlanStyleUpdateDto result = facadeService.updateStyle(updateDto, "test");
 
-        verify(planService).updateStyle(updateDto);
+        verify(planService).updateStyle(updateDto, 1L);
         assertThat(result).isEqualTo(updateDto);
     }
 
@@ -108,14 +108,14 @@ class PlanFacadeServiceTest {
     void deletePlan() {
         Member member = mock(Member.class);
         Plan plan = mock(Plan.class);
-        PlanDto dto = new PlanDto(1L, 2L);
+        PlanDto dto = new PlanDto(2L);
 
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail("test")).thenReturn(member);
         when(planService.findById(2L)).thenReturn(plan);
         when(member.getId()).thenReturn(1L);
         when(plan.isMine(1L)).thenReturn(true);
 
-        PlanDto result = facadeService.deletePlan(dto);
+        PlanDto result = facadeService.deletePlan(dto, "test");
 
         verify(planService).delete(plan);
         assertThat(result).isEqualTo(dto);
@@ -126,16 +126,16 @@ class PlanFacadeServiceTest {
     void updatePartnerSuccess() {
         Member member = mock(Member.class);
         Plan plan = mock(Plan.class);
-        PlanPartnerUpdateDto dto = new PlanPartnerUpdateDto(new PlanDto(1L, 2L), "친구");
+        PlanPartnerUpdateDto dto = new PlanPartnerUpdateDto(new PlanDto(2L), "친구");
 
-        when(userService.findById(1L)).thenReturn(member);
+        when(userService.findByEmail("test")).thenReturn(member);
         when(planService.findById(2L)).thenReturn(plan);
         when(member.getId()).thenReturn(1L);
         when(plan.isMine(1L)).thenReturn(true);
 
-        PlanPartnerUpdateDto result = facadeService.updatePartner(dto);
+        PlanPartnerUpdateDto result = facadeService.updatePartner(dto, "test");
 
-        verify(planService).updatePartner(dto);
+        verify(planService).updatePartner(dto, 1L);
         assertThat(result).isEqualTo(dto);
     }
 }

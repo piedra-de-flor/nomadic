@@ -1,8 +1,11 @@
 package com.example.Triple_clone.service.recommend.user;
 
+import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.domain.entity.Recommendation;
+import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.RecommendationRepository;
+import com.example.Triple_clone.service.membership.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +30,9 @@ class RecommendServiceTest {
     private RecommendationRepository recommendationRepository;
 
     @Mock
+    private MemberRepository memberRepository;
+
+    @Mock
     private Recommendation recommendation1;
 
     @Mock
@@ -41,10 +47,14 @@ class RecommendServiceTest {
 
     @Test
     void 서비스_레이어_장소_단일_조회_테스트() {
-        when(recommendationRepository.findById(1L)).thenReturn(Optional.of(recommendation1));
-        when(recommendation1.getId()).thenReturn(1L);
+        Member member = mock(Member.class);
 
-        RecommendReadDto responseDto = service.findById(1L, 1L);
+        when(recommendationRepository.findById(1L)).thenReturn(Optional.of(recommendation1));
+        when(memberRepository.findByEmail("test")).thenReturn(Optional.ofNullable(member));
+        when(recommendation1.getId()).thenReturn(1L);
+        when(member.getId()).thenReturn(1L);
+
+        RecommendReadDto responseDto = service.findById(1L, "test");
 
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.id()).isEqualTo(recommendation1.getId());
@@ -54,7 +64,7 @@ class RecommendServiceTest {
     void 서비스_레이어_장소_단일_조회_실패_테스트() {
         when(recommendationRepository.findById(2L)).thenReturn(Optional.empty());
         Assertions.assertThrows(NoSuchElementException.class,
-                () -> service.findById(2L, 1L));
+                () -> service.findById(2L, "test"));
     }
 
     @Test

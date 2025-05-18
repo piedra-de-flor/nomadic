@@ -51,12 +51,12 @@ public class ReportServiceTest {
         Review review = mock(Review.class);
 
         when(reportRepository.existsByTargetTypeAndTargetIdAndReporterId("REVIEW", reviewId, reporterId)).thenReturn(false);
-        when(memberRepository.findById(reporterId)).thenReturn(java.util.Optional.of(reporter));
+        when(memberRepository.findByEmail(reporter.getEmail())).thenReturn(java.util.Optional.of(reporter));
         when(reviewRepository.findById(reviewId)).thenReturn(java.util.Optional.of(review));
         when(review.getId()).thenReturn(reviewId);
         when(review.getReportType()).thenReturn(ReportTargetType.REVIEW);
 
-        reportService.reportReview(reviewId, reporterId, reason, detail);
+        reportService.reportReview(reviewId, reporter.getEmail(), reason, detail);
 
         verify(reportRepository, times(1)).save(any());
     }

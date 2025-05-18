@@ -74,6 +74,7 @@ public class PlanServiceTest {
 
     @Test
     void 계획_스타일_수정_성공_테스트(){
+        long userId = 1L;
         PlanStyleUpdateDto planStyleUpdateDto = mock(PlanStyleUpdateDto.class);
         PlanDto planDto = mock(PlanDto.class);
 
@@ -82,15 +83,15 @@ public class PlanServiceTest {
         when(planStyleUpdateDto.planDto().planId()).thenReturn(1L);
         when(plan.isMine(anyLong())).thenReturn(true);
         when(planDto.planId()).thenReturn(1L);
-        when(planDto.userId()).thenReturn(1L);
 
-        planService.updateStyle(planStyleUpdateDto);
+        planService.updateStyle(planStyleUpdateDto, userId);
 
         verify(plan, times(1)).chooseStyle(any());
     }
 
     @Test
     void 계획_스타일_수정_실패_계획_소유_없음_테스트(){
+        long userId = 1L;
         PlanStyleUpdateDto planStyleUpdateDto = mock(PlanStyleUpdateDto.class);
         PlanDto planDto = mock(PlanDto.class);
 
@@ -98,13 +99,13 @@ public class PlanServiceTest {
         when(plan.isMine(1L)).thenReturn(false);
         when(planStyleUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
-        when(planDto.userId()).thenReturn(1L);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updateStyle(planStyleUpdateDto));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updateStyle(planStyleUpdateDto, userId));
     }
 
     @Test
     void 계획_스타일_수정_실패_계획_없음_테스트(){
+        long userId = 1L;
         PlanStyleUpdateDto planStyleUpdateDto = mock(PlanStyleUpdateDto.class);
         PlanDto planDto = mock(PlanDto.class);
 
@@ -112,11 +113,12 @@ public class PlanServiceTest {
         when(planStyleUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updateStyle(planStyleUpdateDto));
+        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updateStyle(planStyleUpdateDto, userId));
     }
 
     @Test
     void 계획_파트너_수정_성공_테스트(){
+        long userId = 1L;
         PlanPartnerUpdateDto planPartnerUpdateDto = mock(PlanPartnerUpdateDto.class);
         PlanDto planDto = mock(PlanDto.class);
 
@@ -126,13 +128,14 @@ public class PlanServiceTest {
         when(plan.isMine(anyLong())).thenReturn(true);
         when(planPartnerUpdateDto.partner()).thenReturn("COUPLE");
 
-        planService.updatePartner(planPartnerUpdateDto);
+        planService.updatePartner(planPartnerUpdateDto, userId);
 
         verify(plan, times(1)).choosePartner(any());
     }
 
     @Test
     void 계획_파트너_수정_실패_계획_소유_없음_테스트(){
+        long userId = 1L;
         PlanPartnerUpdateDto planPartnerUpdateDto = mock(PlanPartnerUpdateDto.class);
         PlanDto planDto = mock(PlanDto.class);
 
@@ -140,13 +143,13 @@ public class PlanServiceTest {
         when(plan.isMine(1L)).thenReturn(false);
         when(planPartnerUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
-        when(planDto.userId()).thenReturn(1L);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updatePartner(planPartnerUpdateDto));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updatePartner(planPartnerUpdateDto, userId));
     }
 
     @Test
     void 계획_파트너_수정_실패_계획_없음_테스트(){
+        long userId = 1L;
         PlanPartnerUpdateDto planPartnerUpdateDto = mock(PlanPartnerUpdateDto.class);
         PlanDto planDto = mock(PlanDto.class);
 
@@ -154,7 +157,7 @@ public class PlanServiceTest {
         when(planPartnerUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updatePartner(planPartnerUpdateDto));
+        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updatePartner(planPartnerUpdateDto, userId));
     }
 
     @Test

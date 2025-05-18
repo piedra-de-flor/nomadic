@@ -48,7 +48,7 @@ public class PlanController {
     @GetMapping("/plans")
     public ResponseEntity<PlanReadAllResponseDto> readAllPlan(
             @Parameter(description = "누구의 계획을 조회할 것인지에 대한 user ID", required = true)
-            , @MemberEmailAspect String email) {
+            @MemberEmailAspect String email) {
         PlanReadAllResponseDto responseDto = service.findAllPlan(email);
         return ResponseEntity.ok(responseDto);
     }

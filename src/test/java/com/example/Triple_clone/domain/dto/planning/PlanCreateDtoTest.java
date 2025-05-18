@@ -24,7 +24,6 @@ public class PlanCreateDtoTest {
     @Test
     void 계획_생성_DTO_유효성_성공() {
         PlanCreateDto dto = new PlanCreateDto(
-                1L,
                 "test",
                 new Date(),
                 new Date(),
@@ -39,7 +38,6 @@ public class PlanCreateDtoTest {
     @Test
     void 계획_생성_DTO_유효성_실패_장소_null() {
         PlanCreateDto dto = new PlanCreateDto(
-                1L,
                 null,
                 new Date(),
                 new Date(),
@@ -54,7 +52,6 @@ public class PlanCreateDtoTest {
     @Test
     void 계획_생성_DTO_유효성_실패_시작날짜_null() {
         PlanCreateDto dto = new PlanCreateDto(
-                1L,
                 "test",
                 null,
                 new Date(),
@@ -69,7 +66,6 @@ public class PlanCreateDtoTest {
     @Test
     void 계획_생성_DTO_유효성_실패_끝날짜_null() {
         PlanCreateDto dto = new PlanCreateDto(
-                1L,
                 "test",
                 new Date(),
                 null,

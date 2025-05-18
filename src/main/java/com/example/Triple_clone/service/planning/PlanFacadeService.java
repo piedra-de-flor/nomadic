@@ -53,10 +53,11 @@ public class PlanFacadeService {
     }
 
     public PlanStyleUpdateDto updateStyle(PlanStyleUpdateDto updateDto, String email) {
+        Member member = userService.findByEmail(email);
         isExist(updateDto.planDto(), email);
 
         if (plan.isMine(member.getId())) {
-            planService.updateStyle(updateDto);
+            planService.updateStyle(updateDto, member.getId());
             return updateDto;
         }
 
@@ -64,10 +65,11 @@ public class PlanFacadeService {
     }
 
     public PlanPartnerUpdateDto updatePartner(PlanPartnerUpdateDto updateDto, String email) {
+        Member member = userService.findByEmail(email);
         isExist(updateDto.planDto(), email);
 
         if (plan.isMine(member.getId())) {
-            planService.updatePartner(updateDto);
+            planService.updatePartner(updateDto, member.getId());
             return updateDto;
         }
 
