@@ -15,6 +15,6 @@ public class SlackNotificationSender implements ChannelNotificationSender {
     @Override
     public void send(NotificationMessage message) {
         System.out.printf("[SLACK] To: %s | Subject: %s | Content: %s%n",
-                message.receiverName(), message.subject(), message.content());
+                message.receiver(), message.subject(), message.content());
     }
 }
