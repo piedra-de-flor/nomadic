@@ -59,8 +59,8 @@ class ReportServiceTest {
 
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(reporter));
-        when(reportRepository.existsByTargetTypeAndTargetIdAndReporterId("REVIEW", reviewId, reporter.getId())).thenReturn(false);
-        when(reportCountRepository.findByTargetIdAndTargetType(reviewId, "REVIEW"))
+        when(reportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, reviewId, reporter.getId())).thenReturn(false);
+        when(reportCountRepository.findByTargetIdAndTargetType(reviewId, ReportTargetType.REVIEW))
                 .thenReturn(Optional.empty());
 
         ReportResponseDto response = reportService.reportReview(reviewId, email, reason, detail);
@@ -121,7 +121,7 @@ class ReportServiceTest {
 
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(member));
-        when(reportRepository.existsByTargetTypeAndTargetIdAndReporterId("REVIEW", reviewId, member.getId()))
+        when(reportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, reviewId, member.getId()))
                 .thenReturn(true);
 
         assertThatThrownBy(() -> reportService.reportReview(reviewId, email, ReportingReason.SPAM, "detail"))

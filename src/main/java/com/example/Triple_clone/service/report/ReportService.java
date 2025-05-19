@@ -4,6 +4,7 @@ import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.entity.Report;
 import com.example.Triple_clone.domain.entity.ReportCount;
 import com.example.Triple_clone.domain.entity.Review;
+import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import com.example.Triple_clone.domain.vo.ReviewStatus;
 import com.example.Triple_clone.dto.report.ReportCreatedEvent;
@@ -37,7 +38,7 @@ public class ReportService {
         Member reporter = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("신고자가 존재하지 않습니다."));
 
-        if (reportRepository.existsByTargetTypeAndTargetIdAndReporterId("REVIEW", review.getId(), reporter.getId())) {
+        if (reportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, review.getId(), reporter.getId())) {
             throw new IllegalArgumentException("이미 신고한 리뷰입니다.");
         }
 
@@ -45,7 +46,7 @@ public class ReportService {
         reportRepository.save(report);
 
         ReportCount reportCount = reportCountRepository.findByTargetIdAndTargetType(
-                        report.getTargetId(), String.valueOf(report.getTargetType()))
+                        report.getTargetId(), report.getTargetType())
                 .orElse(new ReportCount(report.getTargetId(), report.getTargetType(), 0L));
 
         reportCount.incrementCount();
