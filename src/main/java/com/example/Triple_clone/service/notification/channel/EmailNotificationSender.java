@@ -26,4 +26,9 @@ public class EmailNotificationSender implements ChannelNotificationSender {
 
         mailSender.send(mailMessage);
     }
+
+    @Override
+    public NotificationChannelType getChannelType() {
+        return NotificationChannelType.EMAIL;
+    }
 }

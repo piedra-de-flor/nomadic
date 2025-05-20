@@ -59,8 +59,7 @@ public class ReportNotificationSender implements NotificationSender {
         }
     }
 
-    private NotificationChannelType resolveChannelType(ChannelNotificationSender sender) {
-        if (sender instanceof EmailNotificationSender) return NotificationChannelType.EMAIL;
-        throw new IllegalArgumentException("지원하지 않는 채널 타입입니다: " + sender.getClass().getSimpleName());
+    public NotificationChannelType resolveChannelType(ChannelNotificationSender sender) {
+        return sender.getChannelType();
     }
 }

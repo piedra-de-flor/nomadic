@@ -6,5 +6,6 @@ import com.example.Triple_clone.dto.notification.NotificationMessage;
 public interface ChannelNotificationSender {
     boolean supports(NotificationChannelType channel);
     void send(NotificationMessage message);
+    NotificationChannelType getChannelType();
 }
 
