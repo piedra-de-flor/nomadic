@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +52,7 @@ public class ReportAdminService {
     }
 
 
+    @Transactional
     public void approveReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new EntityNotFoundException("신고를 찾을 수 없습니다."));
@@ -58,6 +60,7 @@ public class ReportAdminService {
         report.approve();
     }
 
+    @Transactional
     public void rejectReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new EntityNotFoundException("신고를 찾을 수 없습니다."));
