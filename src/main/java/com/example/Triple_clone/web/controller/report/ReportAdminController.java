@@ -27,13 +27,6 @@ public class ReportAdminController {
         return reportService.getReports(condition, pageable);
     }
 
-    @GetMapping("/report-counts")
-    public List<ReportCountDto> getReportCountsByCondition(
-            @PageableDefault(size = 10) Pageable pageable
-    ) {
-        return reportService.getReportCounts(pageable);
-    }
-
     @GetMapping("/report-counts/conditions")
     public List<ReportCountDto> getReportCountsByCondition(
             @RequestParam(required = false) String targetType,

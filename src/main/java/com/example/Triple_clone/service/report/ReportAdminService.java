@@ -26,18 +26,9 @@ public class ReportAdminService {
     private final ReportAdminRepository reportAdminRepository;
     private final ReportRepository reportRepository;
     private final ReportCountQueryRepository reportCountQueryRepository;
-    private final ReportCountRepository reportCountRepository;
 
     public Page<ReportResponseDto> getReports(ReportSearchDto condition, Pageable pageable) {
         return reportAdminRepository.searchReports(condition, pageable);
-    }
-
-    public List<ReportCountDto> getReportCounts(Pageable pageable) {
-        Page<ReportCount> reportCounts = reportCountRepository.findAll(pageable);
-
-        return reportCounts.stream()
-                .map(reportCount -> new ReportCountDto(reportCount.getTargetId(), reportCount.getTargetType().name(), reportCount.getCount()))
-                .collect(Collectors.toList());
     }
 
     public List<ReportCountDto> getReportCountsByCondition(ReportTargetType targetType, Long minReportCount, Pageable pageable) {

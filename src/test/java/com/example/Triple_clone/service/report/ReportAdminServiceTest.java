@@ -74,19 +74,6 @@ class ReportAdminServiceTest {
     }
 
     @Test
-    @DisplayName("신고 누적 목록 조회 성공")
-    void getReportCounts_success() {
-        Pageable pageable = PageRequest.of(0, 10);
-        ReportCount entity = ReportCount.builder().targetId(1L).targetType(ReportTargetType.REVIEW).count(5L).build();
-        when(reportCountRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(entity)));
-
-        List<ReportCountDto> result = reportAdminService.getReportCounts(pageable);
-
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getTargetId()).isEqualTo(1L);
-    }
-
-    @Test
     @DisplayName("신고 누적 조건별 조회 성공")
     void getReportCountsByCondition_success() {
         Pageable pageable = PageRequest.of(0, 10);
