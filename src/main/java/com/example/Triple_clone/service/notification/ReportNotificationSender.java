@@ -54,6 +54,8 @@ public class ReportNotificationSender implements NotificationSender {
                 NotificationChannelType type = resolveChannelType(sender);
                 if (setting.getChannel().includes(type)) {
                     sender.send(message);
+                } else {
+                    throw new IllegalArgumentException("지원하지 않는 채널 타입입니다.");
                 }
             }
         }

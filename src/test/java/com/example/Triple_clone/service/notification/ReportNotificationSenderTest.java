@@ -58,6 +58,7 @@ class ReportNotificationSenderTest {
         when(setting.getThresholdCount()).thenReturn(5);
         when(setting.getAdmin()).thenReturn(admin);
         when(setting.getChannel()).thenReturn(channel);
+        when(emailSender.getChannelType()).thenReturn(NotificationChannelType.EMAIL);
 
         when(settingRepository.findAll()).thenReturn(List.of(setting));
 
@@ -90,6 +91,7 @@ class ReportNotificationSenderTest {
         when(setting.getThresholdCount()).thenReturn(5);
         when(setting.getAdmin()).thenReturn(admin);
         when(setting.getChannel()).thenReturn(channel);
+        when(emailSender.getChannelType()).thenReturn(NotificationChannelType.EMAIL);
 
         when(settingRepository.findAll()).thenReturn(List.of(setting));
 
@@ -144,10 +146,6 @@ class ReportNotificationSenderTest {
 
     @Test
     void 지원하지_않는_채널타입이면_예외를_던진다() {
-        // given
-        ChannelNotificationSender unknownSender = mock(ChannelNotificationSender.class);
-        reportNotificationSender = new ReportNotificationSender(settingRepository, List.of(unknownSender));
-
         Member admin = mock(Member.class);
         when(admin.getEmail()).thenReturn("admin@example.com");
 
@@ -155,8 +153,10 @@ class ReportNotificationSenderTest {
 
         AdminNotificationSetting setting = mock(AdminNotificationSetting.class);
         when(setting.isNotifyEveryReport()).thenReturn(true);
+        when(setting.getThresholdCount()).thenReturn(5);
         when(setting.getAdmin()).thenReturn(admin);
         when(setting.getChannel()).thenReturn(channel);
+        when(emailSender.getChannelType()).thenReturn(NotificationChannelType.SLACK);
 
         when(settingRepository.findAll()).thenReturn(List.of(setting));
 
@@ -168,7 +168,7 @@ class ReportNotificationSenderTest {
 
         ReportCreatedEvent event = mock(ReportCreatedEvent.class);
         when(event.report()).thenReturn(report);
-        when(event.reportCount()).thenReturn(1L);
+        when(event.reportCount()).thenReturn(3L);
 
         NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, event);
 

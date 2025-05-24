@@ -30,9 +30,6 @@ class ReportServiceTest {
     private ReviewRepository reviewRepository;
 
     @Mock
-    private ReportCountRepository reportCountRepository;
-
-    @Mock
     private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
@@ -59,14 +56,14 @@ class ReportServiceTest {
 
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
         when(memberRepository.findByEmail(email)).thenReturn(Optional.of(reporter));
-        when(reportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, reviewId, reporter.getId())).thenReturn(false);
-        when(reportCountRepository.findByTargetIdAndTargetType(reviewId, ReportTargetType.REVIEW))
-                .thenReturn(Optional.empty());
+        when(reportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, reviewId, reporter.getId()))
+                .thenReturn(false);
+        when(reportRepository.countByTargetTypeAndTargetId(ReportTargetType.REVIEW, reviewId))
+                .thenReturn(0L);
 
         ReportResponseDto response = reportService.reportReview(reviewId, email, reason, detail);
 
         verify(reportRepository).save(any(Report.class));
-        verify(reportCountRepository).save(any(ReportCount.class));
         verify(eventPublisher).publishEvent(any(ReportCreatedEvent.class));
         assertThat(response).isNotNull();
         assertThat(response.reason()).isEqualTo(reason);

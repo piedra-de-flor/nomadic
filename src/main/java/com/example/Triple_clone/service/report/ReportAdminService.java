@@ -1,14 +1,12 @@
 package com.example.Triple_clone.service.report;
 
 import com.example.Triple_clone.domain.entity.Report;
-import com.example.Triple_clone.domain.entity.ReportCount;
 import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.dto.report.ReportCountDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.dto.report.ReportSearchDto;
 import com.example.Triple_clone.repository.ReportAdminRepository;
 import com.example.Triple_clone.repository.ReportCountQueryRepository;
-import com.example.Triple_clone.repository.ReportCountRepository;
 import com.example.Triple_clone.repository.ReportRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
