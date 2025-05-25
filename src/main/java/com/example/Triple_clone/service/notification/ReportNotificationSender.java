@@ -42,11 +42,18 @@ public class ReportNotificationSender implements NotificationSender {
             boolean shouldNotify = setting.isNotifyEveryReport() || count >= setting.getThresholdCount();
             if (!shouldNotify) continue;
 
+            String htmlContent = NotificationContentTemplate.REPORT.loadReportEmailHtml(
+                    report.getReporter().getEmail(),
+                    report.getTargetType().name(),
+                    report.getTargetId(),
+                    report.getReason().name(),
+                    report.getDetail()
+            );
+
             NotificationMessage message = new NotificationMessage(
                     setting.getAdmin().getEmail(),
                     NotificationSubject.REPORT.getValue(),
-                    NotificationContentTemplate.REPORT.format(
-                            report.getTargetType(), report.getTargetId(), report.getReason()),
+                    htmlContent,
                     Map.of("reportId", report.getId())
             );
 

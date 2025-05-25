@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #e53935;
+            font-size: 24px;
+        }
+        .content {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.6;
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .report-table th,
+        .report-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top;
+        }
+        .report-table th {
+            background-color: #f5f5f5;
+            width: 140px;
+            color: #555;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #999999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="header">
+        <h1>📢 신고 알림</h1>
+    </div>
+    <div class="content">
+        <p>새로운 신고가 접수되었습니다. 아래 내용을 확인해주세요.</p>
+        <table class="report-table">
+            <tr>
+                <th>신고자 이메일</th>
+                <td>{{reporterEmail}}</td>
+            </tr>
+            <tr>
+                <th>신고 대상</th>
+                <td>{{reportedTarget}}</td>
+            </tr>
+            <tr>
+                <th>신고 사유</th>
+                <td>{{reportReason}}</td>
+            </tr>
+            <tr>
+                <th>신고 내용</th>
+                <td>{{reportContent}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer">
+        본 메일은 신고 처리 알림 용도로 발송되었습니다.<br/>
+        © Nomadic
+    </div>
+</div>
+</body>
+</html>
