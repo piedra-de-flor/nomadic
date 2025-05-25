@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum NotificationContentTemplate {
-    REPORT("templates/report_notification_template.html");
+    REPORT("report_notification_template.html");
 
     private final String path;
 
