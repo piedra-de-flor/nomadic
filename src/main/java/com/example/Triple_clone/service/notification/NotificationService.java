@@ -54,7 +54,11 @@ public class NotificationService {
 
         NotificationStatus status = statusRepository
                 .findByUserIdAndNotification(member.getId(), notification)
-                .orElseThrow(() -> new NoSuchElementException("상태값 없음"));
+                .orElseGet(() -> NotificationStatus
+                        .builder()
+                        .notification(notification)
+                        .userId(member.getId())
+                        .build());
 
         status.read();
     }
