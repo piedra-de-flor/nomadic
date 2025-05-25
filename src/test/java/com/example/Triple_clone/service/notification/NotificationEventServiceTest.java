@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-class NotificationServiceTest {
+class NotificationEventServiceTest {
 
     @Mock
     private NotificationSender sender1;
@@ -19,12 +19,12 @@ class NotificationServiceTest {
     @Mock
     private NotificationSender sender2;
 
-    private NotificationService notificationService;
+    private NotificationEventService notificationEventService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        notificationService = new NotificationService(List.of(sender1, sender2));
+        notificationEventService = new NotificationEventService(List.of(sender1, sender2));
     }
 
     @Test
@@ -34,7 +34,7 @@ class NotificationServiceTest {
         when(sender1.supports(NotificationType.REPORT_ALERT)).thenReturn(true);
         when(sender2.supports(NotificationType.REPORT_ALERT)).thenReturn(false);
 
-        notificationService.notify(event);
+        notificationEventService.notify(event);
 
         verify(sender1, times(1)).send(event);
         verify(sender2, never()).send(any());
