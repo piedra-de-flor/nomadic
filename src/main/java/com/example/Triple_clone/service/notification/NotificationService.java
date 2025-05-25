@@ -5,7 +5,6 @@ import com.example.Triple_clone.domain.entity.Notification;
 import com.example.Triple_clone.domain.entity.NotificationStatus;
 import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.dto.notification.NotificationSearchDto;
-import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.NotificationRepository;
 import com.example.Triple_clone.repository.NotificationStatusRepository;
 import com.example.Triple_clone.service.membership.UserService;
@@ -58,18 +57,6 @@ public class NotificationService {
                 .orElseThrow(() -> new NoSuchElementException("상태값 없음"));
 
         status.read();
-    }
-
-    /**
-     * 전체 알림 생성
-     */
-    public void createGlobalNotification(String title, String content) {
-    }
-
-    /**
-     * 개인 알림 생성
-     */
-    public void createPersonalNotification(Long targetUserId, String title, String content) {
     }
 }
 

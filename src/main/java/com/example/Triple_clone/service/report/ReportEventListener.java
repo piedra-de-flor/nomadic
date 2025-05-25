@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.report;
 
+import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.domain.vo.NotificationType;
 import com.example.Triple_clone.dto.notification.NotificationDto;
 import com.example.Triple_clone.dto.report.ReportCreatedEvent;
@@ -21,6 +22,7 @@ public class ReportEventListener {
     public void handleReportCreated(ReportCreatedEvent event) {
         notificationEventService.notify(new NotificationDto(
                 NotificationType.REPORT_ALERT,
+                NotificationTarget.ADMIN,
                 event
         ));
     }

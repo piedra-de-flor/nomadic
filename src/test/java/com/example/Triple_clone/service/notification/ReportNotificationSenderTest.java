@@ -8,7 +8,6 @@ import com.example.Triple_clone.dto.notification.NotificationDto;
 import com.example.Triple_clone.dto.notification.NotificationMessage;
 import com.example.Triple_clone.dto.report.ReportCreatedEvent;
 import com.example.Triple_clone.repository.AdminNotificationSettingRepository;
-import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
 import com.example.Triple_clone.service.notification.channel.EmailNotificationSender;
 import com.example.Triple_clone.web.support.HtmlTemplateRenderer;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,7 +78,7 @@ class ReportNotificationSenderTest {
         when(event.report()).thenReturn(report);
         when(event.reportCount()).thenReturn(3L);
 
-        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, event);
+        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
 
         reportNotificationSender.send(dto);
 
@@ -113,7 +112,7 @@ class ReportNotificationSenderTest {
         when(event.report()).thenReturn(report);
         when(event.reportCount()).thenReturn(10L);
 
-        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, event);
+        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
 
         reportNotificationSender.send(dto);
 
@@ -145,7 +144,7 @@ class ReportNotificationSenderTest {
         when(event.report()).thenReturn(report);
         when(event.reportCount()).thenReturn(3L);
 
-        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, event);
+        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
 
         reportNotificationSender.send(dto);
 
@@ -179,7 +178,7 @@ class ReportNotificationSenderTest {
         when(event.report()).thenReturn(report);
         when(event.reportCount()).thenReturn(3L);
 
-        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, event);
+        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
 
         assertThatThrownBy(() -> reportNotificationSender.send(dto))
                 .isInstanceOf(IllegalArgumentException.class)

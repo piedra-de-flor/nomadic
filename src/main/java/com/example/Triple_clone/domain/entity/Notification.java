@@ -4,6 +4,7 @@ import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.domain.vo.NotificationType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +37,15 @@ public class Notification {
     @PrePersist
     public void prePersist() {
         this.sentAt = LocalDateTime.now();
+    }
+
+    @Builder
+    public Notification(NotificationType type, NotificationTarget target, String title, String content, Long targetUserId) {
+        this.type = type;
+        this.target = target;
+        this.title = title;
+        this.content = content;
+        this.targetUserId = targetUserId;
     }
 }
 

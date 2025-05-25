@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.notification;
 
+import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.domain.vo.NotificationType;
 import com.example.Triple_clone.dto.notification.NotificationDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,7 @@ class NotificationEventServiceTest {
 
     @Test
     void notify_callsSend_onSupportingSender() {
-        NotificationDto event = new NotificationDto(NotificationType.REPORT_ALERT, "payload");
+        NotificationDto event = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, "payload");
 
         when(sender1.supports(NotificationType.REPORT_ALERT)).thenReturn(true);
         when(sender2.supports(NotificationType.REPORT_ALERT)).thenReturn(false);
