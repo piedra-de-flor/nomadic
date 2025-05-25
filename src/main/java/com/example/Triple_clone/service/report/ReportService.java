@@ -14,6 +14,7 @@ import com.example.Triple_clone.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class ReportService {
     private final ReviewRepository reviewRepository;
     private final ApplicationEventPublisher eventPublisher;
 
+    @Transactional
     public ReportResponseDto reportReview(Long reviewId, String email, ReportingReason reason, String detail) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("리뷰가 존재하지 않습니다."));
