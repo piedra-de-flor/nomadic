@@ -2,12 +2,10 @@ package com.example.Triple_clone.service.notification;
 
 import com.example.Triple_clone.domain.entity.AdminNotificationSetting;
 import com.example.Triple_clone.domain.entity.Report;
-import com.example.Triple_clone.domain.vo.NotificationChannelType;
-import com.example.Triple_clone.domain.vo.NotificationContentTemplate;
-import com.example.Triple_clone.domain.vo.NotificationSubject;
-import com.example.Triple_clone.domain.vo.NotificationType;
+import com.example.Triple_clone.domain.vo.*;
 import com.example.Triple_clone.dto.notification.NotificationDto;
 import com.example.Triple_clone.dto.notification.NotificationMessage;
+import com.example.Triple_clone.dto.notification.NotificationSaveRequest;
 import com.example.Triple_clone.dto.report.ReportCreatedEvent;
 import com.example.Triple_clone.repository.AdminNotificationSettingRepository;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +23,11 @@ import java.util.Map;
 public class ReportNotificationSender extends NotificationSender {
     private final AdminNotificationSettingRepository settingRepository;
 
-    @Autowired
-    public ReportNotificationSender(HtmlTemplateRenderer htmlTemplateRenderer, List<ChannelNotificationSender> channelSenders, AdminNotificationSettingRepository settingRepository) {
-        super(htmlTemplateRenderer, channelSenders);
+    public ReportNotificationSender(HtmlTemplateRenderer htmlTemplateRenderer,
+                                    List<ChannelNotificationSender> channelSenders,
+                                    NotificationSaveService notificationSaveService,
+                                    AdminNotificationSettingRepository settingRepository) {
+        super(htmlTemplateRenderer, channelSenders, notificationSaveService);
         this.settingRepository = settingRepository;
     }
 
@@ -37,12 +38,13 @@ public class ReportNotificationSender extends NotificationSender {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void send(NotificationDto dto) {
+    public NotificationSaveRequest prepareAndSend(NotificationDto dto) {
         ReportCreatedEvent event = (ReportCreatedEvent) dto.payload();
         Report report = event.report();
         long count = event.reportCount();
 
         List<AdminNotificationSetting> settings = settingRepository.findAll();
+        List<Long> notifiedAdminIds = new ArrayList<>();
 
         for (AdminNotificationSetting setting : settings) {
             boolean shouldNotify = setting.isNotifyEveryReport() || count >= setting.getThresholdCount();
@@ -64,13 +66,21 @@ public class ReportNotificationSender extends NotificationSender {
             );
 
             for (ChannelNotificationSender sender : channelSenders) {
-                NotificationChannelType type = resolveChannelType(sender);
-                if (setting.getChannel().includes(type)) {
+                NotificationChannelType channelType = resolveChannelType(sender);
+                if (setting.getChannel().includes(channelType)) {
                     sender.send(message);
-                } else {
-                    throw new IllegalArgumentException("지원하지 않는 채널 타입입니다.");
                 }
             }
+
+            notifiedAdminIds.add(setting.getAdmin().getId());
         }
+
+        return new NotificationSaveRequest(
+                NotificationType.REPORT_ALERT,
+                NotificationTarget.ADMIN,
+                NotificationSubject.REPORT.getValue(),
+                report.getDetail(),
+                notifiedAdminIds
+        );
     }
 }

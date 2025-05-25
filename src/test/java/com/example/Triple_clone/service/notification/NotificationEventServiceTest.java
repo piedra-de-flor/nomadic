@@ -37,7 +37,7 @@ class NotificationEventServiceTest {
 
         notificationEventService.notify(event);
 
-        verify(sender1, times(1)).send(event);
-        verify(sender2, never()).send(any());
+        verify(sender1, times(1)).process(event);
+        verify(sender2, never()).process(any());
     }
 }

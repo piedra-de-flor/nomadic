@@ -15,7 +15,7 @@ public class NotificationEventService {
     public void notify(NotificationDto event) {
         for (NotificationSender sender : senders) {
             if (sender.supports(event.type())) {
-                sender.send(event);
+                sender.process(event);
             }
         }
     }

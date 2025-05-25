@@ -24,7 +24,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class ReportNotificationSenderTest {
-
+    @Mock
+    private NotificationSaveService notificationSaveService;
     @Mock
     private AdminNotificationSettingRepository settingRepository;
 
@@ -41,6 +42,7 @@ class ReportNotificationSenderTest {
         reportNotificationSender = new ReportNotificationSender(
                 htmlTemplateRenderer,
                 List.of(emailSender),
+                notificationSaveService,
                 settingRepository
         );
     }
@@ -80,7 +82,7 @@ class ReportNotificationSenderTest {
 
         NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
 
-        reportNotificationSender.send(dto);
+        reportNotificationSender.prepareAndSend(dto);
 
         verify(emailSender).send(any(NotificationMessage.class));
     }
@@ -114,7 +116,7 @@ class ReportNotificationSenderTest {
 
         NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
 
-        reportNotificationSender.send(dto);
+        reportNotificationSender.prepareAndSend(dto);
 
         verify(emailSender).send(any(NotificationMessage.class));
     }
@@ -146,7 +148,7 @@ class ReportNotificationSenderTest {
 
         NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
 
-        reportNotificationSender.send(dto);
+        reportNotificationSender.prepareAndSend(dto);
 
         verifyNoInteractions(emailSender);
     }
@@ -180,7 +182,7 @@ class ReportNotificationSenderTest {
 
         NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
 
-        assertThatThrownBy(() -> reportNotificationSender.send(dto))
+        assertThatThrownBy(() -> reportNotificationSender.prepareAndSend(dto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("지원하지 않는 채널 타입입니다");
     }
