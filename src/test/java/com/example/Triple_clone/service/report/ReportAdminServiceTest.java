@@ -1,20 +1,23 @@
 package com.example.Triple_clone.service.report;
 
 import com.example.Triple_clone.domain.entity.Report;
-import com.example.Triple_clone.domain.entity.ReportCount;
 import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.dto.report.ReportCountDto;
 import com.example.Triple_clone.dto.report.ReportResponseDto;
 import com.example.Triple_clone.dto.report.ReportSearchDto;
 import com.example.Triple_clone.repository.ReportAdminRepository;
 import com.example.Triple_clone.repository.ReportCountQueryRepository;
-import com.example.Triple_clone.repository.ReportCountRepository;
 import com.example.Triple_clone.repository.ReportRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.data.domain.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +32,6 @@ class ReportAdminServiceTest {
 
     @Mock private ReportAdminRepository reportAdminRepository;
     @Mock private ReportRepository reportRepository;
-    @Mock private ReportCountRepository reportCountRepository;
     @Mock private ReportCountQueryRepository reportCountQueryRepository;
 
     @BeforeEach
@@ -71,19 +73,6 @@ class ReportAdminServiceTest {
         Page<ReportResponseDto> result = reportAdminService.getReports(condition, pageable);
 
         assertThat(result).hasSize(1);
-    }
-
-    @Test
-    @DisplayName("신고 누적 목록 조회 성공")
-    void getReportCounts_success() {
-        Pageable pageable = PageRequest.of(0, 10);
-        ReportCount entity = ReportCount.builder().targetId(1L).targetType(ReportTargetType.REVIEW).count(5L).build();
-        when(reportCountRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(entity)));
-
-        List<ReportCountDto> result = reportAdminService.getReportCounts(pageable);
-
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getTargetId()).isEqualTo(1L);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.example.Triple_clone.repository;
 
-import com.example.Triple_clone.domain.entity.QReportCount;
+import com.example.Triple_clone.domain.entity.QReport;
+import com.example.Triple_clone.domain.vo.ReportStatus;
 import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.dto.report.ReportCountDto;
 import com.querydsl.core.types.Projections;
@@ -23,45 +24,44 @@ public class ReportCountQueryRepositoryImpl implements ReportCountQueryRepositor
 
     @Override
     public Page<ReportCountDto> searchReportCounts(ReportTargetType targetType, Long minReportCount, Pageable pageable) {
-        QReportCount reportCount = QReportCount.reportCount;
+        QReport report = QReport.report;
 
         JPAQuery<ReportCountDto> query = queryFactory
                 .select(Projections.constructor(
                         ReportCountDto.class,
-                        reportCount.targetId,
-                        reportCount.targetType,
-                        reportCount.reportCount
+                        report.targetId,
+                        report.targetType,
+                        report.count()
                 ))
-                .from(reportCount)
+                .from(report)
                 .where(
-                        eqTargetType(targetType.name()),
-                        goeMinReportCount(minReportCount)
-                );
-
-        List<ReportCountDto> content = query
+                        report.status.eq(ReportStatus.APPROVED),
+                        eqTargetType(targetType)
+                )
+                .groupBy(report.targetId, report.targetType)
+                .having(report.count().goe(minReportCount))
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .limit(pageable.getPageSize());
+
+        List<ReportCountDto> content = query.fetch();
 
         Long total = queryFactory
-                .select(reportCount.count())
-                .from(reportCount)
+                .select(report.targetId.countDistinct())
+                .from(report)
                 .where(
-                        eqTargetType(targetType.name()),
-                        goeMinReportCount(minReportCount)
+                        report.status.eq(ReportStatus.APPROVED),
+                        eqTargetType(targetType)
                 )
-                .fetchOne();
+                .groupBy(report.targetId, report.targetType)
+                .having(report.count().goe(minReportCount))
+                .fetch()
+                .size() * 1L;
 
-        return new PageImpl<>(content, pageable, total == null ? 0 : total);
+        return new PageImpl<>(content, pageable, total);
     }
 
-    private BooleanExpression eqTargetType(String targetType) {
-        return targetType != null ? QReportCount.reportCount.targetType.eq(ReportTargetType.valueOf(targetType)) : null;
+    private BooleanExpression eqTargetType(ReportTargetType targetType) {
+        return targetType != null ? QReport.report.targetType.eq(targetType) : null;
     }
 
-    private BooleanExpression goeMinReportCount(Long minReportCount) {
-        return minReportCount != null ? QReportCount.reportCount.count.goe(minReportCount) : null;
-    }
 }
-
-

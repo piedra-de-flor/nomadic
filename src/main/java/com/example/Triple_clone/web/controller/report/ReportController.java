@@ -17,7 +17,7 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping("/{reviewId}/report")
+    @PostMapping("/report/{reviewId}")
     public ResponseEntity<ReportResponseDto> reportReview(
             @PathVariable Long reviewId,
             @RequestBody ReportRequestDto request,

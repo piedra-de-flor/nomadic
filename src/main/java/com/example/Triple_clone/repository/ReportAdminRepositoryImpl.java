@@ -79,11 +79,12 @@ public class ReportAdminRepositoryImpl implements ReportAdminRepository {
                 .select(Projections.constructor(
                         ReportResponseDto.class,
                         report.id,
-                        report.reason,
-                        report.createdAt,
-                        report.status,
+                        report.targetType,
                         report.targetId,
-                        report.targetType
+                        report.reporter.name,
+                        report.reason,
+                        report.status,
+                        report.createdAt
                 ))
                 .from(report)
                 .where(
