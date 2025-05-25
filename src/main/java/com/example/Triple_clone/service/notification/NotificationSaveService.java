@@ -9,6 +9,8 @@ import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class NotificationSaveService {
     private final MemberRepository memberRepository;
     private final NotificationStatusQueue queue;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void save(NotificationSaveRequest request) {
         if (request.target() == NotificationTarget.GLOBAL) {
             List<String> userRole = List.of("USER");
