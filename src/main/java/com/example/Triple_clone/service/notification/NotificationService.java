@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +59,7 @@ public class NotificationService {
                         .userId(member.getId())
                         .build());
 
+        notification.addStatus(status);
         status.read();
     }
 }

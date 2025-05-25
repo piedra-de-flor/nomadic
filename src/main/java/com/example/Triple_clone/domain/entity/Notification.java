@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,6 +25,9 @@ public class Notification {
 
     @Enumerated(EnumType.STRING)
     private NotificationTarget target;
+
+    @OneToMany(mappedBy = "notification", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<NotificationStatus> statuses = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
@@ -46,6 +51,10 @@ public class Notification {
         this.title = title;
         this.content = content;
         this.targetUserId = targetUserId;
+    }
+
+    public void addStatus(NotificationStatus notificationStatus) {
+        statuses.add(notificationStatus);
     }
 }
 
