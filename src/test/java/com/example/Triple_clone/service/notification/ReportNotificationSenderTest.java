@@ -69,6 +69,7 @@ class ReportNotificationSenderTest {
         when(settingRepository.findAll()).thenReturn(List.of(setting));
 
         Report report = mock(Report.class);
+        when(report.getReporter()).thenReturn(admin);
         when(report.getTargetType()).thenReturn(ReportTargetType.REVIEW);
         when(report.getTargetId()).thenReturn(123L);
         when(report.getReason()).thenReturn(ReportingReason.INAPPROPRIATE);
@@ -102,6 +103,7 @@ class ReportNotificationSenderTest {
         when(settingRepository.findAll()).thenReturn(List.of(setting));
 
         Report report = mock(Report.class);
+        when(report.getReporter()).thenReturn(admin);
         when(report.getTargetType()).thenReturn(ReportTargetType.REVIEW);
         when(report.getTargetId()).thenReturn(123L);
         when(report.getReason()).thenReturn(ReportingReason.INAPPROPRIATE);
@@ -167,6 +169,7 @@ class ReportNotificationSenderTest {
         when(settingRepository.findAll()).thenReturn(List.of(setting));
 
         Report report = mock(Report.class);
+        when(report.getReporter()).thenReturn(admin);
         when(report.getTargetType()).thenReturn(ReportTargetType.REVIEW);
         when(report.getTargetId()).thenReturn(123L);
         when(report.getReason()).thenReturn(ReportingReason.INAPPROPRIATE);
