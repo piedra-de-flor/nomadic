@@ -18,7 +18,7 @@ public class NotificationStatusBatchProcessor {
     private final NotificationRepository notificationRepository;
     private final NotificationStatusRepository statusRepository;
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(cron = "0 0 0 * * *")
     public void process() {
         List<NotificationSentEvent> events = queue.drainAll();
         for (NotificationSentEvent event : events) {
