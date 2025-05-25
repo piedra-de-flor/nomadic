@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.notification;
 
+import com.example.Triple_clone.domain.vo.NotificationChannelType;
 import com.example.Triple_clone.domain.vo.NotificationType;
 import com.example.Triple_clone.dto.notification.NotificationDto;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
@@ -16,5 +17,9 @@ public abstract class NotificationSender {
     abstract boolean supports(NotificationType type);
 
     abstract void send(NotificationDto event);
+
+    public NotificationChannelType resolveChannelType(ChannelNotificationSender sender) {
+        return sender.getChannelType();
+    }
 }
 

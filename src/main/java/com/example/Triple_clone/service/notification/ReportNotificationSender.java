@@ -73,8 +73,4 @@ public class ReportNotificationSender extends NotificationSender {
             }
         }
     }
-
-    public NotificationChannelType resolveChannelType(ChannelNotificationSender sender) {
-        return sender.getChannelType();
-    }
 }
