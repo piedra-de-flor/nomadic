@@ -14,6 +14,7 @@ import com.example.Triple_clone.service.notification.channel.ChannelNotification
 import com.example.Triple_clone.web.support.HtmlTemplateRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ReportNotificationSender extends NotificationSender {
         return type == NotificationType.REPORT_ALERT;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void send(NotificationDto dto) {
         ReportCreatedEvent event = (ReportCreatedEvent) dto.payload();
