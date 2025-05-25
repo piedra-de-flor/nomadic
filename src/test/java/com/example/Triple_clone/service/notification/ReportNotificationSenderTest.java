@@ -10,6 +10,7 @@ import com.example.Triple_clone.dto.report.ReportCreatedEvent;
 import com.example.Triple_clone.repository.AdminNotificationSettingRepository;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
 import com.example.Triple_clone.service.notification.channel.EmailNotificationSender;
+import com.example.Triple_clone.web.support.HtmlTemplateRenderer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -37,7 +38,12 @@ class ReportNotificationSenderTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        reportNotificationSender = new ReportNotificationSender(settingRepository, List.of(emailSender));
+        HtmlTemplateRenderer htmlTemplateRenderer = mock(HtmlTemplateRenderer.class);
+        reportNotificationSender = new ReportNotificationSender(
+                htmlTemplateRenderer,
+                List.of(emailSender),
+                settingRepository
+        );
     }
 
     @Test

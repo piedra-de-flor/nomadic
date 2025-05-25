@@ -11,19 +11,22 @@ import com.example.Triple_clone.dto.notification.NotificationMessage;
 import com.example.Triple_clone.dto.report.ReportCreatedEvent;
 import com.example.Triple_clone.repository.AdminNotificationSettingRepository;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
-import com.example.Triple_clone.service.notification.channel.EmailNotificationSender;
-import lombok.RequiredArgsConstructor;
+import com.example.Triple_clone.web.support.HtmlTemplateRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
 @Component
-@RequiredArgsConstructor
-public class ReportNotificationSender implements NotificationSender {
-
+public class ReportNotificationSender extends NotificationSender {
     private final AdminNotificationSettingRepository settingRepository;
-    private final List<ChannelNotificationSender> channelSenders;
+
+    @Autowired
+    public ReportNotificationSender(HtmlTemplateRenderer htmlTemplateRenderer, List<ChannelNotificationSender> channelSenders, AdminNotificationSettingRepository settingRepository) {
+        super(htmlTemplateRenderer, channelSenders);
+        this.settingRepository = settingRepository;
+    }
 
     @Override
     public boolean supports(NotificationType type) {
@@ -42,13 +45,13 @@ public class ReportNotificationSender implements NotificationSender {
             boolean shouldNotify = setting.isNotifyEveryReport() || count >= setting.getThresholdCount();
             if (!shouldNotify) continue;
 
-            String htmlContent = NotificationContentTemplate.REPORT.loadReportEmailHtml(
-                    report.getReporter().getEmail(),
-                    report.getTargetType().name(),
-                    report.getTargetId(),
-                    report.getReason().name(),
-                    report.getDetail()
-            );
+            String htmlContent = htmlTemplateRenderer.render(NotificationContentTemplate.REPORT.getPath(), Map.of(
+                    "reporterEmail", report.getReporter().getEmail(),
+                    "targetType", report.getTargetType().name(),
+                    "targetId", report.getTargetId(),
+                    "reason", report.getReason().name(),
+                    "content", report.getDetail() != null ? report.getDetail() : ""
+            ));
 
             NotificationMessage message = new NotificationMessage(
                     setting.getAdmin().getEmail(),
