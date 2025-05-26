@@ -25,7 +25,7 @@ public class NotificationSaveService {
     public void save(NotificationSaveRequest request) {
         if (request.target() == NotificationTarget.GLOBAL) {
             List<String> userRole = List.of("USER");
-            List<Member> allMembers = memberRepository.findAllByRolesEquals(userRole);
+            List<Member> allMembers = memberRepository.findAllByRolesIn(userRole);
 
             Notification notification = Notification.builder()
                     .type(request.type())

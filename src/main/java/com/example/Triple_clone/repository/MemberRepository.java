@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
-    List<Member> findAllByRolesEquals(List<String> role);
+    List<Member> findAllByRolesIn(List<String> roles);
 }
