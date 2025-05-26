@@ -34,10 +34,10 @@ public class NotificationSaveService {
                     .content(request.content())
                     .targetUserId(null)
                     .build();
-            notificationRepository.save(notification);
+            Notification savedNotification = notificationRepository.save(notification);
 
             for (Member member : allMembers) {
-                queue.enqueue(new NotificationSentEvent(notification.getId(), member.getId()));
+                queue.enqueue(new NotificationSentEvent(savedNotification.getId(), member.getId()));
             }
         } else {
             for (Long memberId : request.targetUserIds()) {
@@ -48,9 +48,9 @@ public class NotificationSaveService {
                         .content(request.content())
                         .targetUserId(memberId)
                         .build();
-                notificationRepository.save(notification);
+                Notification savedNotification = notificationRepository.save(notification);
 
-                queue.enqueue(new NotificationSentEvent(notification.getId(), memberId));
+                queue.enqueue(new NotificationSentEvent(savedNotification.getId(), memberId));
             }
         }
     }
