@@ -9,7 +9,6 @@ public interface ChannelNotificationSender {
     boolean supports(NotificationChannelType channel);
     void send(NotificationMessage message);
     NotificationChannelType getChannelType();
-
     MimeMessage makeMessage(NotificationMessage message) throws MessagingException;
 }
 
