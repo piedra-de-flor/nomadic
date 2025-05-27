@@ -10,6 +10,6 @@ public interface ChannelNotificationSender {
     void send(NotificationMessage message);
     NotificationChannelType getChannelType();
 
-    public MimeMessage makeMessage(NotificationMessage message) throws MessagingException;
+    MimeMessage makeMessage(NotificationMessage message) throws MessagingException;
 }
 
