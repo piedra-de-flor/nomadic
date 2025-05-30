@@ -7,6 +7,7 @@ import com.example.Triple_clone.domain.vo.NotificationType;
 import com.example.Triple_clone.dto.notification.NotificationSentEvent;
 import com.example.Triple_clone.repository.NotificationRepository;
 import com.example.Triple_clone.repository.NotificationStatusRepository;
+import java.util.concurrent.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -91,5 +92,48 @@ class NotificationBatchProcessorTest {
         batchProcessor.deleteOldNotifications();
 
         verify(notificationRepository, never()).deleteAll(any());
+    }
+
+    @Test
+    @DisplayName("멀티스레드 환경에서 enqueue와 drainAll 동시에 실행")
+    void concurrentEnqueueAndDrainAllTest() throws Exception {
+        NotificationStatusQueue realQueue = new NotificationStatusQueue();
+
+        int totalEvents = 100;
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+
+        Runnable producer = () -> {
+            for (int i = 0; i < totalEvents; i++) {
+                realQueue.enqueue(new NotificationSentEvent(1L, (long) i));
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        };
+
+        Callable<List<NotificationSentEvent>> consumer = () -> {
+            Thread.sleep(20);
+            return realQueue.drainAll();
+        };
+
+        Future<?> producerFuture = executor.submit(producer);
+        Future<List<NotificationSentEvent>> consumerFuture = executor.submit(consumer);
+
+        producerFuture.get();
+        List<NotificationSentEvent> drained = consumerFuture.get();
+        int remaining = realQueue.drainAll().size();
+
+        executor.shutdown();
+        executor.awaitTermination(1, TimeUnit.SECONDS);
+
+        int totalProcessed = drained.size() + remaining;
+
+        System.out.println("drainAll()에서 가져온 이벤트 수: " + drained.size());
+        System.out.println("drainAll 이후 남은 이벤트 수: " + remaining);
+        System.out.println("총 생산된 이벤트 수: " + totalEvents);
+
+        assertThat(totalProcessed).isEqualTo(totalEvents);
     }
 }

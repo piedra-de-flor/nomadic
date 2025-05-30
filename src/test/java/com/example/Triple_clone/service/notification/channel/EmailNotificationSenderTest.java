@@ -2,6 +2,7 @@ package com.example.Triple_clone.service.notification.channel;
 
 import com.example.Triple_clone.domain.vo.NotificationChannelType;
 import com.example.Triple_clone.dto.notification.NotificationMessage;
+import com.example.Triple_clone.service.notification.kafka.EmailRetryProducer;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,13 +24,17 @@ class EmailNotificationSenderTest {
     @Mock
     private JavaMailSender mailSender;
 
+    @Mock
+    private EmailRetryProducer emailRetryProducer;
+
     @InjectMocks
     private EmailNotificationSender emailNotificationSender;
 
     @BeforeEach
     void setUp() {
         mailSender = mock(JavaMailSender.class);
-        emailNotificationSender = new EmailNotificationSender(mailSender);
+        emailRetryProducer = mock(EmailRetryProducer.class);
+        emailNotificationSender = new EmailNotificationSender(mailSender, emailRetryProducer);
     }
 
     @Test
