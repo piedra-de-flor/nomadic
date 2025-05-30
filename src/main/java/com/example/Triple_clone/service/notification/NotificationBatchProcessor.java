@@ -6,13 +6,16 @@ import com.example.Triple_clone.dto.notification.NotificationSentEvent;
 import com.example.Triple_clone.repository.NotificationRepository;
 import com.example.Triple_clone.repository.NotificationStatusRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class NotificationBatchProcessor {
@@ -26,17 +29,27 @@ public class NotificationBatchProcessor {
     public void saveNotificationStatus() {
         List<NotificationSentEvent> events = queue.drainAll();
         for (NotificationSentEvent event : events) {
-            notificationRepository.findById(event.notificationId())
-                    .ifPresent(notification -> {
-                        NotificationStatus status = NotificationStatus.builder()
-                                .notification(notification)
-                                .userId(event.memberId())
-                                .build();
-
-                        statusRepository.save(status);
-                        notification.addStatus(status);
-                    });
+            try {
+                processEvent(event);
+            } catch (Exception e) {
+                log.error("Failed to process notification event: {}", event, e);
+                queue.enqueue(event);
+            }
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void processEvent(NotificationSentEvent event) {
+        notificationRepository.findById(event.notificationId())
+                .ifPresent(notification -> {
+                    NotificationStatus status = NotificationStatus.builder()
+                            .notification(notification)
+                            .userId(event.memberId())
+                            .build();
+
+                    statusRepository.save(status);
+                    notification.addStatus(status);
+                });
     }
 
     @Transactional
