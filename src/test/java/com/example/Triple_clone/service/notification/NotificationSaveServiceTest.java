@@ -10,9 +10,11 @@ import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.NotificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -90,5 +92,46 @@ class NotificationSaveServiceTest {
         verify(notificationRepository, times(2)).save(any());
         verify(queue).enqueue(new NotificationSentEvent(200L, 10L));
         verify(queue).enqueue(new NotificationSentEvent(201L, 20L));
+    }
+
+    @Test
+    void 많은_회원에게_알림을_보낼_때_큐에_정상적으로_전송된다() {
+        int userCount = 10_000;
+        List<Member> members = mockMembers(userCount);
+
+        NotificationSaveRequest request = new NotificationSaveRequest(
+                NotificationType.SYSTEM_ALERT,
+                NotificationTarget.GLOBAL,
+                "대용량 테스트",
+                "많은 사용자에게 보내는 알림",
+                null
+        );
+
+        when(memberRepository.findAllByRolesIn(List.of("USER"))).thenReturn(members);
+
+        Notification savedNotification = mock(Notification.class);
+
+        when(notificationRepository.save(any())).thenReturn(savedNotification);
+        when(savedNotification.getId()).thenReturn(999L);
+
+        notificationSaveService.save(request);
+
+        ArgumentCaptor<NotificationSentEvent> captor = ArgumentCaptor.forClass(NotificationSentEvent.class);
+        verify(queue, times(userCount)).enqueue(captor.capture());
+
+        List<NotificationSentEvent> events = captor.getAllValues();
+        assertThat(events).hasSize(userCount);
+        assertThat(events.get(0).notificationId()).isEqualTo(999L);
+        assertThat(events.get(0).memberId()).isEqualTo(1L);
+        assertThat(events.get(userCount - 1).memberId()).isEqualTo((long) userCount);
+    }
+
+    private List<Member> mockMembers(int count) {
+        return java.util.stream.LongStream.rangeClosed(1, count)
+                .mapToObj(id -> {
+                    Member m = mock(Member.class);
+                    when(m.getId()).thenReturn(id);
+                    return m;
+                }).toList();
     }
 }
