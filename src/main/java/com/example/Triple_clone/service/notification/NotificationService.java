@@ -5,6 +5,7 @@ import com.example.Triple_clone.domain.entity.Notification;
 import com.example.Triple_clone.domain.entity.NotificationStatus;
 import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.dto.notification.NotificationSearchDto;
+import com.example.Triple_clone.repository.NotificationQueryRepository;
 import com.example.Triple_clone.repository.NotificationRepository;
 import com.example.Triple_clone.repository.NotificationStatusRepository;
 import com.example.Triple_clone.service.membership.UserService;
@@ -20,29 +21,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationService {
     private final NotificationRepository notificationRepository;
+    private final NotificationQueryRepository notificationQueryRepository;
     private final NotificationStatusRepository statusRepository;
     private final UserService userService;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<NotificationSearchDto> getUserNotifications(String email) {
         Member member = userService.findByEmail(email);
-        List<Notification> globalNotifications = notificationRepository.findByTarget(NotificationTarget.GLOBAL);
-        List<Notification> personalNotifications = notificationRepository.findByTargetUserId(member.getId());
-
-        List<Notification> all = new ArrayList<>();
-        all.addAll(globalNotifications);
-        all.addAll(personalNotifications);
-
-        return all.stream()
-                .map(notification -> {
-                    boolean isRead = statusRepository.findByUserIdAndNotification(member.getId(), notification)
-                            .map(NotificationStatus::isRead)
-                            .orElse(false);
-
-                    return NotificationSearchDto.from(notification, isRead);
-                })
-                .sorted(Comparator.comparing(NotificationSearchDto::sentAt).reversed())
-                .toList();
+        return notificationQueryRepository.findAllByUserId(member.getId());
     }
 
     @Transactional
