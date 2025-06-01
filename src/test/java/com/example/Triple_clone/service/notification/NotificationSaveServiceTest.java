@@ -10,9 +10,11 @@ import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.NotificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
