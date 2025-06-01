@@ -2,6 +2,7 @@ package com.example.Triple_clone.service.accommodation;
 
 import com.example.Triple_clone.domain.vo.ScrapingLocal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
+@ConditionalOnProperty(name = "scraper.enabled", havingValue = "true", matchIfMissing = true)
 public class ScraperBatchService {
     private final WebClient webClient = WebClient.create("http://fastapi-container:8000");
 

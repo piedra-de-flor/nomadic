@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.notification;
 
+import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.domain.vo.NotificationType;
 import com.example.Triple_clone.dto.notification.NotificationDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-class NotificationServiceTest {
+class NotificationEventServiceTest {
 
     @Mock
     private NotificationSender sender1;
@@ -19,24 +20,24 @@ class NotificationServiceTest {
     @Mock
     private NotificationSender sender2;
 
-    private NotificationService notificationService;
+    private NotificationEventService notificationEventService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        notificationService = new NotificationService(List.of(sender1, sender2));
+        notificationEventService = new NotificationEventService(List.of(sender1, sender2));
     }
 
     @Test
     void notify_callsSend_onSupportingSender() {
-        NotificationDto event = new NotificationDto(NotificationType.REPORT_ALERT, "payload");
+        NotificationDto event = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, "payload");
 
         when(sender1.supports(NotificationType.REPORT_ALERT)).thenReturn(true);
         when(sender2.supports(NotificationType.REPORT_ALERT)).thenReturn(false);
 
-        notificationService.notify(event);
+        notificationEventService.notify(event);
 
-        verify(sender1, times(1)).send(event);
-        verify(sender2, never()).send(any());
+        verify(sender1, times(1)).process(event);
+        verify(sender2, never()).process(any());
     }
 }
