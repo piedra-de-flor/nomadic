@@ -5,6 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jboss.logging.MDC;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,7 +27,12 @@ public class LoggingMdcFilter extends OncePerRequestFilter {
             String traceId = UUID.randomUUID().toString();
             MDC.put("traceId", traceId);
 
-            MDC.put("userId", request.getHeader("X-User-Id"));
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+                MDC.put("email", userDetails.getUsername());
+            } else {
+                MDC.put("email", "anonymous");
+            }
             MDC.put("uri", request.getRequestURI());
 
             filterChain.doFilter(request, response);
