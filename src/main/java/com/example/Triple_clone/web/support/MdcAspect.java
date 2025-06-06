@@ -12,13 +12,19 @@ import java.util.UUID;
 @Component
 public class MdcAspect {
 
-    @Around("@annotation(com.example.Triple_clone.web.support.WithSystemMdc)")
-    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("@annotation(annotation)")
+    public Object around(ProceedingJoinPoint joinPoint, WithSystemMdc annotation) throws Throwable {
         String traceId = UUID.randomUUID().toString();
+        String email = "system";
+        String uri = !annotation.uri().isEmpty() ?
+                annotation.uri() :
+                "task::" + joinPoint.getSignature().getName();
+
         try {
             MDC.put("traceId", traceId);
-            MDC.put("email", "system");
-            MDC.put("uri", "scheduler::" + joinPoint.getSignature().getName());
+            MDC.put("email", email);
+            MDC.put("uri", uri);
+
             return joinPoint.proceed();
         } finally {
             MDC.clear();
