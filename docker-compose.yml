@@ -31,6 +31,7 @@ services:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash/pipeline:/usr/share/logstash/pipeline
       - ./logstash/lib/mysql-connector-j-8.0.33.jar:/usr/share/logstash/mysql-connector-java-8.0.33.jar
+      - ./logs:/logs
     networks:
       - triple
     depends_on:
@@ -55,6 +56,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: triple-application
+    volumes:
+      - ./logs:/logs
     ports:
       - "8080:8080"
     environment:
