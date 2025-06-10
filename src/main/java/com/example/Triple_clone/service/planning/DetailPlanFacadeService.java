@@ -10,12 +10,14 @@ import com.example.Triple_clone.dto.planning.ReservationCreateDto;
 import com.example.Triple_clone.service.accommodation.AccommodationService;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DetailPlanFacadeService {
@@ -76,6 +78,7 @@ public class DetailPlanFacadeService {
                     updateDto.time());
         }
 
+        log.warn("⚠️ 세부 계획 수정 실패 - 목표 계획내 포함되지 않는 세부 계획 : user = {} / target = {}", plan.getMember().getId(), detailPlan.getId());
         throw new NoSuchElementException("this detail plan id is not yours");
     }
 
@@ -88,6 +91,7 @@ public class DetailPlanFacadeService {
             return detailPlan;
         }
 
+        log.warn("⚠️ 세부 계획 삭제 실패 - : 목표 계획내 포함되지 않는 세부 계획 : user = {} / target = {}", plan.getMember().getId(), detailPlan.getId());
         throw new NoSuchElementException("this detail plan id is not yours");
     }
 

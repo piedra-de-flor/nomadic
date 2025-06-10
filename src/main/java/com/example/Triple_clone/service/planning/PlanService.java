@@ -9,27 +9,31 @@ import com.example.Triple_clone.dto.planning.PlanPartnerUpdateDto;
 import com.example.Triple_clone.dto.planning.PlanStyleUpdateDto;
 import com.example.Triple_clone.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PlanService {
     private final PlanRepository repository;
 
     public List<DetailPlan> getPlans(long planId) {
-        Plan plan = repository.findById(planId)
-                .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
+        Plan plan = findById(planId);
 
         return plan.getPlans();
     }
 
     public Plan findById(long planId) {
         return repository.findById(planId)
-                .orElseThrow(() -> new NoSuchElementException("no plan Entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 계획 조회 실패 - 존재하지 않는 계획: {}", planId);
+                    return new NoSuchElementException("no plan Entity");
+                });
     }
 
     public void save(Plan plan) {
@@ -46,6 +50,8 @@ public class PlanService {
             plan.chooseStyle(Style.toStyles(updateDto.styles()));
             return;
         }
+
+        log.warn("⚠️ 계획 스타일 수정 실패 - 계획 소유권 없음: user = {} / target = {}", memberId, plan.getId());
         throw new IllegalArgumentException("this plan is not yours");
     }
 
@@ -55,6 +61,8 @@ public class PlanService {
             plan.choosePartner(Partner.valueOf(updateDto.partner()));
             return;
         }
+
+        log.warn("⚠️ 계획 동반자 수정 실패 - 계획 소유권 없음: user = {} / target = {}", memberId, plan.getId());
         throw new IllegalArgumentException("this plan is not yours");
     }
 

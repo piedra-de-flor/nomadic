@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,8 @@ public class UserService {
     @Transactional
     public UserResponseDto signUp(UserJoinRequestDto signUpDto) {
         if (repository.findByEmail(signUpDto.email()).isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 사용자 이름입니다.");
+            log.warn("⚠️ 사용자 가입 실패 - 중복된 이메일 이메일: {}", signUpDto.email());
+            throw new IllegalArgumentException("이미 사용 중인 이메일 입니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(signUpDto.password());
@@ -54,23 +56,20 @@ public class UserService {
     }
 
     public UserResponseDto read(long userId) {
-        Member member = repository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+        Member member = findById(userId);
 
         return UserResponseDto.fromUser(member);
     }
 
     @Transactional
     public void update(UserUpdateDto userUpdateDto) {
-        Member member = repository.findById(userUpdateDto.userId())
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+        Member member = findById(userUpdateDto.userId());
 
         member.update(userUpdateDto.name(), userUpdateDto.password());
     }
 
     public long delete(String email) {
-        Member member = repository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+        Member member = findByEmail(email);
 
         repository.delete(member);
         return member.getId();
@@ -78,11 +77,17 @@ public class UserService {
 
     public Member findById(long userId) {
         return repository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", userId);
+                    return new NoSuchElementException("no user entity");
+                });
     }
 
     public Member findByEmail(String email) {
         return repository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
+                    return new NoSuchElementException("no user entity");
+                });
     }
 }

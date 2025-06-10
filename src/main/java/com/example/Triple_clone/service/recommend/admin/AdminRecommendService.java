@@ -30,7 +30,10 @@ public class AdminRecommendService {
     @Transactional
     public Long setMainImageOfRecommendation(Long recommendationId, MultipartFile image) {
         Recommendation recommendation = repository.findById(recommendationId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 추천 장소 이미지 삽입 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
+                    return new NoSuchElementException("no place entity for update");
+                });
         Image mainImage = fileManager.uploadImage(image);
         recommendation.setImage(mainImage);
         return recommendationId;
@@ -39,7 +42,10 @@ public class AdminRecommendService {
     @Transactional
     public Recommendation updateRecommendation(AdminRecommendUpdateRecommendationDto updateRecommendationRequestDto) {
         Recommendation recommendation = repository.findById(updateRecommendationRequestDto.placeId())
-                .orElseThrow(() -> new NoSuchElementException("no place entity for update"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 추천 장소 컨텐츠 수정 실패 - 존재하지 않는 추천 장소: {}", updateRecommendationRequestDto.placeId());
+                    return new NoSuchElementException("no place entity for update");
+                });
 
         recommendation.update(updateRecommendationRequestDto.title(),
                 updateRecommendationRequestDto.notionUrl(),
@@ -52,7 +58,10 @@ public class AdminRecommendService {
     @Transactional
     public long deleteRecommendation(Long recommendationId) {
         Recommendation recommendation = repository.findById(recommendationId)
-                .orElseThrow(() -> new NoSuchElementException("no place entity for delete"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 추천 장소 삭제 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
+                    return new NoSuchElementException("no place entity for delete");
+                });
 
         repository.delete(recommendation);
         fileManager.deleteExistingImage(recommendation.getMainImage().getStoredFileName());

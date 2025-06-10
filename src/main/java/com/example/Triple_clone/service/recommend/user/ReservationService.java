@@ -7,12 +7,14 @@ import com.example.Triple_clone.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReservationService {
@@ -20,7 +22,10 @@ public class ReservationService {
     private final MemberRepository memberRepository;
     public List<DetailPlanDto> findAllMyReservation(String email) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
+                    return new NoSuchElementException("no user entity");
+                });
 
         String sql = "SELECT dp.* FROM detail_plan dp " +
                 "JOIN plan p ON dp.plan_id = p.id " +

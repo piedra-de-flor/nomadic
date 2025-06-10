@@ -32,7 +32,7 @@ public class EmailNotificationSender implements ChannelNotificationSender {
             mailSender.send(makeMessage(message));
         } catch (MessagingException e) {
             emailRetryProducer.sendRetryMessage(message);
-            log.warn("이메일 전송 실패: {}, Kafka로 메시지 전송", e.getMessage());
+            log.warn("❌ 이메일 전송 실패: {}, Kafka로 메시지 전송", e.getMessage());
             throw new EmailSendFailureException("이메일 전송에 실패했습니다.", e);
         }
     }

@@ -10,6 +10,7 @@ import com.example.Triple_clone.repository.ReportCountQueryRepository;
 import com.example.Triple_clone.repository.ReportRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportAdminService {
@@ -44,7 +46,10 @@ public class ReportAdminService {
     @Transactional
     public void approveReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
-                .orElseThrow(() -> new EntityNotFoundException("신고를 찾을 수 없습니다."));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 신고 조회 실패 - 존재하지 않는 신고: {}", reportId);
+                    return new EntityNotFoundException("신고를 찾을 수 없습니다.");
+                });
 
         report.approve();
     }
@@ -52,7 +57,10 @@ public class ReportAdminService {
     @Transactional
     public void rejectReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
-                .orElseThrow(() -> new EntityNotFoundException("신고를 찾을 수 없습니다."));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 신고 조회 실패 - 존재하지 않는 신고: {}", reportId);
+                    return new EntityNotFoundException("신고를 찾을 수 없습니다.");
+                });
 
         report.reject();
     }

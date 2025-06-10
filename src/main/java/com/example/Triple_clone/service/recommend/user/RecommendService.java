@@ -37,10 +37,16 @@ public class RecommendService {
     @Transactional(readOnly = true)
     public RecommendReadDto findById(long recommendationId, String email) {
         Recommendation recommendation = recommendationRepository.findById(recommendationId)
-                .orElseThrow(() -> new NoSuchElementException("no place entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 추천 장소 조회 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
+                    return new NoSuchElementException("no place entity");
+                });
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
+                    return new NoSuchElementException("no user entity");
+                });
 
         boolean likeOrNot = recommendation.isLikedBy(member.getId());
 
@@ -111,7 +117,10 @@ public class RecommendService {
         if (!likes.isEmpty()) {
             likes.forEach((placeId, userIds) -> {
                 Recommendation target = recommendationRepository.findById(placeId)
-                        .orElseThrow(NoSuchElementException::new);
+                        .orElseThrow(() -> {
+                            log.warn("⚠️ 추천 장소 조회 실패 - 존재하지 않는 추천 장소: {}", placeId);
+                            return new NoSuchElementException("no place entity for like");
+                        });
                 userIds.forEach(target::like);
             });
             likes.clear();
