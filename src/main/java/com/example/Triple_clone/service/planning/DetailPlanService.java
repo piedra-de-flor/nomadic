@@ -4,6 +4,7 @@ import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
 import com.example.Triple_clone.repository.DetailPlanRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class DetailPlanService {
         return repository.findById(detailPlanId)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 세부 계획 조회 실패 - 존재하지 않는 세부 계획: {}", detailPlanId);
-                    return new NoSuchElementException("new plan Entity");
+                    return new EntityNotFoundException("new plan Entity");
                 });
     }
 

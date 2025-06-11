@@ -6,6 +6,7 @@ import com.example.Triple_clone.dto.recommend.admin.AdminRecommendUpdateRecommen
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.repository.RecommendationRepository;
 import com.example.Triple_clone.service.support.FileManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class AdminRecommendService {
         Recommendation recommendation = repository.findById(recommendationId)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 추천 장소 이미지 삽입 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
-                    return new NoSuchElementException("no place entity for update");
+                    return new EntityNotFoundException("no place entity for update");
                 });
         Image mainImage = fileManager.uploadImage(image);
         recommendation.setImage(mainImage);
@@ -44,7 +45,7 @@ public class AdminRecommendService {
         Recommendation recommendation = repository.findById(updateRecommendationRequestDto.placeId())
                 .orElseThrow(() -> {
                     log.warn("⚠️ 추천 장소 컨텐츠 수정 실패 - 존재하지 않는 추천 장소: {}", updateRecommendationRequestDto.placeId());
-                    return new NoSuchElementException("no place entity for update");
+                    return new EntityNotFoundException("no place entity for update");
                 });
 
         recommendation.update(updateRecommendationRequestDto.title(),
@@ -60,7 +61,7 @@ public class AdminRecommendService {
         Recommendation recommendation = repository.findById(recommendationId)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 추천 장소 삭제 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
-                    return new NoSuchElementException("no place entity for delete");
+                    return new EntityNotFoundException("no place entity for delete");
                 });
 
         repository.delete(recommendation);

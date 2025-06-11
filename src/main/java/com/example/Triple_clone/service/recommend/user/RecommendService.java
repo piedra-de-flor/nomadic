@@ -8,6 +8,7 @@ import com.example.Triple_clone.dto.recommend.user.RecommendReadTop10Dto;
 import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.RecommendationRepository;
 import com.example.Triple_clone.service.support.FileManager;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -39,13 +40,13 @@ public class RecommendService {
         Recommendation recommendation = recommendationRepository.findById(recommendationId)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 추천 장소 조회 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
-                    return new NoSuchElementException("no place entity");
+                    return new EntityNotFoundException("no place entity");
                 });
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
-                    return new NoSuchElementException("no user entity");
+                    return new EntityNotFoundException("no user entity");
                 });
 
         boolean likeOrNot = recommendation.isLikedBy(member.getId());
@@ -119,7 +120,7 @@ public class RecommendService {
                 Recommendation target = recommendationRepository.findById(placeId)
                         .orElseThrow(() -> {
                             log.warn("⚠️ 추천 장소 조회 실패 - 존재하지 않는 추천 장소: {}", placeId);
-                            return new NoSuchElementException("no place entity for like");
+                            return new EntityNotFoundException("no place entity for like");
                         });
                 userIds.forEach(target::like);
             });

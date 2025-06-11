@@ -7,6 +7,7 @@ import com.example.Triple_clone.dto.membership.UserResponseDto;
 import com.example.Triple_clone.dto.membership.UserUpdateDto;
 import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.service.support.JwtTokenProvider;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -79,7 +80,7 @@ public class UserService {
         return repository.findById(userId)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", userId);
-                    return new NoSuchElementException("no user entity");
+                    return new EntityNotFoundException("no user entity");
                 });
     }
 
@@ -87,7 +88,7 @@ public class UserService {
         return repository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
-                    return new NoSuchElementException("no user entity");
+                    return new EntityNotFoundException("no user entity");
                 });
     }
 }

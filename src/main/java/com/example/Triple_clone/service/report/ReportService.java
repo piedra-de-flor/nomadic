@@ -35,7 +35,7 @@ public class ReportService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 리뷰 신고 실패 - 존재하지 않는 리뷰: {}", reviewId);
-                    return new NoSuchElementException("no user entity");
+                    return new EntityNotFoundException("no user entity");
                 });
 
         if (review.getStatus() == ReviewStatus.DELETED) {
@@ -46,7 +46,7 @@ public class ReportService {
         Member reporter = memberRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 리뷰 신고 실패 - 존재하지 않는 신고자: {}", email);
-                    return new NoSuchElementException("no user entity");
+                    return new EntityNotFoundException("no user entity");
                 });
 
         if (reportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, review.getId(), reporter.getId())) {

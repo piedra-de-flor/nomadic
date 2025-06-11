@@ -5,6 +5,7 @@ import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class ReservationService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
-                    return new NoSuchElementException("no user entity");
+                    return new EntityNotFoundException("no user entity");
                 });
 
         String sql = "SELECT dp.* FROM detail_plan dp " +

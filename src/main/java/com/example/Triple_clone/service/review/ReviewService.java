@@ -4,6 +4,7 @@ import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.dto.review.ReviewResponseDto;
 import com.example.Triple_clone.dto.review.RootReviewResponseDto;
 import com.example.Triple_clone.repository.ReviewRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,7 @@ public class ReviewService {
         return repository.findById(reviewId)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 리뷰 조회 실패 - 존재하지 않는 리뷰: {}", reviewId);
-                    return new NoSuchElementException("no review entity");
+                    return new EntityNotFoundException("no review entity");
                 });
     }
 

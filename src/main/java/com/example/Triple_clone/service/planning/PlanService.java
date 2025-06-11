@@ -8,6 +8,7 @@ import com.example.Triple_clone.domain.vo.Style;
 import com.example.Triple_clone.dto.planning.PlanPartnerUpdateDto;
 import com.example.Triple_clone.dto.planning.PlanStyleUpdateDto;
 import com.example.Triple_clone.repository.PlanRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class PlanService {
         return repository.findById(planId)
                 .orElseThrow(() -> {
                     log.warn("⚠️ 계획 조회 실패 - 존재하지 않는 계획: {}", planId);
-                    return new NoSuchElementException("no plan Entity");
+                    return new EntityNotFoundException("no plan Entity");
                 });
     }
 
