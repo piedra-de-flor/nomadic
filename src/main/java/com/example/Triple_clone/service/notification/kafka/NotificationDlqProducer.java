@@ -8,10 +8,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class EmailDlqProducer {
+public class NotificationDlqProducer {
     private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
 
-    public void sendToDlq(NotificationMessage message) {
+    public void sendEmailToDlq(NotificationMessage message) {
         kafkaTemplate.send(KafkaTopic.EMAIL_DLQ_TOPIC.getValue(), message);
+    }
+
+    public void sendSlackToDlq(NotificationMessage message) {
+        kafkaTemplate.send(KafkaTopic.SLACK_DLQ_TOPIC.getValue(), message);
     }
 }
