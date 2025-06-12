@@ -1,5 +1,7 @@
 package com.example.Triple_clone.dto.notification;
 
+import com.example.Triple_clone.domain.vo.NotificationChannelType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +11,10 @@ public record NotificationMessage(
         String content,
         Map<String, Object> metadata
 ) {
+    public static final String RETRY_COUNT_KEY = "retryCount";
+
     public int getRetryCount() {
-        Object value = metadata != null ? metadata.get("retryCount") : null;
+        Object value = metadata != null ? metadata.get(RETRY_COUNT_KEY) : null;
         return value instanceof Integer ? (int) value : 0;
     }
 
