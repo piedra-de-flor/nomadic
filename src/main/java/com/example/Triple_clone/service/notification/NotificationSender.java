@@ -1,8 +1,9 @@
 package com.example.Triple_clone.service.notification;
 
+import com.example.Triple_clone.dto.notification.NotificationDto;
 import com.example.Triple_clone.domain.vo.NotificationChannelType;
 import com.example.Triple_clone.domain.vo.NotificationType;
-import com.example.Triple_clone.dto.notification.NotificationDto;
+import com.example.Triple_clone.dto.notification.NotificationSaveRequest;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
 import com.example.Triple_clone.web.support.HtmlTemplateRenderer;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +14,18 @@ import java.util.List;
 public abstract class NotificationSender {
     protected final HtmlTemplateRenderer htmlTemplateRenderer;
     protected final List<ChannelNotificationSender> channelSenders;
+    protected final NotificationSaveService notificationSaveService;
 
-    abstract boolean supports(NotificationType type);
+    public final void process(NotificationDto dto) {
+        NotificationSaveRequest saveRequest = prepareAndSend(dto);
+        notificationSaveService.save(saveRequest);
+    }
 
-    abstract void send(NotificationDto event);
+    protected abstract NotificationSaveRequest prepareAndSend(NotificationDto dto);
 
-    public NotificationChannelType resolveChannelType(ChannelNotificationSender sender) {
+    public abstract boolean supports(NotificationType type);
+
+    protected NotificationChannelType resolveChannelType(ChannelNotificationSender sender) {
         return sender.getChannelType();
     }
 }
-

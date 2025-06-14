@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 @SpringBootTest
-@Import(ElasticSearchConfig.class)
+@Import({ElasticSearchConfig.class, TestMailConfig.class})
 class TripleCloneApplicationTests {
 	@Test
 	void contextLoads() {
