@@ -6,4 +6,4 @@
 *User:* `{email}`
 *Trace ID:* `{traceId}`
 
-*Message:*
+*Message:* '{content}'

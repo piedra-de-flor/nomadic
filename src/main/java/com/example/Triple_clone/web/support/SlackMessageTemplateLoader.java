@@ -13,7 +13,7 @@ import java.util.Map;
 @Slf4j
 @Component
 public class SlackMessageTemplateLoader {
-    private static final String TEMPLATE_PATH = "templates/slack-error-template.txt";
+    private static final String TEMPLATE_PATH = "templates/slack-error-message-template.txt";
     private final String template;
 
     public SlackMessageTemplateLoader() {
