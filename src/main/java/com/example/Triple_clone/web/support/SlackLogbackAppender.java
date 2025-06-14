@@ -29,6 +29,12 @@ public class SlackLogbackAppender extends AppenderBase<ILoggingEvent> {
             metadata.put("thread", eventObject.getThreadName());
             metadata.put("timestamp", eventObject.getTimeStamp());
 
+            metadata.put("traceId", eventObject.getMDCPropertyMap().get("traceId"));
+            metadata.put("email", eventObject.getMDCPropertyMap().get("email"));
+            metadata.put("uri", eventObject.getMDCPropertyMap().get("uri"));
+            metadata.put("level", eventObject.getLevel().levelStr);
+            metadata.put("logger", eventObject.getLoggerName());
+
             NotificationMessage message = new NotificationMessage(
                     "ADMIN",
                     "[ERROR] " + eventObject.getLoggerName(),

@@ -1,6 +1,8 @@
 package com.example.Triple_clone.service.notification.channel;
 
 import com.example.Triple_clone.dto.notification.NotificationMessage;
+import com.example.Triple_clone.web.support.SlackMessageTemplateLoader;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -8,23 +10,21 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Component
 public class SlackClient {
     @Value("${slack.webhook.url}")
     private String webhookUrl;
+    private final SlackMessageTemplateLoader templateLoader;
 
     public void sendMessage(NotificationMessage message) {
         WebClient.create(webhookUrl)
                 .post()
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Map.of("text", formatMessage(message)))
+                .bodyValue(Map.of("text", templateLoader.build(message)))
                 .retrieve()
                 .toBodilessEntity()
                 .block();
-    }
-
-    private String formatMessage(NotificationMessage message) {
-        return String.format("*%s*\n%s", message.subject(), message.content());
     }
 }
 
