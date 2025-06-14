@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>신고 알림</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td align="center" style="padding: 40px 0;">
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+                <!-- 헤더 -->
+                <tr>
+                    <td style="background-color: #e53935; padding: 24px; text-align: center;">
+                        <h1 style="margin: 0; color: #ffffff; font-size: 22px;">📢 신고 알림</h1>
+                    </td>
+                </tr>
+
+                <!-- 본문 -->
+                <tr>
+                    <td style="padding: 30px 40px; color: #333333; font-size: 16px;">
+                        <p style="margin-top: 0;">안녕하세요,</p>
+                        <p>새로운 신고가 접수되었습니다. 아래 내용을 확인해 주세요:</p>
+
+                        <table cellpadding="0" cellspacing="0" width="100%" style="margin-top: 24px; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 10px; background-color: #f8f8f8; font-weight: bold; border: 1px solid #e0e0e0; width: 180px;">신고자 이메일</td>
+                                <td style="padding: 10px; border: 1px solid #e0e0e0;" th:text="${reporterEmail}"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; background-color: #f8f8f8; font-weight: bold; border: 1px solid #e0e0e0;">신고 대상 타입</td>
+                                <td style="padding: 10px; border: 1px solid #e0e0e0;" th:text="${targetType}"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; background-color: #f8f8f8; font-weight: bold; border: 1px solid #e0e0e0;">신고 대상 ID</td>
+                                <td style="padding: 10px; border: 1px solid #e0e0e0;" th:text="${targetId}"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; background-color: #f8f8f8; font-weight: bold; border: 1px solid #e0e0e0;">신고 사유</td>
+                                <td style="padding: 10px; border: 1px solid #e0e0e0;" th:text="${reason}"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; background-color: #f8f8f8; font-weight: bold; border: 1px solid #e0e0e0;">신고 내용</td>
+                                <td style="padding: 10px; border: 1px solid #e0e0e0;" th:text="${content}"></td>
+                            </tr>
+                        </table>
+
+                        <p style="margin-top: 30px; color: #666; font-size: 14px;">※ 본 메일은 신고 접수에 따른 자동 알림입니다.</p>
+                    </td>
+                </tr>
+
+                <!-- 푸터 -->
+                <tr>
+                    <td style="background-color: #fafafa; padding: 20px 40px; text-align: center; font-size: 12px; color: #999999;">
+                        © Nomadic Corp. All rights reserved.
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

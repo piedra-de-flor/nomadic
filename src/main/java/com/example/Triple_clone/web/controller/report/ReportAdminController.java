@@ -27,26 +27,19 @@ public class ReportAdminController {
         return reportService.getReports(condition, pageable);
     }
 
-    @GetMapping("/report-counts")
+    @GetMapping("/reports/count/{targetType}/{minReportCount}")
     public List<ReportCountDto> getReportCountsByCondition(
-            @PageableDefault(size = 10) Pageable pageable
-    ) {
-        return reportService.getReportCounts(pageable);
-    }
-
-    @GetMapping("/report-counts/conditions")
-    public List<ReportCountDto> getReportCountsByCondition(
-            @RequestParam(required = false) String targetType,
-            @RequestParam(required = false) Long minReportCount,
+            @PathVariable(required = false) String targetType,
+            @PathVariable(required = false) Long minReportCount,
             @PageableDefault(size = 10) Pageable pageable
     ) {
         return reportService.getReportCountsByCondition(ReportTargetType.valueOf(targetType), minReportCount, pageable);
     }
 
-    @GetMapping("/reports/by-target")
+    @GetMapping("/reports/{targetType}/{targetId}")
     public Page<ReportResponseDto> getReportsByTarget(
-            @RequestParam String targetType,
-            @RequestParam Long targetId,
+            @PathVariable String targetType,
+            @PathVariable Long targetId,
             Pageable pageable
     ) {
         return reportService.getReportsByTarget(ReportTargetType.valueOf(targetType), targetId, pageable);
