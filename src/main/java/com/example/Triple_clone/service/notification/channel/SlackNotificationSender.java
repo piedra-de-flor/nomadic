@@ -23,7 +23,7 @@ public class SlackNotificationSender implements ChannelNotificationSender {
         return channel == NotificationChannelType.SLACK;
     }
 
-    @Async
+    @Async("mdcAsyncExecutor")
     @Override
     public void send(NotificationMessage message) {
         try {

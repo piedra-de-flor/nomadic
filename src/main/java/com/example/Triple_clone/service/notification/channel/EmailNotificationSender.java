@@ -25,7 +25,7 @@ public class EmailNotificationSender implements ChannelNotificationSender {
         return channel == NotificationChannelType.EMAIL;
     }
 
-    @Async
+    @Async("mdcAsyncExecutor")
     @Override
     public void send(NotificationMessage message) {
         try {
