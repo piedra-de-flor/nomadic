@@ -9,16 +9,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class InfluxConfig {
 
-    @Value("${influx.token}")
+    @Value("${management.influx.metrics.export.token}")
     private String token;
 
-    @Value("${influx.org}")
+    @Value("${management.influx.metrics.export.org}")
     private String org;
 
-    @Value("${influx.bucket}")
+    @Value("${management.influx.metrics.export.bucket}")
     private String bucket;
 
-    @Value("${influx.url}")
+    @Value("${management.influx.metrics.export.uri}")
     private String url;
 
     @Bean
