@@ -4,13 +4,16 @@ import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
 import com.example.Triple_clone.repository.DetailPlanRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DetailPlanService {
@@ -18,7 +21,10 @@ public class DetailPlanService {
 
     public DetailPlan findById(long detailPlanId) {
         return repository.findById(detailPlanId)
-                .orElseThrow(() -> new NoSuchElementException("new plan Entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 세부 계획 조회 실패 - 존재하지 않는 세부 계획: {}", detailPlanId);
+                    return new EntityNotFoundException("new plan Entity");
+                });
     }
 
     public void save(DetailPlan detailPlan) {

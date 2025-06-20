@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "유저 Controller", description = "USER API")
 public class UserController {
     private final UserService service;
-    private final String testJenkinsCI = "Successsss";
 
     @Operation(summary = "회원가입", description = "새로운 회원을 생성합니다")
     @ApiResponse(responseCode = "200", description = "성공")

@@ -4,18 +4,22 @@ import com.example.Triple_clone.domain.entity.Accommodation;
 import com.example.Triple_clone.domain.entity.DetailPlan;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.entity.Recommendation;
+import com.example.Triple_clone.domain.vo.AuthErrorCode;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
 import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
 import com.example.Triple_clone.dto.planning.ReservationCreateDto;
 import com.example.Triple_clone.service.accommodation.AccommodationService;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
+import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DetailPlanFacadeService {
@@ -76,7 +80,8 @@ public class DetailPlanFacadeService {
                     updateDto.time());
         }
 
-        throw new NoSuchElementException("this detail plan id is not yours");
+        log.warn("⚠️ 세부 계획 수정 실패 - 목표 계획내 포함되지 않는 세부 계획 : user = {} / target = {}", plan.getMember().getId(), detailPlan.getId());
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
     public DetailPlan delete(long planId, long detailPlanId) {
@@ -88,7 +93,8 @@ public class DetailPlanFacadeService {
             return detailPlan;
         }
 
-        throw new NoSuchElementException("this detail plan id is not yours");
+        log.warn("⚠️ 세부 계획 삭제 실패 - : 목표 계획내 포함되지 않는 세부 계획 : user = {} / target = {}", plan.getMember().getId(), detailPlan.getId());
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
     private boolean isContain(Plan plan, DetailPlan detailPlan) {

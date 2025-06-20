@@ -18,7 +18,7 @@ public class ScraperBatchService {
 
     @Scheduled(fixedRate = 6000000)
     public void scrapeAllLocations() {
-        log.info("==== 크롤링 시작 ====");
+        log.info("✅ Start Batch process = 숙소 정보 크롤링");
         for (ScrapingLocal local : ScrapingLocal.values()) {
             scrapeYanolja(local.getKoreanName());
         }

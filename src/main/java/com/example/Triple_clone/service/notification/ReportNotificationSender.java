@@ -10,6 +10,7 @@ import com.example.Triple_clone.dto.report.ReportCreatedEvent;
 import com.example.Triple_clone.repository.AdminNotificationSettingRepository;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
 import com.example.Triple_clone.web.support.HtmlTemplateRenderer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class ReportNotificationSender extends NotificationSender {
     private final AdminNotificationSettingRepository settingRepository;
@@ -70,6 +72,7 @@ public class ReportNotificationSender extends NotificationSender {
                 if (setting.getChannel().includes(channelType)) {
                     sender.send(message);
                 } else {
+                    log.warn("⚠️ 신고 알림 생성 실패 - 지원하지 않는 채널: {}", channelType);
                     throw new IllegalArgumentException("지원하지 않는 채널 타입입니다.");
                 }
             }

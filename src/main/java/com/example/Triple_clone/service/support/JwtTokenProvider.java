@@ -61,6 +61,7 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get("auth") == null) {
+            log.warn("⚠️ 접근 권한 에러 - 토큰 권한 정보 누락: {}", accessToken);
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
@@ -80,14 +81,15 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+            log.warn("JWT 토큰 검증 실패 - 바르지 못한 토큰값: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            log.warn("JWT 토큰 검증 실패 - 이미 만료된 토큰값: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            log.warn("JWT 토큰 검증 실패 - 지원하지 않는 토큰: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            log.warn("JWT 토큰 검증 실패 - 토큰 정보 누락: {}", e.getMessage());
         } catch (Exception e) {
+            log.error("JWT 토큰 검증 실패 - 예상치 못한 에러 : {}", e.getMessage());
             throw new IllegalArgumentException("AUTH ERROR");
         }
         return false;
