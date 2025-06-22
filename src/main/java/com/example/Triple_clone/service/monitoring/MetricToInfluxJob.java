@@ -1,9 +1,11 @@
 package com.example.Triple_clone.service.monitoring;
 
 import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import oshi.SystemInfo;
@@ -13,6 +15,7 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 import java.time.Instant;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MetricToInfluxJob {
@@ -36,7 +39,13 @@ public class MetricToInfluxJob {
                 .addField("memory_usage", memoryUsage)
                 .time(Instant.now(), WritePrecision.MS);
 
-        influxDBClient.makeWriteApi().writePoint(point);
+        try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
+            writeApi.writePoint(point);
+            log.info("✅ InfluxDB write 성공");
+        } catch (Exception e) {
+            log.error("❌ InfluxDB write 실패", e);
+        }
+
     }
 
     private double getCpuUsage(CentralProcessor processor) {

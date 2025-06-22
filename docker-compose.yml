@@ -102,5 +102,24 @@ services:
       - elasticsearch
     networks:
       - triple
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=woodking2
+      - DOCKER_INFLUXDB_INIT_PASSWORD=kakao4851?
+      - DOCKER_INFLUXDB_INIT_ORG=ChoiYoungWoo
+      - DOCKER_INFLUXDB_INIT_BUCKET=nomadic_monitoring
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=O73uulQ6Bw95lSMqlfs2BrXfVU1KQNapUtjJeOy9RnmgufsOnCxloFEsolqniXbLvevnzVGI3qbEI9jBMnHaKA==
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    networks:
+      - triple
+
 volumes:
   elastic_data:
+  influxdb_data:

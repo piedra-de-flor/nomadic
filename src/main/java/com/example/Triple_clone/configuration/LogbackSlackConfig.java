@@ -2,6 +2,7 @@ package com.example.Triple_clone.configuration;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
 import com.example.Triple_clone.service.notification.channel.SlackNotificationSender;
 import com.example.Triple_clone.web.support.SlackLogbackAppender;
 import jakarta.annotation.PostConstruct;
@@ -10,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class LogbackSlackConfig {
-    private final SlackNotificationSender slackNotificationSender;
+    private final ChannelNotificationSender slackNotificationSender;
 
-    public LogbackSlackConfig(SlackNotificationSender slackNotificationSender) {
+    public LogbackSlackConfig(ChannelNotificationSender slackNotificationSender) {
         this.slackNotificationSender = slackNotificationSender;
     }
 
