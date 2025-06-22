@@ -6,35 +6,50 @@ import com.influxdb.client.write.Point;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import oshi.SystemInfo;
+import oshi.hardware.CentralProcessor;
+import oshi.hardware.GlobalMemory;
+import oshi.hardware.HardwareAbstractionLayer;
 
 import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
 public class MetricToInfluxJob {
+    private static final double PERCENTAGE = 10.0;
     private final InfluxDBClient influxDBClient;
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 300_000)
     public void reportMetrics() {
-        double memoryUsage = getMemoryUsage();
-        double cpuUsage = getCpuUsage();
+        SystemInfo systemInfo = new SystemInfo();
+        HardwareAbstractionLayer hal = systemInfo.getHardware();
+        CentralProcessor processor = hal.getProcessor();
+        GlobalMemory memory = hal.getMemory();
+
+        double cpuUsage = getCpuUsage(processor);
+        double memoryUsage = getMemoryUsage(memory);
 
         Point point = Point
                 .measurement("server_metrics")
                 .addTag("host", "triple-app")
-                .addField("memory_usage", memoryUsage)
                 .addField("cpu_usage", cpuUsage)
+                .addField("memory_usage", memoryUsage)
                 .time(Instant.now(), WritePrecision.MS);
 
-        influxDBClient.getWriteApi().writePoint(point);
+        influxDBClient.makeWriteApi().writePoint(point);
     }
 
-    private double getMemoryUsage() {
-        Runtime runtime = Runtime.getRuntime();
-        return (double) (runtime.totalMemory() - runtime.freeMemory()) / runtime.maxMemory();
+    private double getCpuUsage(CentralProcessor processor) {
+        long[] prevTicks = processor.getSystemCpuLoadTicks();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {}
+        return processor.getSystemCpuLoadBetweenTicks(prevTicks) * PERCENTAGE;
     }
 
-    private double getCpuUsage() {
-        return 0.5;
+    private double getMemoryUsage(GlobalMemory memory) {
+        long total = memory.getTotal();
+        long used = total - memory.getAvailable();
+        return (double) used / total * PERCENTAGE;
     }
 }
