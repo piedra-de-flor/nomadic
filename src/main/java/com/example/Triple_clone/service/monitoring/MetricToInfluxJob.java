@@ -16,7 +16,7 @@ import java.time.Instant;
 @Component
 @RequiredArgsConstructor
 public class MetricToInfluxJob {
-    private static final double PERCENTAGE = 10.0;
+    private static final double PERCENTAGE = 100.0;
     private final InfluxDBClient influxDBClient;
 
     @Scheduled(fixedRate = 300_000)
