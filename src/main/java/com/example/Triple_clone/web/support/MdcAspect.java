@@ -3,7 +3,7 @@ package com.example.Triple_clone.web.support;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.jboss.logging.MDC;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
