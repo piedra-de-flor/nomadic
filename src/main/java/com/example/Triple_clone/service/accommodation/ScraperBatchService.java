@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.accommodation;
 
+import com.example.Triple_clone.domain.vo.LogMessage;
 import com.example.Triple_clone.domain.vo.ScrapingLocal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -18,7 +19,7 @@ public class ScraperBatchService {
 
     @Scheduled(fixedRate = 6000000)
     public void scrapeAllLocations() {
-        log.info("✅ Start Batch process = 숙소 정보 크롤링");
+        log.info(LogMessage.BATCH_PROCESS_START.format("숙소 크롤링"));
         for (ScrapingLocal local : ScrapingLocal.values()) {
             scrapeYanolja(local.getKoreanName());
         }
@@ -29,12 +30,12 @@ public class ScraperBatchService {
                 .uri("/scrape/{location}", location)
                 .retrieve()
                 .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> {
-                    log.error("❌ 크롤링 요청 실패: {} - HTTP 상태 코드: {}", location, response.statusCode());
+                    log.error(LogMessage.BATCH_PROCESS_FAIL.format(location + " 숙소 크롤링", response.statusCode()));
                     return Mono.error(new RuntimeException("크롤링 실패: " + response.statusCode()));
                 })
                 .bodyToMono(String.class)
-                .doOnSuccess(response -> log.info("✅ 크롤링 성공: {}", location))
-                .doOnError(error -> log.error("❌ 크롤링 중 예외 발생: {}", location, error))
+                .doOnSuccess(response -> log.info(LogMessage.BATCH_PROCESS_SUCCESS.format(location + " 숙소 크롤링")))
+                .doOnError(error -> log.error(LogMessage.BATCH_PROCESS_FAIL.format(location + " 숙소 크롤링", error)))
                 .then()
                 .toFuture();
     }

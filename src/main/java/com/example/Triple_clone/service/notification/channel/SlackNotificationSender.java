@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.notification.channel;
 
+import com.example.Triple_clone.domain.vo.LogMessage;
 import com.example.Triple_clone.domain.vo.NotificationChannelType;
 import com.example.Triple_clone.dto.notification.NotificationMessage;
 import com.example.Triple_clone.service.notification.kafka.NotificationRetryProducer;
@@ -30,7 +31,8 @@ public class SlackNotificationSender implements ChannelNotificationSender {
             slackClient.sendMessage(message);
         } catch (Exception e) {
             slackRetryProducer.sendSlackRetryMessage(message);
-            log.warn("❌ Slack 전송 실패: {}, Kafka로 메시지 전송", e.getMessage());
+            log.warn(LogMessage.SLACK_SEND_FAIL.format(e.getMessage()));
+            log.info(LogMessage.KAFKA_MESSAGE_SEND.format(message.subject()));
             throw new SlackSendFailureException("Slack 전송에 실패했습니다.", e);
         }
     }

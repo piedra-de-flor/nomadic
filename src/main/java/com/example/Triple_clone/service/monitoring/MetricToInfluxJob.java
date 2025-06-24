@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.monitoring;
 
+import com.example.Triple_clone.domain.vo.LogMessage;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
@@ -41,9 +42,9 @@ public class MetricToInfluxJob {
 
         try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
             writeApi.writePoint(point);
-            log.info("✅ InfluxDB write 성공");
+            log.info(LogMessage.BATCH_PROCESS_SUCCESS.format("InfluxDB write"));
         } catch (Exception e) {
-            log.error("❌ InfluxDB write 실패", e);
+            log.error(LogMessage.BATCH_PROCESS_FAIL.format("InfluxDB write", e));
         }
 
     }

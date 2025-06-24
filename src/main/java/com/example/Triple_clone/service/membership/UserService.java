@@ -1,6 +1,7 @@
 package com.example.Triple_clone.service.membership;
 
 import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.vo.LogMessage;
 import com.example.Triple_clone.dto.auth.JwtToken;
 import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
 import com.example.Triple_clone.dto.membership.UserResponseDto;
@@ -79,7 +80,7 @@ public class UserService {
     public Member findById(long userId) {
         return repository.findById(userId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", userId);
+                    log.warn(LogMessage.USER_NOT_FOUND_ID.format(userId));
                     return new EntityNotFoundException("no user entity");
                 });
     }
@@ -87,7 +88,7 @@ public class UserService {
     public Member findByEmail(String email) {
         return repository.findByEmail(email)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
+                    log.warn(LogMessage.USER_NOT_FOUND_EMAIL.format(email));
                     return new EntityNotFoundException("no user entity");
                 });
     }
