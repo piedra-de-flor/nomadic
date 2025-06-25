@@ -1,13 +1,11 @@
 package com.example.Triple_clone.dto.membership;
 
 import com.example.Triple_clone.domain.entity.Member;
-import com.example.Triple_clone.domain.vo.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public record UserJoinRequestDto(

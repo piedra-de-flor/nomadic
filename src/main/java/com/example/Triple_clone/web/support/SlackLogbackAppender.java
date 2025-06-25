@@ -6,7 +6,6 @@ import ch.qos.logback.core.AppenderBase;
 import com.example.Triple_clone.domain.vo.NotificationChannelType;
 import com.example.Triple_clone.dto.notification.NotificationMessage;
 import com.example.Triple_clone.service.notification.channel.ChannelNotificationSender;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;

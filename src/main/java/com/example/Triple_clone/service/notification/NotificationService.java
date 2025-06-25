@@ -3,7 +3,6 @@ package com.example.Triple_clone.service.notification;
 import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.entity.Notification;
 import com.example.Triple_clone.domain.entity.NotificationStatus;
-import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.dto.notification.NotificationSearchDto;
 import com.example.Triple_clone.repository.NotificationQueryRepository;
 import com.example.Triple_clone.repository.NotificationRepository;
@@ -14,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
