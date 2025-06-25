@@ -1,5 +1,6 @@
 package com.example.Triple_clone.service.notification.kafka;
 
+import com.example.Triple_clone.domain.vo.LogMessage;
 import com.example.Triple_clone.dto.notification.NotificationMessage;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class NotificationRetryConsumer {
 
         if (retryCount >= MAX_RETRY_COUNT) {
             notificationDlqProducer.sendEmailToDlq(message);
-            log.warn("Email DLQ 전송: 최대 재시도 초과 -> {}", message.receiver());
+            log.warn(LogMessage.KAFKA_MESSAGE_RETRY_FAIL.format(message));
             return;
         }
 

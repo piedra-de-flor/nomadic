@@ -32,7 +32,7 @@ public class SlackNotificationSender implements ChannelNotificationSender {
         } catch (Exception e) {
             slackRetryProducer.sendSlackRetryMessage(message);
             log.warn(LogMessage.SLACK_SEND_FAIL.format(e.getMessage()));
-            log.info(LogMessage.KAFKA_MESSAGE_SEND.format(message.subject()));
+            log.info(LogMessage.KAFKA_MESSAGE_SEND.format(message.receiver()));
             throw new SlackSendFailureException("Slack 전송에 실패했습니다.", e);
         }
     }

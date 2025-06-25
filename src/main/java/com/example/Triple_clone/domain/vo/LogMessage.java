@@ -9,8 +9,11 @@ public enum LogMessage {
     BATCH_PROCESS_SUCCESS("✅ 배치 process 성공: %s"),
     BATCH_PROCESS_FAIL("❌ %s 배치 process 실패: %s"),
     EMAIL_SEND_FAIL("❌ Email 전송 실패: %s"),
+    EMAIL_SEND_RETRY_FAIL("⚠️ Email 재전송 실패, 재시도 카운트 증가 후 Kafka에 다시 전송: retry_count = %s"),
     SLACK_SEND_FAIL("❌ Slack 전송 실패: %s"),
+    SLACK_SEND_RETRY_FAIL("⚠️ Slack 재전송 실패, 재시도 카운트 증가 후 Kafka에 다시 전송: retry_count = %s"),
     KAFKA_MESSAGE_SEND("✅ Kafka로 이벤트 발송: %s"),
+    KAFKA_MESSAGE_RETRY_FAIL("⚠️ Kafka 재전송 실패 DLQ 전송: %s"),
 
 
     private final String template;
