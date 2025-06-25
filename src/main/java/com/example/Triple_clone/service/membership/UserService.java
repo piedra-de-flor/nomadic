@@ -1,12 +1,14 @@
 package com.example.Triple_clone.service.membership;
 
 import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.vo.LogMessage;
 import com.example.Triple_clone.dto.auth.JwtToken;
 import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
 import com.example.Triple_clone.dto.membership.UserResponseDto;
 import com.example.Triple_clone.dto.membership.UserUpdateDto;
 import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.service.support.JwtTokenProvider;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -32,7 +33,8 @@ public class UserService {
     @Transactional
     public UserResponseDto signUp(UserJoinRequestDto signUpDto) {
         if (repository.findByEmail(signUpDto.email()).isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 사용자 이름입니다.");
+            log.warn("⚠️ 사용자 가입 실패 - 중복된 이메일 이메일: {}", signUpDto.email());
+            throw new IllegalArgumentException("이미 사용 중인 이메일 입니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(signUpDto.password());
@@ -54,23 +56,20 @@ public class UserService {
     }
 
     public UserResponseDto read(long userId) {
-        Member member = repository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+        Member member = findById(userId);
 
         return UserResponseDto.fromUser(member);
     }
 
     @Transactional
     public void update(UserUpdateDto userUpdateDto) {
-        Member member = repository.findById(userUpdateDto.userId())
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+        Member member = findById(userUpdateDto.userId());
 
         member.update(userUpdateDto.name(), userUpdateDto.password());
     }
 
     public long delete(String email) {
-        Member member = repository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+        Member member = findByEmail(email);
 
         repository.delete(member);
         return member.getId();
@@ -78,11 +77,17 @@ public class UserService {
 
     public Member findById(long userId) {
         return repository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
+                .orElseThrow(() -> {
+                    log.warn(LogMessage.USER_NOT_FOUND_ID.format(userId));
+                    return new EntityNotFoundException("no user entity");
+                });
     }
 
     public Member findByEmail(String email) {
         return repository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("no user Entity"));
+                .orElseThrow(() -> {
+                    log.warn(LogMessage.USER_NOT_FOUND_EMAIL.format(email));
+                    return new EntityNotFoundException("no user entity");
+                });
     }
 }

@@ -27,15 +27,18 @@ public class NotificationBatchProcessor {
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void saveNotificationStatus() {
+        log.info("✅ Start Batch process = 알림 상태 저장");
         List<NotificationSentEvent> events = queue.drainAll();
         for (NotificationSentEvent event : events) {
             try {
                 processEvent(event);
             } catch (Exception e) {
-                log.error("Failed to process notification event: {}", event, e);
+                log.error("❌ Failed to process notification event: {}", event, e);
                 queue.enqueue(event);
             }
         }
+
+        log.info("✅ End Batch process = 알림 상태 저장");
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -55,6 +58,7 @@ public class NotificationBatchProcessor {
     @Transactional
     @Scheduled(cron = "0 50 23 * * *")
     public void deleteOldNotifications() {
+        log.info("✅ Start Batch process = 오래된 알림 삭제");
         LocalDateTime threshold = LocalDateTime.now().minusDays(30);
 
         List<Notification> oldNotifications = notificationRepository.findBySentAtBefore(threshold);
@@ -62,5 +66,7 @@ public class NotificationBatchProcessor {
         if (!oldNotifications.isEmpty()) {
             notificationRepository.deleteAll(oldNotifications);
         }
+
+        log.info("✅ End Batch process = 오래된 알림 삭제");
     }
 }

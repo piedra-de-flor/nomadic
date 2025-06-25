@@ -9,7 +9,7 @@ import com.example.Triple_clone.dto.notification.NotificationSearchDto;
 import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.NotificationRepository;
 import com.example.Triple_clone.service.membership.UserService;
-import com.example.Triple_clone.service.notification.kafka.EmailRetryConsumer;
+import com.example.Triple_clone.service.notification.kafka.NotificationRetryConsumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.List;
 @Transactional
 class NotificationServicePerformanceTest {
     @MockBean
-    private EmailRetryConsumer emailRetryConsumer;
+    private NotificationRetryConsumer notificationRetryConsumer;
 
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;

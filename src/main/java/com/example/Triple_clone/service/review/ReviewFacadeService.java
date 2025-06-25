@@ -1,8 +1,8 @@
 package com.example.Triple_clone.service.review;
 
+import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.entity.Review;
-import com.example.Triple_clone.domain.entity.Member;
 import com.example.Triple_clone.domain.vo.AuthErrorCode;
 import com.example.Triple_clone.domain.vo.Image;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
@@ -14,14 +14,14 @@ import com.example.Triple_clone.service.recommend.user.RecommendService;
 import com.example.Triple_clone.service.support.FileManager;
 import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.NoSuchElementException;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReviewFacadeService {
@@ -40,6 +40,7 @@ public class ReviewFacadeService {
             parent = reviewService.findById(writeReviewRequestDto.parentId());
 
             if (parent.getParent() != null) {
+                log.warn("⚠️ 리뷰 작성 실패 - 대댓글 depth 제한: parentReview = {}", writeReviewRequestDto.parentId());
                 throw new IllegalArgumentException("대댓글은 depth가 2이상 허용되지 않습니다.");
             }
         }

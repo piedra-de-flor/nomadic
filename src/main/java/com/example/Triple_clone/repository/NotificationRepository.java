@@ -1,7 +1,6 @@
 package com.example.Triple_clone.repository;
 
 import com.example.Triple_clone.domain.entity.Notification;
-import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.domain.vo.NotificationType;
 import org.springframework.data.jpa.repository.JpaRepository;
 

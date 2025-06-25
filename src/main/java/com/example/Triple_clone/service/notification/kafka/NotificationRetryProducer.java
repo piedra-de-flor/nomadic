@@ -8,10 +8,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class EmailRetryProducer {
+public class NotificationRetryProducer {
     private final KafkaTemplate<String, NotificationMessage> kafkaTemplate;
 
-    public void sendRetryMessage(NotificationMessage message) {
+    public void sendEmailRetryMessage(NotificationMessage message) {
         kafkaTemplate.send(KafkaTopic.EMAIL_RETRY_TOPIC.getValue(), message);
+    }
+
+    public void sendSlackRetryMessage(NotificationMessage message) {
+        kafkaTemplate.send(KafkaTopic.SLACK_RETRY_TOPIC.getValue(), message);
     }
 }

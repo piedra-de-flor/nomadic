@@ -1,9 +1,8 @@
 package com.example.Triple_clone.web.exception;
 
 import com.example.Triple_clone.domain.vo.ErrorCode;
-import com.example.Triple_clone.dto.error.ErrorResponse;
 import com.example.Triple_clone.domain.vo.GlobalErrorCode;
-import jakarta.servlet.ServletException;
+import com.example.Triple_clone.dto.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;

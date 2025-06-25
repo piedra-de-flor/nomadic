@@ -2,7 +2,6 @@ package com.example.Triple_clone.dto.recommend.user;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.vo.Location;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 

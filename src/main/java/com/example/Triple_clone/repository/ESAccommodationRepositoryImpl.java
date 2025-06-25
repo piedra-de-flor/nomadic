@@ -9,6 +9,7 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
 import com.example.Triple_clone.domain.entity.AccommodationDocument;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Repository
 public class ESAccommodationRepositoryImpl implements ESAccommodationRepository {
@@ -98,6 +100,7 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
             return new PageImpl<>(results, pageable, total);
 
         } catch (IOException e) {
+            log.error("Elasticsearch 검색 중 오류 발생: {}", e.getMessage());
             throw new RuntimeException("Elasticsearch 검색 중 오류 발생: " + e.getMessage(), e);
         }
     }

@@ -8,19 +8,19 @@ import com.example.Triple_clone.dto.recommend.user.RecommendReadTop10Dto;
 import com.example.Triple_clone.repository.MemberRepository;
 import com.example.Triple_clone.repository.RecommendationRepository;
 import com.example.Triple_clone.service.support.FileManager;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,10 +37,16 @@ public class RecommendService {
     @Transactional(readOnly = true)
     public RecommendReadDto findById(long recommendationId, String email) {
         Recommendation recommendation = recommendationRepository.findById(recommendationId)
-                .orElseThrow(() -> new NoSuchElementException("no place entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 추천 장소 조회 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
+                    return new EntityNotFoundException("no place entity");
+                });
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("no user entity"));
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
+                    return new EntityNotFoundException("no user entity");
+                });
 
         boolean likeOrNot = recommendation.isLikedBy(member.getId());
 
@@ -111,7 +117,10 @@ public class RecommendService {
         if (!likes.isEmpty()) {
             likes.forEach((placeId, userIds) -> {
                 Recommendation target = recommendationRepository.findById(placeId)
-                        .orElseThrow(NoSuchElementException::new);
+                        .orElseThrow(() -> {
+                            log.warn("⚠️ 추천 장소 조회 실패 - 존재하지 않는 추천 장소: {}", placeId);
+                            return new EntityNotFoundException("no place entity for like");
+                        });
                 userIds.forEach(target::like);
             });
             likes.clear();

@@ -4,14 +4,15 @@ import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.dto.review.ReviewResponseDto;
 import com.example.Triple_clone.dto.review.RootReviewResponseDto;
 import com.example.Triple_clone.repository.ReviewRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReviewService {
@@ -33,7 +34,10 @@ public class ReviewService {
 
     public Review findById(Long reviewId) {
         return repository.findById(reviewId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> {
+                    log.warn("⚠️ 리뷰 조회 실패 - 존재하지 않는 리뷰: {}", reviewId);
+                    return new EntityNotFoundException("no review entity");
+                });
     }
 
     public Page<RootReviewResponseDto> getRootReviews(Long recommendationId, Pageable pageable) {
