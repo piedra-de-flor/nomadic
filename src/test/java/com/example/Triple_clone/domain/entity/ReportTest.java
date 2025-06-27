@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import org.junit.jupiter.api.Test;

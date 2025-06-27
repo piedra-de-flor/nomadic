@@ -1,4 +1,4 @@
-package com.example.Triple_clone.service.accommodation;
+package com.example.Triple_clone.domain.accommodation.accommodation;
 
 import com.example.Triple_clone.domain.vo.LogMessage;
 import com.example.Triple_clone.domain.vo.ScrapingLocal;

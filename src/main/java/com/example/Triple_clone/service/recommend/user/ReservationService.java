@@ -1,9 +1,9 @@
 package com.example.Triple_clone.service.recommend.user;
 
 import com.example.Triple_clone.domain.entity.DetailPlan;
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.dto.planning.DetailPlanDto;
-import com.example.Triple_clone.repository.MemberRepository;
+import com.example.Triple_clone.domain.member.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Query;

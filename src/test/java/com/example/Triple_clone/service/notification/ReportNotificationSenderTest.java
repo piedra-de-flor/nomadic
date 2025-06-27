@@ -1,7 +1,7 @@
 package com.example.Triple_clone.service.notification;
 
 import com.example.Triple_clone.domain.entity.AdminNotificationSetting;
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.entity.Report;
 import com.example.Triple_clone.domain.vo.*;
 import com.example.Triple_clone.dto.notification.NotificationDto;

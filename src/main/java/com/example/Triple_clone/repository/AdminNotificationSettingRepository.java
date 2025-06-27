@@ -1,7 +1,7 @@
 package com.example.Triple_clone.repository;
 
 import com.example.Triple_clone.domain.entity.AdminNotificationSetting;
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

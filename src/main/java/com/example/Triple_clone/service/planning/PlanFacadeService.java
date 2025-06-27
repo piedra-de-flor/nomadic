@@ -1,10 +1,10 @@
 package com.example.Triple_clone.service.planning;
 
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.entity.Plan;
 import com.example.Triple_clone.domain.vo.AuthErrorCode;
 import com.example.Triple_clone.dto.planning.*;
-import com.example.Triple_clone.service.membership.UserService;
+import com.example.Triple_clone.domain.member.UserService;
 import com.example.Triple_clone.web.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

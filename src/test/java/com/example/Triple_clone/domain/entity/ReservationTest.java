@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.entity;
 
+import com.example.Triple_clone.domain.accommodation.Accommodation;
 import com.example.Triple_clone.domain.vo.Location;
 import org.junit.jupiter.api.Test;
 

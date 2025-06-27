@@ -1,11 +1,11 @@
 package com.example.Triple_clone.service.notification;
 
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.entity.Notification;
 import com.example.Triple_clone.domain.vo.NotificationTarget;
 import com.example.Triple_clone.dto.notification.NotificationSaveRequest;
 import com.example.Triple_clone.dto.notification.NotificationSentEvent;
-import com.example.Triple_clone.repository.MemberRepository;
+import com.example.Triple_clone.domain.member.MemberRepository;
 import com.example.Triple_clone.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

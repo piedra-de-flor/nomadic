@@ -1,11 +1,11 @@
-package com.example.Triple_clone.web.controller.membership;
+package com.example.Triple_clone.domain.member;
 
 import com.example.Triple_clone.dto.auth.JwtToken;
-import com.example.Triple_clone.dto.membership.LoginDto;
-import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
-import com.example.Triple_clone.dto.membership.UserResponseDto;
-import com.example.Triple_clone.dto.membership.UserUpdateDto;
-import com.example.Triple_clone.service.membership.UserService;
+import com.example.Triple_clone.domain.member.LoginDto;
+import com.example.Triple_clone.domain.member.UserJoinRequestDto;
+import com.example.Triple_clone.domain.member.UserResponseDto;
+import com.example.Triple_clone.domain.member.UserUpdateDto;
+import com.example.Triple_clone.domain.member.UserService;
 import com.example.Triple_clone.web.support.MemberEmailAspect;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,6 +1,8 @@
 package com.example.Triple_clone.service.report;
 
 import com.example.Triple_clone.domain.entity.*;
+import com.example.Triple_clone.domain.member.Member;
+import com.example.Triple_clone.domain.member.MemberRepository;
 import com.example.Triple_clone.domain.vo.ReportTargetType;
 import com.example.Triple_clone.domain.vo.ReportingReason;
 import com.example.Triple_clone.domain.vo.ReviewStatus;

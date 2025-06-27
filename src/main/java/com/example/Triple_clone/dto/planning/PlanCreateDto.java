@@ -1,7 +1,7 @@
 package com.example.Triple_clone.dto.planning;
 
 import com.example.Triple_clone.domain.entity.Plan;
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.vo.Partner;
 import com.example.Triple_clone.domain.vo.Style;
 import jakarta.validation.constraints.NotBlank;

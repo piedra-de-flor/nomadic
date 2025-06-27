@@ -1,6 +1,6 @@
-package com.example.Triple_clone.repository;
+package com.example.Triple_clone.domain.accommodation;
 
-import com.example.Triple_clone.domain.entity.Accommodation;
+import com.example.Triple_clone.domain.accommodation.Accommodation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

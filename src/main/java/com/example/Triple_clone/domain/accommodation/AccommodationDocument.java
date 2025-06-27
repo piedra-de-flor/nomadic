@@ -1,4 +1,4 @@
-package com.example.Triple_clone.domain.entity;
+package com.example.Triple_clone.domain.accommodation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;

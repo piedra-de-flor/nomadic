@@ -2,7 +2,7 @@ package com.example.Triple_clone.dto.recommend.user;
 
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.entity.Review;
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

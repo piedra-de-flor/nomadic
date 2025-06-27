@@ -1,4 +1,4 @@
-package com.example.Triple_clone.domain.entity;
+package com.example.Triple_clone.domain.accommodation;
 
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;

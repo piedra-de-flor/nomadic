@@ -1,8 +1,8 @@
-package com.example.Triple_clone.service.membership;
+package com.example.Triple_clone.domain.member;
 
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.vo.LogMessage;
-import com.example.Triple_clone.repository.MemberRepository;
+import com.example.Triple_clone.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;

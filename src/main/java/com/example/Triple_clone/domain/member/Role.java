@@ -1,4 +1,4 @@
-package com.example.Triple_clone.domain.vo;
+package com.example.Triple_clone.domain.member;
 
 //TODO
 //FIXME

@@ -1,6 +1,6 @@
-package com.example.Triple_clone.dto.membership;
+package com.example.Triple_clone.domain.member;
 
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

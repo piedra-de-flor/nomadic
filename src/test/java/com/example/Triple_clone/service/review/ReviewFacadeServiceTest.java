@@ -1,6 +1,6 @@
 package com.example.Triple_clone.service.review;
 
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.entity.Review;
 import com.example.Triple_clone.domain.vo.Image;
@@ -8,7 +8,7 @@ import com.example.Triple_clone.domain.vo.Location;
 import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
 import com.example.Triple_clone.dto.review.ReviewResponseDto;
 import com.example.Triple_clone.dto.review.ReviewUpdateDto;
-import com.example.Triple_clone.service.membership.UserService;
+import com.example.Triple_clone.domain.member.UserService;
 import com.example.Triple_clone.service.recommend.user.RecommendService;
 import com.example.Triple_clone.service.support.FileManager;
 import com.example.Triple_clone.web.exception.RestApiException;

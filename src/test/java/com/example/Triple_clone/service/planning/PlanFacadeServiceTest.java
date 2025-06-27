@@ -1,18 +1,15 @@
 package com.example.Triple_clone.service.planning;
 
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.entity.Plan;
-import com.example.Triple_clone.domain.vo.AuthErrorCode;
-import com.example.Triple_clone.domain.vo.Partner;
 import com.example.Triple_clone.domain.vo.Style;
 import com.example.Triple_clone.dto.planning.*;
-import com.example.Triple_clone.service.membership.UserService;
+import com.example.Triple_clone.domain.member.UserService;
 import com.example.Triple_clone.web.exception.RestApiException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;

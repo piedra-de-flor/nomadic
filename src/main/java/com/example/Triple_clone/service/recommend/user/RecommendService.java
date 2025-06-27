@@ -1,11 +1,11 @@
 package com.example.Triple_clone.service.recommend.user;
 
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.entity.Recommendation;
 import com.example.Triple_clone.domain.vo.RecommendOrderType;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadDto;
 import com.example.Triple_clone.dto.recommend.user.RecommendReadTop10Dto;
-import com.example.Triple_clone.repository.MemberRepository;
+import com.example.Triple_clone.domain.member.MemberRepository;
 import com.example.Triple_clone.repository.RecommendationRepository;
 import com.example.Triple_clone.service.support.FileManager;
 import jakarta.persistence.EntityNotFoundException;

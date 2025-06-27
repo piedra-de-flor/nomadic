@@ -1,7 +1,7 @@
-package com.example.Triple_clone.web.controller.accommodation;
+package com.example.Triple_clone.domain.accommodation;
 
-import com.example.Triple_clone.dto.accommodation.AccommodationDto;
-import com.example.Triple_clone.service.accommodation.AccommodationService;
+import com.example.Triple_clone.domain.accommodation.AccommodationDto;
+import com.example.Triple_clone.domain.accommodation.accommodation.AccommodationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

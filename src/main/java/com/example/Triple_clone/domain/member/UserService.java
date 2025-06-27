@@ -1,12 +1,12 @@
-package com.example.Triple_clone.service.membership;
+package com.example.Triple_clone.domain.member;
 
-import com.example.Triple_clone.domain.entity.Member;
+import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.vo.LogMessage;
 import com.example.Triple_clone.dto.auth.JwtToken;
-import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
-import com.example.Triple_clone.dto.membership.UserResponseDto;
-import com.example.Triple_clone.dto.membership.UserUpdateDto;
-import com.example.Triple_clone.repository.MemberRepository;
+import com.example.Triple_clone.domain.member.UserJoinRequestDto;
+import com.example.Triple_clone.domain.member.UserResponseDto;
+import com.example.Triple_clone.domain.member.UserUpdateDto;
+import com.example.Triple_clone.domain.member.MemberRepository;
 import com.example.Triple_clone.service.support.JwtTokenProvider;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

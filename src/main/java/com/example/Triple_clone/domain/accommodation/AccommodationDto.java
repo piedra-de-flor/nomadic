@@ -1,7 +1,7 @@
-package com.example.Triple_clone.dto.accommodation;
+package com.example.Triple_clone.domain.accommodation;
 
-import com.example.Triple_clone.domain.entity.Accommodation;
-import com.example.Triple_clone.domain.entity.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.Accommodation;
+import com.example.Triple_clone.domain.accommodation.AccommodationDocument;
 
 public record AccommodationDto(
         String local,

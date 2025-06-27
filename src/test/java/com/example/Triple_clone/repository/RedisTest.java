@@ -1,12 +1,12 @@
 package com.example.Triple_clone.repository;
 
-import com.example.Triple_clone.domain.entity.RedisAccommodation;
+import com.example.Triple_clone.domain.accommodation.RedisAccommodation;
+import com.example.Triple_clone.domain.accommodation.RedisAccommodationRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalTime;
 import java.util.Optional;
