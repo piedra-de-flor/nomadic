@@ -1,13 +1,15 @@
 package com.example.Triple_clone.service.notification;
 
 import com.example.Triple_clone.domain.member.Member;
-import com.example.Triple_clone.domain.entity.Notification;
-import com.example.Triple_clone.domain.vo.NotificationTarget;
-import com.example.Triple_clone.domain.vo.NotificationType;
-import com.example.Triple_clone.dto.notification.NotificationSaveRequest;
-import com.example.Triple_clone.dto.notification.NotificationSentEvent;
+import com.example.Triple_clone.domain.notification.Notification;
+import com.example.Triple_clone.domain.notification.NotificationTarget;
+import com.example.Triple_clone.domain.notification.NotificationType;
+import com.example.Triple_clone.domain.notification.notification.NotificationSaveRequest;
+import com.example.Triple_clone.domain.notification.notification.NotificationSaveService;
+import com.example.Triple_clone.domain.notification.notification.NotificationSentEvent;
 import com.example.Triple_clone.domain.member.MemberRepository;
-import com.example.Triple_clone.repository.NotificationRepository;
+import com.example.Triple_clone.domain.notification.NotificationRepository;
+import com.example.Triple_clone.domain.notification.notification.NotificationStatusQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

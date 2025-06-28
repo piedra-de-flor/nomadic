@@ -1,7 +1,9 @@
 package com.example.Triple_clone.domain.entity;
 
 import com.example.Triple_clone.domain.accommodation.Accommodation;
-import com.example.Triple_clone.domain.vo.Location;
+import com.example.Triple_clone.domain.plan.Plan;
+import com.example.Triple_clone.domain.plan.Reservation;
+import com.example.Triple_clone.domain.plan.Location;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Date;

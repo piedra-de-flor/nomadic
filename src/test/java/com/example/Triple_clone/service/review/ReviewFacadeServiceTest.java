@@ -1,17 +1,15 @@
 package com.example.Triple_clone.service.review;
 
 import com.example.Triple_clone.domain.member.Member;
-import com.example.Triple_clone.domain.entity.Recommendation;
-import com.example.Triple_clone.domain.entity.Review;
-import com.example.Triple_clone.domain.vo.Image;
-import com.example.Triple_clone.domain.vo.Location;
-import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
-import com.example.Triple_clone.dto.review.ReviewResponseDto;
-import com.example.Triple_clone.dto.review.ReviewUpdateDto;
+import com.example.Triple_clone.domain.recommend.Recommendation;
+import com.example.Triple_clone.domain.review.*;
+import com.example.Triple_clone.common.Image;
+import com.example.Triple_clone.domain.plan.Location;
+import com.example.Triple_clone.domain.recommend.RecommendWriteReviewDto;
 import com.example.Triple_clone.domain.member.UserService;
-import com.example.Triple_clone.service.recommend.user.RecommendService;
-import com.example.Triple_clone.service.support.FileManager;
-import com.example.Triple_clone.web.exception.RestApiException;
+import com.example.Triple_clone.domain.recommend.RecommendService;
+import com.example.Triple_clone.common.FileManager;
+import com.example.Triple_clone.common.RestApiException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

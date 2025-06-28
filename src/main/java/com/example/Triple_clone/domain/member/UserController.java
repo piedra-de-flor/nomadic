@@ -1,12 +1,7 @@
 package com.example.Triple_clone.domain.member;
 
-import com.example.Triple_clone.dto.auth.JwtToken;
-import com.example.Triple_clone.domain.member.LoginDto;
-import com.example.Triple_clone.domain.member.UserJoinRequestDto;
-import com.example.Triple_clone.domain.member.UserResponseDto;
-import com.example.Triple_clone.domain.member.UserUpdateDto;
-import com.example.Triple_clone.domain.member.UserService;
-import com.example.Triple_clone.web.support.MemberEmailAspect;
+import com.example.Triple_clone.common.JwtToken;
+import com.example.Triple_clone.common.MemberEmailAspect;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

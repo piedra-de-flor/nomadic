@@ -2,7 +2,9 @@ package com.example.Triple_clone.domain.entity;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.example.Triple_clone.domain.vo.Location;
+import com.example.Triple_clone.domain.recommend.Recommendation;
+import com.example.Triple_clone.domain.review.Review;
+import com.example.Triple_clone.domain.plan.Location;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

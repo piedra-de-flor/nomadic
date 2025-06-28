@@ -1,8 +1,8 @@
 package com.example.Triple_clone.service.membership;
 
 import com.example.Triple_clone.domain.member.*;
-import com.example.Triple_clone.dto.auth.JwtToken;
-import com.example.Triple_clone.service.support.JwtTokenProvider;
+import com.example.Triple_clone.common.JwtToken;
+import com.example.Triple_clone.common.JwtTokenProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

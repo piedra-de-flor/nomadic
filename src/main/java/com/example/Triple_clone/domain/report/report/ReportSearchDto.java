@@ -1,0 +1,22 @@
+package com.example.Triple_clone.domain.report.report;
+
+import com.example.Triple_clone.domain.report.ReportStatus;
+import com.example.Triple_clone.domain.report.ReportTargetType;
+import com.example.Triple_clone.domain.report.ReportingReason;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+
+@Data
+public class ReportSearchDto {
+    private ReportTargetType targetType;
+    private ReportStatus status;
+    private ReportingReason reason;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime fromDate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime toDate;
+}

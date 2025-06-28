@@ -1,11 +1,11 @@
 package com.example.Triple_clone.service.planning;
 
 import com.example.Triple_clone.domain.member.Member;
-import com.example.Triple_clone.domain.entity.Plan;
-import com.example.Triple_clone.domain.vo.Style;
-import com.example.Triple_clone.dto.planning.*;
+import com.example.Triple_clone.domain.plan.Plan;
+import com.example.Triple_clone.domain.plan.*;
+import com.example.Triple_clone.domain.plan.Style;
 import com.example.Triple_clone.domain.member.UserService;
-import com.example.Triple_clone.web.exception.RestApiException;
+import com.example.Triple_clone.common.RestApiException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

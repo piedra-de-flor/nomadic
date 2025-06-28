@@ -1,9 +1,8 @@
 package com.example.Triple_clone.service.support;
 
-import com.example.Triple_clone.domain.vo.Image;
-import com.example.Triple_clone.dto.support.FileDataDto;
+import com.example.Triple_clone.common.FileDataDto;
+import com.example.Triple_clone.common.FileManager;
 import org.junit.jupiter.api.*;
-import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.File;
 import java.io.FileWriter;

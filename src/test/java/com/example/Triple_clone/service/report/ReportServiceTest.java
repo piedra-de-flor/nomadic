@@ -1,14 +1,13 @@
 package com.example.Triple_clone.service.report;
 
-import com.example.Triple_clone.domain.entity.*;
 import com.example.Triple_clone.domain.member.Member;
 import com.example.Triple_clone.domain.member.MemberRepository;
-import com.example.Triple_clone.domain.vo.ReportTargetType;
-import com.example.Triple_clone.domain.vo.ReportingReason;
-import com.example.Triple_clone.domain.vo.ReviewStatus;
-import com.example.Triple_clone.dto.report.ReportCreatedEvent;
-import com.example.Triple_clone.dto.report.ReportResponseDto;
-import com.example.Triple_clone.repository.*;
+import com.example.Triple_clone.domain.report.*;
+import com.example.Triple_clone.domain.review.Review;
+import com.example.Triple_clone.domain.review.ReviewRepository;
+import com.example.Triple_clone.domain.review.ReviewStatus;
+import com.example.Triple_clone.domain.report.report.ReportCreatedEvent;
+import com.example.Triple_clone.domain.report.report.ReportResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;

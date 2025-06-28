@@ -1,6 +1,7 @@
 package com.example.Triple_clone.service.notification;
 
-import com.example.Triple_clone.dto.notification.NotificationSentEvent;
+import com.example.Triple_clone.domain.notification.notification.NotificationSentEvent;
+import com.example.Triple_clone.domain.notification.notification.NotificationStatusQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

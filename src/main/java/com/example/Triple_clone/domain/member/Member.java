@@ -1,7 +1,7 @@
 package com.example.Triple_clone.domain.member;
 
-import com.example.Triple_clone.domain.entity.Plan;
-import com.example.Triple_clone.domain.entity.Review;
+import com.example.Triple_clone.domain.plan.Plan;
+import com.example.Triple_clone.domain.review.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

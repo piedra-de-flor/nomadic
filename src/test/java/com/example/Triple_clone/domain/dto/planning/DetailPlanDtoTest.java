@@ -1,7 +1,7 @@
 package com.example.Triple_clone.domain.dto.planning;
 
-import com.example.Triple_clone.domain.vo.Location;
-import com.example.Triple_clone.dto.planning.DetailPlanDto;
+import com.example.Triple_clone.domain.plan.Location;
+import com.example.Triple_clone.domain.plan.DetailPlanDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

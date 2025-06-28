@@ -1,14 +1,12 @@
 package com.example.Triple_clone.service.planning;
 
 import com.example.Triple_clone.domain.accommodation.Accommodation;
-import com.example.Triple_clone.domain.entity.*;
 import com.example.Triple_clone.domain.member.Member;
-import com.example.Triple_clone.domain.vo.Location;
-import com.example.Triple_clone.dto.planning.DetailPlanDto;
-import com.example.Triple_clone.dto.planning.DetailPlanUpdateDto;
-import com.example.Triple_clone.dto.planning.ReservationCreateDto;
+import com.example.Triple_clone.domain.plan.*;
+import com.example.Triple_clone.domain.recommend.Recommendation;
+import com.example.Triple_clone.domain.plan.Location;
 import com.example.Triple_clone.domain.accommodation.accommodation.AccommodationService;
-import com.example.Triple_clone.service.recommend.user.RecommendService;
+import com.example.Triple_clone.domain.recommend.RecommendService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.example.Triple_clone.domain.accommodation.accommodation;
 
-import com.example.Triple_clone.domain.vo.LogMessage;
-import com.example.Triple_clone.domain.vo.ScrapingLocal;
+import com.example.Triple_clone.common.LogMessage;
+import com.example.Triple_clone.batch.ScrapingLocal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
