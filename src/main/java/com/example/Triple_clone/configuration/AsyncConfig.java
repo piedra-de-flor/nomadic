@@ -1,6 +1,6 @@
 package com.example.Triple_clone.configuration;
 
-import com.example.Triple_clone.common.MdcTaskDecorator;
+import com.example.Triple_clone.common.logging.MdcTaskDecorator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;

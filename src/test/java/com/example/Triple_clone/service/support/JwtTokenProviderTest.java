@@ -1,7 +1,7 @@
 package com.example.Triple_clone.service.support;
 
-import com.example.Triple_clone.common.JwtToken;
-import com.example.Triple_clone.common.JwtTokenProvider;
+import com.example.Triple_clone.common.auth.JwtToken;
+import com.example.Triple_clone.common.auth.JwtTokenProvider;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;

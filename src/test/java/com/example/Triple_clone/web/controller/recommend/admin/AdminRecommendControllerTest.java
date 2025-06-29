@@ -1,11 +1,11 @@
 package com.example.Triple_clone.web.controller.recommend.admin;
 
-import com.example.Triple_clone.domain.recommend.Recommendation;
-import com.example.Triple_clone.domain.recommend.AdminRecommendController;
-import com.example.Triple_clone.domain.plan.Location;
-import com.example.Triple_clone.domain.recommend.AdminRecommendCreateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.AdminRecommendUpdateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.AdminRecommendService;
+import com.example.Triple_clone.domain.recommend.domain.Recommendation;
+import com.example.Triple_clone.domain.recommend.web.controller.AdminRecommendController;
+import com.example.Triple_clone.domain.plan.domain.Location;
+import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.application.AdminRecommendService;
 import com.example.Triple_clone.web.filter.JwtSecurityConfigForTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

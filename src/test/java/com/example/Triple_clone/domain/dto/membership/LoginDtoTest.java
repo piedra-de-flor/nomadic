@@ -1,6 +1,6 @@
 package com.example.Triple_clone.domain.dto.membership;
 
-import com.example.Triple_clone.domain.member.LoginDto;
+import com.example.Triple_clone.domain.member.web.dto.LoginDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

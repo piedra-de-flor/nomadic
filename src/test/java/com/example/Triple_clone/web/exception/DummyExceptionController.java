@@ -1,7 +1,7 @@
 package com.example.Triple_clone.web.exception;
 
-import com.example.Triple_clone.common.GlobalErrorCode;
-import com.example.Triple_clone.common.RestApiException;
+import com.example.Triple_clone.common.error.GlobalErrorCode;
+import com.example.Triple_clone.common.error.RestApiException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.bind.annotation.GetMapping;

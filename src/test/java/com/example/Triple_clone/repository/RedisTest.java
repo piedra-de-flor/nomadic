@@ -1,7 +1,7 @@
 package com.example.Triple_clone.repository;
 
-import com.example.Triple_clone.domain.accommodation.RedisAccommodation;
-import com.example.Triple_clone.domain.accommodation.RedisAccommodationRepository;
+import com.example.Triple_clone.domain.accommodation.domain.RedisAccommodation;
+import com.example.Triple_clone.domain.accommodation.infra.RedisAccommodationRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

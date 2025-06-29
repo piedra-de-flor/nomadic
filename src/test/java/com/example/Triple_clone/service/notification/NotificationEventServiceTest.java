@@ -1,10 +1,10 @@
 package com.example.Triple_clone.service.notification;
 
-import com.example.Triple_clone.domain.notification.NotificationTarget;
-import com.example.Triple_clone.domain.notification.NotificationType;
-import com.example.Triple_clone.domain.notification.notification.NotificationDto;
-import com.example.Triple_clone.domain.notification.notification.NotificationEventService;
-import com.example.Triple_clone.domain.notification.notification.NotificationSender;
+import com.example.Triple_clone.domain.notification.domain.NotificationTarget;
+import com.example.Triple_clone.domain.notification.domain.NotificationType;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationDto;
+import com.example.Triple_clone.domain.notification.application.NotificationEventService;
+import com.example.Triple_clone.domain.notification.infra.NotificationSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

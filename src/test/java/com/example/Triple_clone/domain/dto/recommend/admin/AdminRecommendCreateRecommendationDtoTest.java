@@ -1,7 +1,7 @@
 package com.example.Triple_clone.domain.dto.recommend.admin;
 
-import com.example.Triple_clone.domain.plan.Location;
-import com.example.Triple_clone.domain.recommend.AdminRecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.plan.domain.Location;
+import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendCreateRecommendationDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

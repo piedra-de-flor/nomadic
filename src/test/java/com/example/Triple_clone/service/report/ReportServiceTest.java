@@ -1,13 +1,17 @@
 package com.example.Triple_clone.service.report;
 
-import com.example.Triple_clone.domain.member.Member;
-import com.example.Triple_clone.domain.member.MemberRepository;
-import com.example.Triple_clone.domain.report.*;
-import com.example.Triple_clone.domain.review.Review;
-import com.example.Triple_clone.domain.review.ReviewRepository;
-import com.example.Triple_clone.domain.review.ReviewStatus;
-import com.example.Triple_clone.domain.report.report.ReportCreatedEvent;
-import com.example.Triple_clone.domain.report.report.ReportResponseDto;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.member.infra.MemberRepository;
+import com.example.Triple_clone.domain.report.application.ReportService;
+import com.example.Triple_clone.domain.report.domain.Report;
+import com.example.Triple_clone.domain.report.domain.ReportTargetType;
+import com.example.Triple_clone.domain.report.domain.ReportingReason;
+import com.example.Triple_clone.domain.report.infra.ReportRepository;
+import com.example.Triple_clone.domain.review.domain.Review;
+import com.example.Triple_clone.domain.review.infra.ReviewRepository;
+import com.example.Triple_clone.domain.review.domain.ReviewStatus;
+import com.example.Triple_clone.domain.report.web.dto.ReportCreatedEvent;
+import com.example.Triple_clone.domain.report.web.dto.ReportResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;

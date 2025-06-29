@@ -1,10 +1,10 @@
 package com.example.Triple_clone.domain.entity;
 
-import com.example.Triple_clone.domain.notification.Notification;
-import com.example.Triple_clone.domain.notification.NotificationStatus;
-import com.example.Triple_clone.domain.notification.NotificationTarget;
-import com.example.Triple_clone.domain.notification.NotificationType;
-import com.example.Triple_clone.domain.notification.NotificationRepository;
+import com.example.Triple_clone.domain.notification.domain.Notification;
+import com.example.Triple_clone.domain.notification.domain.NotificationStatus;
+import com.example.Triple_clone.domain.notification.domain.NotificationTarget;
+import com.example.Triple_clone.domain.notification.domain.NotificationType;
+import com.example.Triple_clone.domain.notification.infra.NotificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

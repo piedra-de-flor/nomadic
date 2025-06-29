@@ -1,9 +1,9 @@
 package com.example.Triple_clone.service.accommodation;
 
-import com.example.Triple_clone.domain.accommodation.AccommodationDocument;
-import com.example.Triple_clone.domain.accommodation.AccommodationDto;
-import com.example.Triple_clone.domain.accommodation.ESAccommodationRepositoryImpl;
-import com.example.Triple_clone.domain.accommodation.accommodation.AccommodationService;
+import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.web.dto.AccommodationDto;
+import com.example.Triple_clone.domain.accommodation.infra.ESAccommodationRepositoryImpl;
+import com.example.Triple_clone.domain.accommodation.application.AccommodationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

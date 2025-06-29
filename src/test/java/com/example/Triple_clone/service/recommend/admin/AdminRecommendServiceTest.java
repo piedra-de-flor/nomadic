@@ -1,12 +1,12 @@
 package com.example.Triple_clone.service.recommend.admin;
 
-import com.example.Triple_clone.domain.recommend.Recommendation;
-import com.example.Triple_clone.domain.recommend.AdminRecommendService;
-import com.example.Triple_clone.common.Image;
-import com.example.Triple_clone.domain.recommend.AdminRecommendCreateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.AdminRecommendUpdateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.RecommendationRepository;
-import com.example.Triple_clone.common.FileManager;
+import com.example.Triple_clone.domain.recommend.domain.Recommendation;
+import com.example.Triple_clone.domain.recommend.application.AdminRecommendService;
+import com.example.Triple_clone.common.file.Image;
+import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
+import com.example.Triple_clone.common.file.FileManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

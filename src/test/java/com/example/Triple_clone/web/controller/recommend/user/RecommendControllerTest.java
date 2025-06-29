@@ -1,9 +1,9 @@
 package com.example.Triple_clone.web.controller.recommend.user;
 
-import com.example.Triple_clone.domain.recommend.RecommendController;
-import com.example.Triple_clone.domain.plan.Location;
-import com.example.Triple_clone.domain.recommend.RecommendReadDto;
-import com.example.Triple_clone.domain.recommend.RecommendService;
+import com.example.Triple_clone.domain.recommend.web.controller.RecommendController;
+import com.example.Triple_clone.domain.plan.domain.Location;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadDto;
+import com.example.Triple_clone.domain.recommend.application.RecommendService;
 import com.example.Triple_clone.web.filter.JwtSecurityConfigForTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

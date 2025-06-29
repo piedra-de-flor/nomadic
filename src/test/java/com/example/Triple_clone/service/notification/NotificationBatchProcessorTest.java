@@ -1,16 +1,16 @@
 package com.example.Triple_clone.service.notification;
 
-import com.example.Triple_clone.domain.notification.Notification;
-import com.example.Triple_clone.domain.notification.NotificationStatus;
-import com.example.Triple_clone.domain.notification.NotificationTarget;
-import com.example.Triple_clone.domain.notification.NotificationType;
-import com.example.Triple_clone.domain.notification.notification.NotificationBatchProcessor;
-import com.example.Triple_clone.domain.notification.notification.NotificationSentEvent;
-import com.example.Triple_clone.domain.notification.NotificationRepository;
-import com.example.Triple_clone.domain.notification.NotificationStatusRepository;
+import com.example.Triple_clone.domain.notification.domain.Notification;
+import com.example.Triple_clone.domain.notification.domain.NotificationStatus;
+import com.example.Triple_clone.domain.notification.domain.NotificationTarget;
+import com.example.Triple_clone.domain.notification.domain.NotificationType;
+import com.example.Triple_clone.batch.NotificationBatchProcessor;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationSentEvent;
+import com.example.Triple_clone.domain.notification.infra.NotificationRepository;
+import com.example.Triple_clone.domain.notification.infra.NotificationStatusRepository;
 import java.util.concurrent.*;
 
-import com.example.Triple_clone.domain.notification.notification.NotificationStatusQueue;
+import com.example.Triple_clone.domain.notification.infra.NotificationStatusQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

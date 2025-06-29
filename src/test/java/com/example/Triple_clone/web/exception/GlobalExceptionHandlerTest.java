@@ -1,6 +1,6 @@
 package com.example.Triple_clone.web.exception;
 
-import com.example.Triple_clone.common.GlobalErrorCode;
+import com.example.Triple_clone.common.error.GlobalErrorCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

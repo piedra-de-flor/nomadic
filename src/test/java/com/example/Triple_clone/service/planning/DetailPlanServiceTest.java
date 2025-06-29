@@ -1,10 +1,10 @@
 package com.example.Triple_clone.service.planning;
 
-import com.example.Triple_clone.domain.plan.DetailPlan;
-import com.example.Triple_clone.domain.plan.DetailPlanService;
-import com.example.Triple_clone.domain.plan.Location;
-import com.example.Triple_clone.domain.plan.DetailPlanUpdateDto;
-import com.example.Triple_clone.domain.plan.DetailPlanRepository;
+import com.example.Triple_clone.domain.plan.domain.DetailPlan;
+import com.example.Triple_clone.domain.plan.application.DetailPlanService;
+import com.example.Triple_clone.domain.plan.domain.Location;
+import com.example.Triple_clone.domain.plan.web.dto.DetailPlanUpdateDto;
+import com.example.Triple_clone.domain.plan.infra.DetailPlanRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.example.Triple_clone.domain.dto;
 
-import com.example.Triple_clone.domain.report.ReportingReason;
-import com.example.Triple_clone.domain.report.report.ReportRequestDto;
+import com.example.Triple_clone.domain.report.domain.ReportingReason;
+import com.example.Triple_clone.domain.report.web.dto.ReportRequestDto;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,7 +1,7 @@
 package com.example.Triple_clone.service.support;
 
-import com.example.Triple_clone.common.FileDataDto;
-import com.example.Triple_clone.common.FileManager;
+import com.example.Triple_clone.common.file.FileDataDto;
+import com.example.Triple_clone.common.file.FileManager;
 import org.junit.jupiter.api.*;
 
 import java.io.File;

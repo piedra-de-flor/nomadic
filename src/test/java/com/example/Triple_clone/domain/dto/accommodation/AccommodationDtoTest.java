@@ -1,8 +1,8 @@
 package com.example.Triple_clone.domain.dto.accommodation;
 
-import com.example.Triple_clone.domain.accommodation.Accommodation;
-import com.example.Triple_clone.domain.accommodation.AccommodationDocument;
-import com.example.Triple_clone.domain.accommodation.AccommodationDto;
+import com.example.Triple_clone.domain.accommodation.domain.Accommodation;
+import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.web.dto.AccommodationDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

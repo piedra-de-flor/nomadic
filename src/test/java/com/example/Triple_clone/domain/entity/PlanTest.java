@@ -1,9 +1,9 @@
 package com.example.Triple_clone.domain.entity;
 
-import com.example.Triple_clone.domain.member.Member;
-import com.example.Triple_clone.domain.plan.Plan;
-import com.example.Triple_clone.domain.plan.Partner;
-import com.example.Triple_clone.domain.plan.Style;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.plan.domain.Plan;
+import com.example.Triple_clone.domain.plan.domain.Partner;
+import com.example.Triple_clone.domain.plan.domain.Style;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,11 +1,13 @@
 package com.example.Triple_clone.service.planning;
 
-import com.example.Triple_clone.domain.member.Member;
-import com.example.Triple_clone.domain.plan.Plan;
-import com.example.Triple_clone.domain.plan.*;
-import com.example.Triple_clone.domain.plan.Style;
-import com.example.Triple_clone.domain.member.UserService;
-import com.example.Triple_clone.common.RestApiException;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.plan.application.PlanFacadeService;
+import com.example.Triple_clone.domain.plan.application.PlanService;
+import com.example.Triple_clone.domain.plan.domain.Plan;
+import com.example.Triple_clone.domain.plan.domain.Style;
+import com.example.Triple_clone.domain.member.application.UserService;
+import com.example.Triple_clone.common.error.RestApiException;
+import com.example.Triple_clone.domain.plan.web.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

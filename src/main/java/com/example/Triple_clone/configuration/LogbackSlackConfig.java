@@ -2,8 +2,8 @@ package com.example.Triple_clone.configuration;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import com.example.Triple_clone.domain.notification.notification.channel.ChannelNotificationSender;
-import com.example.Triple_clone.common.SlackLogbackAppender;
+import com.example.Triple_clone.domain.notification.infra.ChannelNotificationSender;
+import com.example.Triple_clone.common.logging.SlackLogbackAppender;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
