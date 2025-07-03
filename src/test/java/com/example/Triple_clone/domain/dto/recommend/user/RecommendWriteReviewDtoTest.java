@@ -1,6 +1,6 @@
 package com.example.Triple_clone.domain.dto.recommend.user;
 
-import com.example.Triple_clone.dto.recommend.user.RecommendWriteReviewDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendWriteReviewDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

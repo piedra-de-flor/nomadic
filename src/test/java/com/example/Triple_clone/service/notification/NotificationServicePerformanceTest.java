@@ -1,15 +1,16 @@
 package com.example.Triple_clone.service.notification;
 
 import com.example.Triple_clone.TestMailConfig;
-import com.example.Triple_clone.domain.entity.Member;
-import com.example.Triple_clone.domain.entity.Notification;
-import com.example.Triple_clone.domain.vo.NotificationTarget;
-import com.example.Triple_clone.domain.vo.NotificationType;
-import com.example.Triple_clone.dto.notification.NotificationSearchDto;
-import com.example.Triple_clone.repository.MemberRepository;
-import com.example.Triple_clone.repository.NotificationRepository;
-import com.example.Triple_clone.service.membership.UserService;
-import com.example.Triple_clone.service.notification.kafka.NotificationRetryConsumer;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.notification.domain.Notification;
+import com.example.Triple_clone.domain.notification.domain.NotificationTarget;
+import com.example.Triple_clone.domain.notification.domain.NotificationType;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationSearchDto;
+import com.example.Triple_clone.domain.member.infra.MemberRepository;
+import com.example.Triple_clone.domain.notification.infra.NotificationRepository;
+import com.example.Triple_clone.domain.member.application.UserService;
+import com.example.Triple_clone.domain.notification.application.NotificationService;
+import com.example.Triple_clone.domain.notification.web.controller.NotificationRetryConsumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

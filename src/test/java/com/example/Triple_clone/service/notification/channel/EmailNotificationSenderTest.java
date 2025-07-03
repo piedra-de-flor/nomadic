@@ -1,8 +1,9 @@
 package com.example.Triple_clone.service.notification.channel;
 
-import com.example.Triple_clone.domain.vo.NotificationChannelType;
-import com.example.Triple_clone.dto.notification.NotificationMessage;
-import com.example.Triple_clone.service.notification.kafka.NotificationRetryProducer;
+import com.example.Triple_clone.domain.notification.domain.NotificationChannelType;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationMessage;
+import com.example.Triple_clone.domain.notification.infra.EmailNotificationSender;
+import com.example.Triple_clone.domain.notification.web.controller.NotificationRetryProducer;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package com.example.Triple_clone.configuration;
 
-import com.example.Triple_clone.service.support.JwtTokenProvider;
-import com.example.Triple_clone.web.filter.JwtAuthFilter;
+import com.example.Triple_clone.common.auth.JwtTokenProvider;
+import com.example.Triple_clone.common.auth.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
