@@ -1,5 +1,6 @@
 package com.example.Triple_clone.batch;
 
+import com.example.Triple_clone.common.logging.logMessage.BatchLogMessage;
 import com.example.Triple_clone.domain.notification.domain.Notification;
 import com.example.Triple_clone.domain.notification.domain.NotificationStatus;
 import com.example.Triple_clone.domain.notification.infra.NotificationRepository;
@@ -28,18 +29,18 @@ public class NotificationBatchProcessor {
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void saveNotificationStatus() {
-        log.info("✅ Start Batch process = 알림 상태 저장");
+        log.info(BatchLogMessage.BATCH_PROCESS_STARTED.format("알림 상태 저장"));
         List<NotificationSentEvent> events = queue.drainAll();
         for (NotificationSentEvent event : events) {
             try {
                 processEvent(event);
             } catch (Exception e) {
-                log.error("❌ Failed to process notification event: {}", event, e);
+                log.error(BatchLogMessage.BATCH_PROCESS_FAILED.format("알림 상태 저장 = " + event.notificationId(), e.getMessage()));
                 queue.enqueue(event);
             }
         }
 
-        log.info("✅ End Batch process = 알림 상태 저장");
+        log.info(BatchLogMessage.BATCH_PROCESS_ENDED.format("알림 상태 저장"));
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -59,7 +60,7 @@ public class NotificationBatchProcessor {
     @Transactional
     @Scheduled(cron = "0 50 23 * * *")
     public void deleteOldNotifications() {
-        log.info("✅ Start Batch process = 오래된 알림 삭제");
+        log.info(BatchLogMessage.BATCH_PROCESS_STARTED.format("오래된 알림 상태 삭제"));
         LocalDateTime threshold = LocalDateTime.now().minusDays(30);
 
         List<Notification> oldNotifications = notificationRepository.findBySentAtBefore(threshold);
@@ -68,6 +69,6 @@ public class NotificationBatchProcessor {
             notificationRepository.deleteAll(oldNotifications);
         }
 
-        log.info("✅ End Batch process = 오래된 알림 삭제");
+        log.info(BatchLogMessage.BATCH_PROCESS_ENDED.format("오래된 알림 상태 삭제"));
     }
 }

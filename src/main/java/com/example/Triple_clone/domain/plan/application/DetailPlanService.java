@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.plan.application;
 
+import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
 import com.example.Triple_clone.domain.plan.web.dto.DetailPlanUpdateDto;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.plan.infra.DetailPlanRepository;
@@ -17,7 +18,7 @@ public class DetailPlanService {
     public DetailPlan findById(long detailPlanId) {
         return repository.findById(detailPlanId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 세부 계획 조회 실패 - 존재하지 않는 세부 계획: {}", detailPlanId);
+                    log.warn(PlanLogMessage.DETAIL_PLAN_SEARCH_FAILED.format(detailPlanId));
                     return new EntityNotFoundException("new plan Entity");
                 });
     }

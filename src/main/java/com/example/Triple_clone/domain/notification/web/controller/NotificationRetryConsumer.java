@@ -1,6 +1,7 @@
 package com.example.Triple_clone.domain.notification.web.controller;
 
-import com.example.Triple_clone.common.logging.LogMessage;
+import com.example.Triple_clone.common.kafka.KafkaTopic;
+import com.example.Triple_clone.common.logging.logMessage.NotificationLogMessage;
 import com.example.Triple_clone.domain.notification.web.dto.NotificationMessage;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class NotificationRetryConsumer {
 
         if (retryCount >= MAX_RETRY_COUNT) {
             notificationDlqProducer.sendEmailToDlq(message);
-            log.warn(LogMessage.KAFKA_MESSAGE_RETRY_FAIL.format(message));
+            log.warn(NotificationLogMessage.KAFKA_EVENT_TO_DLQ.format(KafkaTopic.EMAIL_DLQ_TOPIC.getValue(), message.receiver()));
             return;
         }
 
@@ -40,7 +41,7 @@ public class NotificationRetryConsumer {
             helper.setText(message.content(), true);
             mailSender.send(mimeMessage);
         } catch (Exception e) {
-            log.warn("Email 재전송 실패, 재시도 카운트 증가 후 Kafka에 다시 전송: {}", retryCount + 1);
+            log.warn(NotificationLogMessage.KAFKA_RETRY_FAILED.format(KafkaTopic.EMAIL_RETRY_TOPIC.getValue(), message.receiver(), retryCount + 1));
             notificationRetryProducer.sendEmailRetryMessage(message.incrementRetryCount());
         }
     }
@@ -51,7 +52,7 @@ public class NotificationRetryConsumer {
 
         if (retryCount >= MAX_RETRY_COUNT) {
             notificationDlqProducer.sendSlackToDlq(message);
-            log.warn("Slack DLQ 전송: 최대 재시도 초과 -> {}", message.receiver());
+            log.warn(NotificationLogMessage.KAFKA_EVENT_TO_DLQ.format(KafkaTopic.SLACK_DLQ_TOPIC.getValue(), message.receiver()));
             return;
         }
 
@@ -63,7 +64,7 @@ public class NotificationRetryConsumer {
             helper.setText(message.content(), true);
             mailSender.send(mimeMessage);
         } catch (Exception e) {
-            log.warn("Slack 재전송 실패, 재시도 카운트 증가 후 Kafka에 다시 전송: {}", retryCount + 1);
+            log.warn(NotificationLogMessage.KAFKA_RETRY_FAILED.format(KafkaTopic.SLACK_RETRY_TOPIC.getValue(), message.receiver(), retryCount + 1));
             notificationRetryProducer.sendEmailRetryMessage(message.incrementRetryCount());
         }
     }

@@ -1,5 +1,6 @@
 package com.example.Triple_clone.common.file;
 
+import com.example.Triple_clone.common.logging.logMessage.FileLogMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -54,7 +55,7 @@ public class FileManager {
         try {
             image.transferTo(new File(storedImagePath));
         } catch (IOException e){
-            log.error("❌ 이미지 저장 실패 - IO 에러: {}", e.getMessage());
+            log.error(FileLogMessage.IO_ERROR.format(e.getMessage()));
             throw new IllegalArgumentException("이미지 업로드 실패");
         }
         return new Image(originName, storedImagePath);
@@ -86,14 +87,13 @@ public class FileManager {
                 byte[] imageBytes = Files.readAllBytes(imagePath);
                 return imageBytes;
             } else {
-                log.error("❌ 이미지 로드 실패 - 이미지를 찾을 수 없음: {}", imageName);
                 throw new FileNotFoundException();
             }
         } catch (MalformedURLException | FileNotFoundException e) {
-            log.error("❌ 이미지 로드 실패 - 이미지를 찾을 수 없음: {}", e.getMessage());
+            log.error(FileLogMessage.FILE_SEARCH_ERROR.format(e.getMessage()));
             throw new IllegalArgumentException("이미지를 찾을 수 없습니다.", e);
         } catch (IOException e) {
-            log.error("❌ 이미지 로드 실패 - 이미지 처리 오류: {}", e.getMessage());
+            log.error(FileLogMessage.FILE_HANDLE_ERROR.format(e.getMessage()));
             throw new IllegalArgumentException("이미지 처리하는 과정에서 오류가 발생하였습니다.", e);
         }
     }

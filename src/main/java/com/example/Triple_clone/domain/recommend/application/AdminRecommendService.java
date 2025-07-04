@@ -1,7 +1,8 @@
 package com.example.Triple_clone.domain.recommend.application;
 
-import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.common.file.FileManager;
+import com.example.Triple_clone.common.file.Image;
+import com.example.Triple_clone.common.logging.logMessage.RecommendLogMessage;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
 import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendCreateRecommendationDto;
@@ -30,7 +31,7 @@ public class AdminRecommendService {
     public Long setMainImageOfRecommendation(Long recommendationId, MultipartFile image) {
         Recommendation recommendation = repository.findById(recommendationId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 추천 장소 이미지 삽입 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
+                    log.warn(RecommendLogMessage.RECOMMEND_SEARCH_FAILED.format("추천 장소 이미지 수정 실패", recommendationId));
                     return new EntityNotFoundException("no place entity for update");
                 });
         Image mainImage = fileManager.uploadImage(image);
@@ -42,7 +43,7 @@ public class AdminRecommendService {
     public Recommendation updateRecommendation(AdminRecommendUpdateRecommendationDto updateRecommendationRequestDto) {
         Recommendation recommendation = repository.findById(updateRecommendationRequestDto.placeId())
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 추천 장소 컨텐츠 수정 실패 - 존재하지 않는 추천 장소: {}", updateRecommendationRequestDto.placeId());
+                    log.warn(RecommendLogMessage.RECOMMEND_SEARCH_FAILED.format("추천 장소 컨텐츠 수정 실패", updateRecommendationRequestDto.placeId()));
                     return new EntityNotFoundException("no place entity for update");
                 });
 
@@ -58,7 +59,7 @@ public class AdminRecommendService {
     public long deleteRecommendation(Long recommendationId) {
         Recommendation recommendation = repository.findById(recommendationId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 추천 장소 삭제 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
+                    log.warn(RecommendLogMessage.RECOMMEND_SEARCH_FAILED.format("추천 장소 삭제 실패", recommendationId));
                     return new EntityNotFoundException("no place entity for delete");
                 });
 

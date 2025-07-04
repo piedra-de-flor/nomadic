@@ -1,5 +1,6 @@
 package com.example.Triple_clone.common.auth;
 
+import com.example.Triple_clone.common.logging.logMessage.AuthLogMessage;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -60,7 +61,7 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get("auth") == null) {
-            log.warn("⚠️ 접근 권한 에러 - 토큰 권한 정보 누락: {}", accessToken);
+            log.warn(AuthLogMessage.TOKEN_HAS_NO_AUTH.format(accessToken));
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
@@ -80,15 +81,15 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.warn("JWT 토큰 검증 실패 - 바르지 못한 토큰값: {}", e.getMessage());
+            log.warn(AuthLogMessage.TOKEN_IS_NOT_VALID.format(e.getMessage()));
         } catch (ExpiredJwtException e) {
-            log.warn("JWT 토큰 검증 실패 - 이미 만료된 토큰값: {}", e.getMessage());
+            log.warn(AuthLogMessage.TOKEN_EXPIRED.format(e.getMessage()));
         } catch (UnsupportedJwtException e) {
-            log.warn("JWT 토큰 검증 실패 - 지원하지 않는 토큰: {}", e.getMessage());
+            log.warn(AuthLogMessage.UNSUPPORTED_TOKEN.format(e.getMessage()));
         } catch (IllegalArgumentException e) {
-            log.warn("JWT 토큰 검증 실패 - 토큰 정보 누락: {}", e.getMessage());
+            log.warn(AuthLogMessage.TOKEN_HAS_NO_AUTH.format(e.getMessage()));
         } catch (Exception e) {
-            log.error("JWT 토큰 검증 실패 - 예상치 못한 에러 : {}", e.getMessage());
+            log.error(AuthLogMessage.TOKEN_ERROR.format(e.getMessage()));
             throw new IllegalArgumentException("AUTH ERROR");
         }
         return false;

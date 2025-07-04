@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.recommend.application;
 
+import com.example.Triple_clone.common.logging.logMessage.MemberLogMessage;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.web.dto.DetailPlanDto;
@@ -23,7 +24,7 @@ public class ReservationService {
     public List<DetailPlanDto> findAllMyReservation(String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
+                    log.warn(MemberLogMessage.MEMBER_SEARCH_FAILED_BY_EMAIL.format(email));
                     return new EntityNotFoundException("no user entity");
                 });
 

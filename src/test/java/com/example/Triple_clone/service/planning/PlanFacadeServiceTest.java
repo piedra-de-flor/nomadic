@@ -98,7 +98,7 @@ class PlanFacadeServiceTest {
 
         PlanStyleUpdateDto result = facadeService.updateStyle(updateDto, "test");
 
-        verify(planService).updateStyle(updateDto, 1L);
+        verify(planService).updateStyle(updateDto);
         assertThat(result).isEqualTo(updateDto);
     }
 
@@ -134,7 +134,7 @@ class PlanFacadeServiceTest {
 
         PlanPartnerUpdateDto result = facadeService.updatePartner(dto, "test");
 
-        verify(planService).updatePartner(dto, 1L);
+        verify(planService).updatePartner(dto);
         assertThat(result).isEqualTo(dto);
     }
 }

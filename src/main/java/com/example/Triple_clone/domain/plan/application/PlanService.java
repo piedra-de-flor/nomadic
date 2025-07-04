@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.plan.application;
 
+import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
 import com.example.Triple_clone.domain.plan.web.dto.PlanStyleUpdateDto;
 import com.example.Triple_clone.domain.plan.domain.Style;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
@@ -31,7 +32,7 @@ public class PlanService {
     public Plan findById(long planId) {
         return repository.findById(planId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 계획 조회 실패 - 존재하지 않는 계획: {}", planId);
+                    log.warn(PlanLogMessage.PLAN_SEARCH_FAILED.format(planId));
                     return new EntityNotFoundException("no plan Entity");
                 });
     }
@@ -44,26 +45,14 @@ public class PlanService {
         repository.delete(plan);
     }
 
-    public void updateStyle(PlanStyleUpdateDto updateDto, long memberId) {
+    public void updateStyle(PlanStyleUpdateDto updateDto) {
         Plan plan = findById(updateDto.planDto().planId());
-        if (plan.isMine(memberId)) {
-            plan.chooseStyle(Style.toStyles(updateDto.styles()));
-            return;
-        }
-
-        log.warn("⚠️ 계획 스타일 수정 실패 - 계획 소유권 없음: user = {} / target = {}", memberId, plan.getId());
-        throw new IllegalArgumentException("this plan is not yours");
+        plan.chooseStyle(Style.toStyles(updateDto.styles()));
     }
 
-    public void updatePartner(PlanPartnerUpdateDto updateDto, long memberId) {
+    public void updatePartner(PlanPartnerUpdateDto updateDto) {
         Plan plan = findById(updateDto.planDto().planId());
-        if (plan.isMine(memberId)) {
-            plan.choosePartner(Partner.valueOf(updateDto.partner()));
-            return;
-        }
-
-        log.warn("⚠️ 계획 동반자 수정 실패 - 계획 소유권 없음: user = {} / target = {}", memberId, plan.getId());
-        throw new IllegalArgumentException("this plan is not yours");
+        plan.choosePartner(Partner.valueOf(updateDto.partner()));
     }
 
     public List<Location> addLocation(long planId, String name, double latitude, double longitude) {

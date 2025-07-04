@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.report.application;
 
+import com.example.Triple_clone.common.logging.logMessage.ReportLogMessage;
 import com.example.Triple_clone.domain.report.domain.Report;
 import com.example.Triple_clone.domain.report.domain.ReportTargetType;
 import com.example.Triple_clone.domain.report.infra.ReportAdminRepository;
@@ -47,7 +48,7 @@ public class ReportAdminService {
     public void approveReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 신고 조회 실패 - 존재하지 않는 신고: {}", reportId);
+                    log.warn(ReportLogMessage.REPORT_SEARCH_FAILED.format(reportId));
                     return new EntityNotFoundException("신고를 찾을 수 없습니다.");
                 });
 
@@ -58,7 +59,7 @@ public class ReportAdminService {
     public void rejectReport(Long reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 신고 조회 실패 - 존재하지 않는 신고: {}", reportId);
+                    log.warn(ReportLogMessage.REPORT_SEARCH_FAILED.format(reportId));
                     return new EntityNotFoundException("신고를 찾을 수 없습니다.");
                 });
 

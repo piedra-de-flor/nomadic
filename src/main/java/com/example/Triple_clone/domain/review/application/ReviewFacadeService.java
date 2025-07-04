@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.review.application;
 
+import com.example.Triple_clone.common.logging.logMessage.ReviewLogMessage;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.common.error.AuthErrorCode;
@@ -40,7 +41,7 @@ public class ReviewFacadeService {
             parent = reviewService.findById(writeReviewRequestDto.parentId());
 
             if (parent.getParent() != null) {
-                log.warn("⚠️ 리뷰 작성 실패 - 대댓글 depth 제한: parentReview = {}", writeReviewRequestDto.parentId());
+                log.warn(ReviewLogMessage.RE_REVIEW_DEPTH_LIMIT.format(writeReviewRequestDto.parentId()));
                 throw new IllegalArgumentException("대댓글은 depth가 2이상 허용되지 않습니다.");
             }
         }

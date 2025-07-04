@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.plan.application;
 
+import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
 import com.example.Triple_clone.domain.accommodation.domain.Accommodation;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.plan.domain.Plan;
@@ -79,7 +80,7 @@ public class DetailPlanFacadeService {
                     updateDto.time());
         }
 
-        log.warn("⚠️ 세부 계획 수정 실패 - 목표 계획내 포함되지 않는 세부 계획 : user = {} / target = {}", plan.getMember().getId(), detailPlan.getId());
+        log.warn(PlanLogMessage.PLAN_DOESNT_HAVE_THE_DETAIL_PLAN.format("세부 계획 수정 실패", plan.getId(), detailPlan.getId()));
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
@@ -92,7 +93,7 @@ public class DetailPlanFacadeService {
             return detailPlan;
         }
 
-        log.warn("⚠️ 세부 계획 삭제 실패 - : 목표 계획내 포함되지 않는 세부 계획 : user = {} / target = {}", plan.getMember().getId(), detailPlan.getId());
+        log.warn(PlanLogMessage.PLAN_DOESNT_HAVE_THE_DETAIL_PLAN.format("세부 계획 삭제 실패", plan.getId(), detailPlan.getId()));
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 

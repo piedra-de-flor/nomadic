@@ -1,5 +1,7 @@
 package com.example.Triple_clone.domain.notification.infra;
 
+import com.example.Triple_clone.common.logging.logMessage.NotificationLogMessage;
+import com.example.Triple_clone.common.template.HtmlTemplateRenderer;
 import com.example.Triple_clone.domain.notification.application.NotificationSaveService;
 import com.example.Triple_clone.domain.notification.domain.*;
 import com.example.Triple_clone.domain.notification.web.NotificationContentTemplate;
@@ -8,7 +10,6 @@ import com.example.Triple_clone.domain.notification.web.dto.NotificationMessage;
 import com.example.Triple_clone.domain.notification.web.dto.NotificationSaveRequest;
 import com.example.Triple_clone.domain.report.domain.Report;
 import com.example.Triple_clone.domain.report.web.dto.ReportCreatedEvent;
-import com.example.Triple_clone.common.template.HtmlTemplateRenderer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -70,7 +71,7 @@ public class ReportNotificationSender extends NotificationSender {
                 if (setting.getChannel().includes(channelType)) {
                     sender.send(message);
                 } else {
-                    log.warn("⚠️ 신고 알림 생성 실패 - 지원하지 않는 채널: {}", channelType);
+                    log.warn(NotificationLogMessage.UNSUPPORTED_CHANNEL.format(report.getClass().getSimpleName(), channelType));
                     throw new IllegalArgumentException("지원하지 않는 채널 타입입니다.");
                 }
             }

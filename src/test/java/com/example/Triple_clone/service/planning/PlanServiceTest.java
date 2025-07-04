@@ -85,7 +85,7 @@ public class PlanServiceTest {
         when(plan.isMine(anyLong())).thenReturn(true);
         when(planDto.planId()).thenReturn(1L);
 
-        planService.updateStyle(planStyleUpdateDto, userId);
+        planService.updateStyle(planStyleUpdateDto);
 
         verify(plan, times(1)).chooseStyle(any());
     }
@@ -101,7 +101,7 @@ public class PlanServiceTest {
         when(planStyleUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updateStyle(planStyleUpdateDto, userId));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updateStyle(planStyleUpdateDto));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class PlanServiceTest {
         when(planStyleUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updateStyle(planStyleUpdateDto, userId));
+        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updateStyle(planStyleUpdateDto));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class PlanServiceTest {
         when(plan.isMine(anyLong())).thenReturn(true);
         when(planPartnerUpdateDto.partner()).thenReturn("COUPLE");
 
-        planService.updatePartner(planPartnerUpdateDto, userId);
+        planService.updatePartner(planPartnerUpdateDto);
 
         verify(plan, times(1)).choosePartner(any());
     }
@@ -145,7 +145,7 @@ public class PlanServiceTest {
         when(planPartnerUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updatePartner(planPartnerUpdateDto, userId));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updatePartner(planPartnerUpdateDto));
     }
 
     @Test
@@ -158,7 +158,7 @@ public class PlanServiceTest {
         when(planPartnerUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updatePartner(planPartnerUpdateDto, userId));
+        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updatePartner(planPartnerUpdateDto));
     }
 
     @Test

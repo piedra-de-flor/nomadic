@@ -1,8 +1,8 @@
 package com.example.Triple_clone.domain.member.application;
 
-import com.example.Triple_clone.common.logging.LogMessage;
-import com.example.Triple_clone.domain.member.infra.MemberRepository;
+import com.example.Triple_clone.common.logging.logMessage.AuthLogMessage;
 import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.member.infra.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(this::createUserDetails)
                 .orElseThrow(
                         () -> {
-                            log.warn(LogMessage.USER_AUTH_FAIL.format(username));
+                            log.warn(AuthLogMessage.AUTH_FAILED.format(username));
                             return new UsernameNotFoundException("해당하는 회원을 찾을 수 없습니다.");
                         });
     }

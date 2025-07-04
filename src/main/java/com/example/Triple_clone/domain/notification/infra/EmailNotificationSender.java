@@ -1,10 +1,11 @@
 package com.example.Triple_clone.domain.notification.infra;
 
-import com.example.Triple_clone.common.logging.LogMessage;
 import com.example.Triple_clone.common.error.EmailSendFailureException;
+import com.example.Triple_clone.common.kafka.KafkaTopic;
+import com.example.Triple_clone.common.logging.logMessage.NotificationLogMessage;
 import com.example.Triple_clone.domain.notification.domain.NotificationChannelType;
-import com.example.Triple_clone.domain.notification.web.dto.NotificationMessage;
 import com.example.Triple_clone.domain.notification.web.controller.NotificationRetryProducer;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationMessage;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,7 @@ public class EmailNotificationSender implements ChannelNotificationSender {
             mailSender.send(makeMessage(message));
         } catch (MessagingException e) {
             notificationRetryProducer.sendEmailRetryMessage(message);
-            log.warn(LogMessage.EMAIL_SEND_FAIL.format(e.getMessage()));
-            log.info(LogMessage.KAFKA_MESSAGE_SEND.format(message.subject()));
+            log.warn(NotificationLogMessage.EMAIL_SEND_FAILED.format(e.getMessage()));
             throw new EmailSendFailureException("이메일 전송에 실패했습니다.", e);
         }
     }

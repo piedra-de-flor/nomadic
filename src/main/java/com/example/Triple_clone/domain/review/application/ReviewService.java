@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.review.application;
 
+import com.example.Triple_clone.common.logging.logMessage.ReviewLogMessage;
 import com.example.Triple_clone.domain.review.domain.Review;
 import com.example.Triple_clone.domain.review.infra.ReviewRepository;
 import com.example.Triple_clone.domain.review.web.dto.ReviewResponseDto;
@@ -35,7 +36,7 @@ public class ReviewService {
     public Review findById(Long reviewId) {
         return repository.findById(reviewId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 리뷰 조회 실패 - 존재하지 않는 리뷰: {}", reviewId);
+                    log.warn(ReviewLogMessage.REVIEW_SEARCH_FAILED.format(reviewId));
                     return new EntityNotFoundException("no review entity");
                 });
     }

@@ -1,13 +1,13 @@
 package com.example.Triple_clone.domain.member.application;
 
-import com.example.Triple_clone.common.logging.LogMessage;
 import com.example.Triple_clone.common.auth.JwtToken;
 import com.example.Triple_clone.common.auth.JwtTokenProvider;
-import com.example.Triple_clone.domain.member.web.dto.UserUpdateDto;
+import com.example.Triple_clone.common.logging.logMessage.MemberLogMessage;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.member.infra.MemberRepository;
 import com.example.Triple_clone.domain.member.web.dto.UserJoinRequestDto;
 import com.example.Triple_clone.domain.member.web.dto.UserResponseDto;
+import com.example.Triple_clone.domain.member.web.dto.UserUpdateDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class UserService {
     @Transactional
     public UserResponseDto signUp(UserJoinRequestDto signUpDto) {
         if (repository.findByEmail(signUpDto.email()).isPresent()) {
-            log.warn("⚠️ 사용자 가입 실패 - 중복된 이메일 이메일: {}", signUpDto.email());
+            log.warn(MemberLogMessage.MEMBER_SIGN_UP_FAIL.format(signUpDto.email()));
             throw new IllegalArgumentException("이미 사용 중인 이메일 입니다.");
         }
 
@@ -78,7 +78,7 @@ public class UserService {
     public Member findById(long userId) {
         return repository.findById(userId)
                 .orElseThrow(() -> {
-                    log.warn(LogMessage.USER_NOT_FOUND_ID.format(userId));
+                    log.warn(MemberLogMessage.MEMBER_SEARCH_FAILED_BY_ID.format(userId));
                     return new EntityNotFoundException("no user entity");
                 });
     }
@@ -86,7 +86,7 @@ public class UserService {
     public Member findByEmail(String email) {
         return repository.findByEmail(email)
                 .orElseThrow(() -> {
-                    log.warn(LogMessage.USER_NOT_FOUND_EMAIL.format(email));
+                    log.warn(MemberLogMessage.MEMBER_SEARCH_FAILED_BY_EMAIL.format(email));
                     return new EntityNotFoundException("no user entity");
                 });
     }

@@ -1,5 +1,8 @@
 package com.example.Triple_clone.domain.report.application;
 
+import com.example.Triple_clone.common.logging.logMessage.MemberLogMessage;
+import com.example.Triple_clone.common.logging.logMessage.ReportLogMessage;
+import com.example.Triple_clone.common.logging.logMessage.ReviewLogMessage;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.report.domain.ReportTargetType;
 import com.example.Triple_clone.domain.report.domain.Report;
@@ -32,23 +35,23 @@ public class ReportService {
     public ReportResponseDto reportReview(Long reviewId, String email, ReportingReason reason, String detail) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 리뷰 신고 실패 - 존재하지 않는 리뷰: {}", reviewId);
+                    log.warn(ReviewLogMessage.REVIEW_SEARCH_FAILED.format(reviewId));
                     return new EntityNotFoundException("no user entity");
                 });
 
         if (review.getStatus() == ReviewStatus.DELETED) {
-            log.warn("⚠️ 리뷰 신고 실패 - 이미 삭제된 신고: {}", reviewId);
+            log.warn(ReviewLogMessage.REVIEW_SEARCH_FAILED.format(reviewId));
             throw new IllegalArgumentException("삭제된 리뷰는 신고할 수 없습니다.");
         }
 
         Member reporter = memberRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 리뷰 신고 실패 - 존재하지 않는 신고자: {}", email);
+                    log.warn(MemberLogMessage.MEMBER_SEARCH_FAILED_BY_EMAIL.format(email));
                     return new EntityNotFoundException("no user entity");
                 });
 
         if (reportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, review.getId(), reporter.getId())) {
-            log.warn("⚠️ 리뷰 신고 실패 - 중복된 신고: reporter = {} / target = {}", reporter, reviewId);
+            log.warn(ReportLogMessage.DUPLICATED_REPORT.format(review.getClass().getSimpleName(), review.getId(), reporter.getId()));
             throw new IllegalArgumentException("이미 신고한 리뷰입니다.");
         }
 

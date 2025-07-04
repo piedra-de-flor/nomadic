@@ -7,6 +7,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
+import com.example.Triple_clone.common.logging.logMessage.ESLogMessage;
 import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -100,7 +101,7 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
             return new PageImpl<>(results, pageable, total);
 
         } catch (IOException e) {
-            log.error("Elasticsearch 검색 중 오류 발생: {}", e.getMessage());
+            log.error(ESLogMessage.ES_SEARCH_ERROR.format(e.getMessage()));
             throw new RuntimeException("Elasticsearch 검색 중 오류 발생: " + e.getMessage(), e);
         }
     }

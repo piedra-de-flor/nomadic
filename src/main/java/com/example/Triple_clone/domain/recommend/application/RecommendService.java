@@ -1,5 +1,7 @@
 package com.example.Triple_clone.domain.recommend.application;
 
+import com.example.Triple_clone.common.logging.logMessage.MemberLogMessage;
+import com.example.Triple_clone.common.logging.logMessage.RecommendLogMessage;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.member.infra.MemberRepository;
 import com.example.Triple_clone.common.file.FileManager;
@@ -37,13 +39,13 @@ public class RecommendService {
     public RecommendReadDto findById(long recommendationId, String email) {
         Recommendation recommendation = recommendationRepository.findById(recommendationId)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 추천 장소 조회 실패 - 존재하지 않는 추천 장소: {}", recommendationId);
+                    log.warn(RecommendLogMessage.RECOMMEND_SEARCH_FAILED.format("추천 장소 조회 실패", recommendationId));
                     return new EntityNotFoundException("no place entity");
                 });
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    log.warn("⚠️ 사용자 조회 실패 - 존재하지 않는 회원: {}", email);
+                    log.warn(MemberLogMessage.MEMBER_SEARCH_FAILED_BY_EMAIL.format(email));
                     return new EntityNotFoundException("no user entity");
                 });
 
@@ -117,7 +119,7 @@ public class RecommendService {
             likes.forEach((placeId, userIds) -> {
                 Recommendation target = recommendationRepository.findById(placeId)
                         .orElseThrow(() -> {
-                            log.warn("⚠️ 추천 장소 조회 실패 - 존재하지 않는 추천 장소: {}", placeId);
+                            log.warn(RecommendLogMessage.RECOMMEND_SEARCH_FAILED.format("추천 장소 조회 실패", placeId));
                             return new EntityNotFoundException("no place entity for like");
                         });
                 userIds.forEach(target::like);

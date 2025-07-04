@@ -1,10 +1,11 @@
 package com.example.Triple_clone.domain.notification.infra;
 
-import com.example.Triple_clone.common.logging.LogMessage;
 import com.example.Triple_clone.common.error.SlackSendFailureException;
+import com.example.Triple_clone.common.kafka.KafkaTopic;
+import com.example.Triple_clone.common.logging.logMessage.NotificationLogMessage;
 import com.example.Triple_clone.domain.notification.domain.NotificationChannelType;
-import com.example.Triple_clone.domain.notification.web.dto.NotificationMessage;
 import com.example.Triple_clone.domain.notification.web.controller.NotificationRetryProducer;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationMessage;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +32,7 @@ public class SlackNotificationSender implements ChannelNotificationSender {
             slackClient.sendMessage(message);
         } catch (Exception e) {
             slackRetryProducer.sendSlackRetryMessage(message);
-            log.warn(LogMessage.SLACK_SEND_FAIL.format(e.getMessage()));
-            log.info(LogMessage.KAFKA_MESSAGE_SEND.format(message.receiver()));
+            log.warn(NotificationLogMessage.SLACK_SEND_FAILED.format(e.getMessage()));
             throw new SlackSendFailureException("Slack 전송에 실패했습니다.", e);
         }
     }
