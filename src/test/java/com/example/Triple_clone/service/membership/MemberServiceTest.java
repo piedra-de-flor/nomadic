@@ -1,14 +1,13 @@
 package com.example.Triple_clone.service.membership;
 
-import com.example.Triple_clone.domain.entity.Member;
-import com.example.Triple_clone.domain.vo.Role;
-import com.example.Triple_clone.dto.auth.JwtToken;
-import com.example.Triple_clone.dto.membership.LoginDto;
-import com.example.Triple_clone.dto.membership.UserJoinRequestDto;
-import com.example.Triple_clone.dto.membership.UserResponseDto;
-import com.example.Triple_clone.dto.membership.UserUpdateDto;
-import com.example.Triple_clone.repository.MemberRepository;
-import com.example.Triple_clone.service.support.JwtTokenProvider;
+import com.example.Triple_clone.common.auth.JwtToken;
+import com.example.Triple_clone.common.auth.JwtTokenProvider;
+import com.example.Triple_clone.domain.member.application.UserService;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.member.infra.MemberRepository;
+import com.example.Triple_clone.domain.member.web.dto.UserJoinRequestDto;
+import com.example.Triple_clone.domain.member.web.dto.UserResponseDto;
+import com.example.Triple_clone.domain.member.web.dto.UserUpdateDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,11 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

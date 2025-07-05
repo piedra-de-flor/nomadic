@@ -36,3 +36,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Logstash ###
+logstash/
+logs/
+
+### Docker ###
+docker-compose.yml
+Dockerfile

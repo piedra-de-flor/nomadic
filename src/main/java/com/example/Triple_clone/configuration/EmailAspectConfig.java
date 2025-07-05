@@ -1,6 +1,6 @@
 package com.example.Triple_clone.configuration;
 
-import com.example.Triple_clone.web.support.MemberEmailAspectResolver;
+import com.example.Triple_clone.common.auth.MemberEmailAspectResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

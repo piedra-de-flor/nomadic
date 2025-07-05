@@ -1,7 +1,9 @@
 package com.example.Triple_clone.domain.entity;
 
-import com.example.Triple_clone.domain.vo.ReportTargetType;
-import com.example.Triple_clone.domain.vo.ReportingReason;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.report.domain.Report;
+import com.example.Triple_clone.domain.report.domain.ReportTargetType;
+import com.example.Triple_clone.domain.report.domain.ReportingReason;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

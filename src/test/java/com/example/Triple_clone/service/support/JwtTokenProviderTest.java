@@ -1,7 +1,7 @@
 package com.example.Triple_clone.service.support;
 
-import com.example.Triple_clone.dto.auth.JwtToken;
-import io.jsonwebtoken.Claims;
+import com.example.Triple_clone.common.auth.JwtToken;
+import com.example.Triple_clone.common.auth.JwtTokenProvider;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.security.Key;
 import java.util.Collections;
 import java.util.Date;
 

@@ -1,6 +1,7 @@
 package com.example.Triple_clone.web.filter;
 
-import com.example.Triple_clone.service.support.JwtTokenProvider;
+import com.example.Triple_clone.common.auth.JwtAuthFilter;
+import com.example.Triple_clone.common.auth.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

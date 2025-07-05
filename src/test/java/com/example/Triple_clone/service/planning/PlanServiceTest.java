@@ -1,12 +1,13 @@
 package com.example.Triple_clone.service.planning;
 
-import com.example.Triple_clone.domain.entity.DetailPlan;
-import com.example.Triple_clone.domain.entity.Plan;
-import com.example.Triple_clone.domain.vo.Location;
-import com.example.Triple_clone.dto.planning.PlanDto;
-import com.example.Triple_clone.dto.planning.PlanPartnerUpdateDto;
-import com.example.Triple_clone.dto.planning.PlanStyleUpdateDto;
-import com.example.Triple_clone.repository.PlanRepository;
+import com.example.Triple_clone.domain.plan.domain.DetailPlan;
+import com.example.Triple_clone.domain.plan.domain.Plan;
+import com.example.Triple_clone.domain.plan.application.PlanService;
+import com.example.Triple_clone.domain.plan.domain.Location;
+import com.example.Triple_clone.domain.plan.web.dto.PlanDto;
+import com.example.Triple_clone.domain.plan.web.dto.PlanPartnerUpdateDto;
+import com.example.Triple_clone.domain.plan.web.dto.PlanStyleUpdateDto;
+import com.example.Triple_clone.domain.plan.infra.PlanRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,7 +85,7 @@ public class PlanServiceTest {
         when(plan.isMine(anyLong())).thenReturn(true);
         when(planDto.planId()).thenReturn(1L);
 
-        planService.updateStyle(planStyleUpdateDto, userId);
+        planService.updateStyle(planStyleUpdateDto);
 
         verify(plan, times(1)).chooseStyle(any());
     }
@@ -100,7 +101,7 @@ public class PlanServiceTest {
         when(planStyleUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updateStyle(planStyleUpdateDto, userId));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updateStyle(planStyleUpdateDto));
     }
 
     @Test
@@ -113,7 +114,7 @@ public class PlanServiceTest {
         when(planStyleUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updateStyle(planStyleUpdateDto, userId));
+        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updateStyle(planStyleUpdateDto));
     }
 
     @Test
@@ -128,7 +129,7 @@ public class PlanServiceTest {
         when(plan.isMine(anyLong())).thenReturn(true);
         when(planPartnerUpdateDto.partner()).thenReturn("COUPLE");
 
-        planService.updatePartner(planPartnerUpdateDto, userId);
+        planService.updatePartner(planPartnerUpdateDto);
 
         verify(plan, times(1)).choosePartner(any());
     }
@@ -144,7 +145,7 @@ public class PlanServiceTest {
         when(planPartnerUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updatePartner(planPartnerUpdateDto, userId));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> planService.updatePartner(planPartnerUpdateDto));
     }
 
     @Test
@@ -157,7 +158,7 @@ public class PlanServiceTest {
         when(planPartnerUpdateDto.planDto()).thenReturn(planDto);
         when(planDto.planId()).thenReturn(1L);
 
-        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updatePartner(planPartnerUpdateDto, userId));
+        Assertions.assertThrows(NoSuchElementException.class, () -> planService.updatePartner(planPartnerUpdateDto));
     }
 
     @Test

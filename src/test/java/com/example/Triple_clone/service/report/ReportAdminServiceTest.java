@@ -1,13 +1,14 @@
 package com.example.Triple_clone.service.report;
 
-import com.example.Triple_clone.domain.entity.Report;
-import com.example.Triple_clone.domain.vo.ReportTargetType;
-import com.example.Triple_clone.dto.report.ReportCountDto;
-import com.example.Triple_clone.dto.report.ReportResponseDto;
-import com.example.Triple_clone.dto.report.ReportSearchDto;
-import com.example.Triple_clone.repository.ReportAdminRepository;
-import com.example.Triple_clone.repository.ReportCountQueryRepository;
-import com.example.Triple_clone.repository.ReportRepository;
+import com.example.Triple_clone.domain.report.application.ReportAdminService;
+import com.example.Triple_clone.domain.report.domain.Report;
+import com.example.Triple_clone.domain.report.domain.ReportTargetType;
+import com.example.Triple_clone.domain.report.infra.ReportCountQueryRepository;
+import com.example.Triple_clone.domain.report.infra.ReportRepository;
+import com.example.Triple_clone.domain.report.web.dto.ReportCountDto;
+import com.example.Triple_clone.domain.report.web.dto.ReportResponseDto;
+import com.example.Triple_clone.domain.report.web.dto.ReportSearchDto;
+import com.example.Triple_clone.domain.report.infra.ReportAdminRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

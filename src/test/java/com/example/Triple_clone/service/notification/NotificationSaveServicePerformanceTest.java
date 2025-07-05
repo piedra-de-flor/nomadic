@@ -1,12 +1,13 @@
 package com.example.Triple_clone.service.notification;
 
 import com.example.Triple_clone.TestMailConfig;
-import com.example.Triple_clone.domain.entity.Member;
-import com.example.Triple_clone.domain.vo.NotificationTarget;
-import com.example.Triple_clone.domain.vo.NotificationType;
-import com.example.Triple_clone.dto.notification.NotificationSaveRequest;
-import com.example.Triple_clone.repository.MemberRepository;
-import com.example.Triple_clone.service.notification.kafka.EmailRetryConsumer;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.notification.domain.NotificationTarget;
+import com.example.Triple_clone.domain.notification.domain.NotificationType;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationSaveRequest;
+import com.example.Triple_clone.domain.member.infra.MemberRepository;
+import com.example.Triple_clone.domain.notification.application.NotificationSaveService;
+import com.example.Triple_clone.domain.notification.web.controller.NotificationRetryConsumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.List;
 @Transactional
 class NotificationSaveServicePerformanceTest {
     @MockBean
-    private EmailRetryConsumer emailRetryConsumer;
+    private NotificationRetryConsumer notificationRetryConsumer;
 
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;

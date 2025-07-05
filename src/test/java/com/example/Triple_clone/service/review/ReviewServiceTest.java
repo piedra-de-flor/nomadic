@@ -1,9 +1,10 @@
 package com.example.Triple_clone.service.review;
 
-import com.example.Triple_clone.domain.entity.Recommendation;
-import com.example.Triple_clone.domain.entity.Review;
-import com.example.Triple_clone.domain.entity.Member;
-import com.example.Triple_clone.repository.ReviewRepository;
+import com.example.Triple_clone.domain.recommend.domain.Recommendation;
+import com.example.Triple_clone.domain.review.domain.Review;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.review.infra.ReviewRepository;
+import com.example.Triple_clone.domain.review.application.ReviewService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;

@@ -1,18 +1,17 @@
 package com.example.Triple_clone.service.planning;
 
-import com.example.Triple_clone.domain.entity.Member;
-import com.example.Triple_clone.domain.entity.Plan;
-import com.example.Triple_clone.domain.vo.AuthErrorCode;
-import com.example.Triple_clone.domain.vo.Partner;
-import com.example.Triple_clone.domain.vo.Style;
-import com.example.Triple_clone.dto.planning.*;
-import com.example.Triple_clone.service.membership.UserService;
-import com.example.Triple_clone.web.exception.RestApiException;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.plan.application.PlanFacadeService;
+import com.example.Triple_clone.domain.plan.application.PlanService;
+import com.example.Triple_clone.domain.plan.domain.Plan;
+import com.example.Triple_clone.domain.plan.domain.Style;
+import com.example.Triple_clone.domain.member.application.UserService;
+import com.example.Triple_clone.common.error.RestApiException;
+import com.example.Triple_clone.domain.plan.web.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -99,7 +98,7 @@ class PlanFacadeServiceTest {
 
         PlanStyleUpdateDto result = facadeService.updateStyle(updateDto, "test");
 
-        verify(planService).updateStyle(updateDto, 1L);
+        verify(planService).updateStyle(updateDto);
         assertThat(result).isEqualTo(updateDto);
     }
 
@@ -135,7 +134,7 @@ class PlanFacadeServiceTest {
 
         PlanPartnerUpdateDto result = facadeService.updatePartner(dto, "test");
 
-        verify(planService).updatePartner(dto, 1L);
+        verify(planService).updatePartner(dto);
         assertThat(result).isEqualTo(dto);
     }
 }

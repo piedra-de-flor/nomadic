@@ -1,6 +1,9 @@
 package com.example.Triple_clone.domain.entity;
 
-import com.example.Triple_clone.domain.vo.Image;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.recommend.domain.Recommendation;
+import com.example.Triple_clone.domain.review.domain.Review;
+import com.example.Triple_clone.common.file.Image;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
