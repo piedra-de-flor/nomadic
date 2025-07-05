@@ -1,0 +1,17 @@
+{
+  "name": "accommodation-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "database.hostname": "mysql",
+    "database.port": "3306",
+    "database.user": "debezium",
+    "database.password": "debezium_pw",
+    "database.server.id": "10181",
+    "database.server.name": "triple",
+    "database.include.list": "triple",
+    "table.include.list": "triple.accommodation",
+    "database.history.kafka.bootstrap.servers": "kafka:9092",
+    "database.history.kafka.topic": "schema-changes.triple",
+    "include.schema.changes": "false"
+  }
+}
