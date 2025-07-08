@@ -28,6 +28,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PostMapping("/sign-up")
     public ResponseEntity<UserResponseDto> signUp(
             @Parameter(description = "회원 가입 요청 정보", required = true)
@@ -40,6 +41,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PostMapping("/sign-in")
     public JwtToken signIn(
             @Parameter(description = "로그인 요청 정보", required = true)
@@ -51,6 +53,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/user")
     public ResponseEntity<UserResponseDto> read(
             @Parameter(description = "회원 조회 요청 정보", required = true)
@@ -63,6 +66,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PatchMapping("/user")
     public ResponseEntity<UserUpdateDto> update(
             @Parameter(description = "회원 수정 요청 정보", required = true)
@@ -75,6 +79,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @DeleteMapping("/user")
     public ResponseEntity<Long> delete(
             @Parameter(description = "회원 삭제 요청 정보", required = true)

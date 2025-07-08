@@ -23,6 +23,7 @@ public class AccommodationController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/accommodations")
     public ResponseEntity<List<AccommodationDto>> readAll(
             @Parameter(description = "원하는 지역 이름", required = true)

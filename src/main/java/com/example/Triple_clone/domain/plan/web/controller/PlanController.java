@@ -21,6 +21,7 @@ public class PlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PostMapping("/plan")
     public ResponseEntity<PlanCreateDto> createPlan(
             @Parameter(description = "계획 생성 요청 정보", required = true)
@@ -33,6 +34,7 @@ public class PlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/plan")
     public ResponseEntity<PlanReadResponseDto> readPlan(
             @Parameter(description = "계획 단일 조회 요청 정보", required = true)
@@ -45,6 +47,7 @@ public class PlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/plans")
     public ResponseEntity<PlanReadAllResponseDto> readAllPlan(
             @Parameter(description = "누구의 계획을 조회할 것인지에 대한 user ID", required = true)
@@ -57,6 +60,7 @@ public class PlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PutMapping("/plan/style")
     public ResponseEntity<PlanStyleUpdateDto> updateStyle(
             @Parameter(description = "계획 스타일 수정 요청 정보", required = true)
@@ -69,6 +73,7 @@ public class PlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PutMapping("/plan/partner")
     public ResponseEntity<PlanPartnerUpdateDto> updatePartner(
             @Parameter(description = "계획 파트너 수정 요청 정보", required = true)
@@ -81,6 +86,7 @@ public class PlanController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @DeleteMapping("/plan")
     public ResponseEntity<PlanDto> deletePlan(
             @Parameter(description = "계획 삭제 요청 정보", required = true)
