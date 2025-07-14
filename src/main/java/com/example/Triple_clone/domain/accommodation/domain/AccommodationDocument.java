@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import co.elastic.clients.elasticsearch._types.mapping.Field
 
 @Getter
 @Setter
@@ -26,4 +27,5 @@ public class AccommodationDocument {
     private Long lodgmentOriginPrice;
     private Long lodgmentPrice;
     private Boolean lodgmentStatus;
+    private CompletionField nameSuggest;
 }
