@@ -1,0 +1,9 @@
+:rotating_light: *Application error*
+
+*Level:* {level}
+*Time:* {timestamp}
+*Request URI:* `{uri}`
+*User:* `{email}`
+*Trace ID:* `{traceId}`
+
+*Message:* '{content}'
