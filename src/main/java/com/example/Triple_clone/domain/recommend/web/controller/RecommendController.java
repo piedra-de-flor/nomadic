@@ -30,6 +30,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/recommendations")
     public ResponseEntity<Page<RecommendReadDto>> readAllOrderBy(
             @Parameter(description = "원하는 정렬순 (날짜별, 이름별)", required = true)
@@ -42,6 +43,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/recommendation")
     public ResponseEntity<RecommendReadDto> read(
             @Parameter(description = "추천 장소 단일 조회 요청 정보 (추천 장소 ID)", required = true)
@@ -55,6 +57,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/recommendation/image")
     public ResponseEntity<byte[]> readImage(
             @Parameter(description = "이미지를 가져올 추천 장소 ID", required = true)
@@ -69,6 +72,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PutMapping("/recommendation/like")
     public ResponseEntity<RecommendLikeDto> like(
             @Parameter(description = "추천 장소 좋아요 요청 정보", required = true)
@@ -81,6 +85,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PutMapping("/recommendations/top10")
     public ResponseEntity<List<RecommendReadTop10Dto>> readTop10() {
         List<RecommendReadTop10Dto> response = service.findTop10();
@@ -91,6 +96,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/recommendation/user/plan")
     public String redirectToPlanning(
             @Parameter(description = "타겟 계획 ID", required = true)

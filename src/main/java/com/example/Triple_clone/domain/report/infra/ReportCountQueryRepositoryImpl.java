@@ -1,6 +1,6 @@
 package com.example.Triple_clone.domain.report.infra;
 
-import com.example.Triple_clone.domain.entity.QReport;
+import com.example.Triple_clone.domain.report.domain.QReport;
 import com.example.Triple_clone.domain.report.domain.ReportStatus;
 import com.example.Triple_clone.domain.report.domain.ReportTargetType;
 import com.example.Triple_clone.domain.report.web.dto.ReportCountDto;

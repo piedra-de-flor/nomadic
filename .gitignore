@@ -38,8 +38,8 @@ out/
 .vscode/
 
 ### Logstash ###
-logstash/
-logs/
+logstash/*
+logs/*
 
 ### Docker ###
 docker-compose.yml
