@@ -1,17 +1,19 @@
 package com.example.Triple_clone.domain.report.infra;
 
-import com.example.Triple_clone.domain.entity.QMember;
-import com.example.Triple_clone.domain.entity.QReport;
+import com.example.Triple_clone.domain.member.domain.QMember;
+import com.example.Triple_clone.domain.report.domain.QReport;
+import com.example.Triple_clone.domain.report.domain.ReportTargetType;
+import com.example.Triple_clone.domain.report.web.dto.QReportResponseDto;
 import com.example.Triple_clone.domain.report.web.dto.ReportResponseDto;
 import com.example.Triple_clone.domain.report.web.dto.ReportSearchDto;
-import com.example.Triple_clone.domain.report.domain.ReportTargetType;
-import com.example.Triple_clone.dto.report.QReportResponseDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

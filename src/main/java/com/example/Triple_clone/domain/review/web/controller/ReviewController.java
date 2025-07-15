@@ -30,6 +30,7 @@ public class ReviewController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PostMapping("/recommendation/review")
     public ResponseEntity<RecommendWriteReviewDto> writeReview(
             @Parameter(description = "추천 장소에 대한 리뷰 생성 정보", required = true)
@@ -42,6 +43,7 @@ public class ReviewController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/recommendation/review/{recommendationId}")
     public ResponseEntity<Page<RootReviewResponseDto>> readReview(
             @Parameter(description = "해당 게시물 ID", required = true)
@@ -53,6 +55,7 @@ public class ReviewController {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/recommendation/reply/{parentId}")
     public ResponseEntity<Page<ReviewResponseDto>> readReply(
             @Parameter(description = "해당 게시물 ID", required = true)
@@ -91,6 +94,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 수정", description = "리뷰의 내용을 수정합니다.")
+    @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")

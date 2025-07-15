@@ -1,9 +1,9 @@
 package com.example.Triple_clone.domain.notification.infra;
 
-import com.example.Triple_clone.domain.entity.QNotification;
-import com.example.Triple_clone.domain.entity.QNotificationStatus;
-import com.example.Triple_clone.domain.notification.web.dto.NotificationSearchDto;
+import com.example.Triple_clone.domain.notification.domain.QNotification;
+import com.example.Triple_clone.domain.notification.domain.QNotificationStatus;
 import com.example.Triple_clone.domain.notification.domain.NotificationTarget;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationSearchDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

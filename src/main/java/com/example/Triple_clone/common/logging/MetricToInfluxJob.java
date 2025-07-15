@@ -1,5 +1,6 @@
 package com.example.Triple_clone.common.logging;
 
+import com.example.Triple_clone.common.logging.logMessage.BatchLogMessage;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
@@ -41,9 +42,9 @@ public class MetricToInfluxJob {
 
         try (WriteApi writeApi = influxDBClient.makeWriteApi()) {
             writeApi.writePoint(point);
-            log.info(LogMessage.BATCH_PROCESS_SUCCESS.format("InfluxDB write"));
+            log.info(BatchLogMessage.BATCH_PROCESS_ENDED.format("InfluxDB write"));
         } catch (Exception e) {
-            log.error(LogMessage.BATCH_PROCESS_FAIL.format("InfluxDB write", e));
+            log.error(BatchLogMessage.BATCH_PROCESS_FAILED.format("InfluxDB write", e));
         }
 
     }
