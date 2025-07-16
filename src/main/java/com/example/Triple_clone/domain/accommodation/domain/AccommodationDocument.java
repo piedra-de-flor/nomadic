@@ -16,6 +16,10 @@ public class AccommodationDocument {
     private String local;
     private String name;
     private Double score;
+    private String imageUrl;
+    private String description;
+    private String detailDescription;
+    private String services;
     private String enterTime;
     private Long lentDiscountRate;
     private Long lentOriginPrice;
