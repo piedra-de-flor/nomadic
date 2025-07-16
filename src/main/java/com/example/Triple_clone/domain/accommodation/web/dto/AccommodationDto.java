@@ -8,6 +8,10 @@ public record AccommodationDto(
         String name,
         double score,
         String category,
+        String imageUrl,
+        String description,
+        String detailDescription,
+        String services,
         long lentDiscountRate,
         int lentTime,
         long lentOriginPrice,
@@ -25,6 +29,10 @@ public record AccommodationDto(
                 .name(name)
                 .score(score)
                 .category(category)
+                .imageUrl(imageUrl)
+                .description(description)
+                .detailDescription(detailDescription)
+                .services(services)
                 .lentTime(lentTime)
                 .lentPrice(lentPrice)
                 .lentOriginPrice(lentOriginPrice)
@@ -44,6 +52,10 @@ public record AccommodationDto(
                 accommodation.getName(),
                 accommodation.getScore(),
                 accommodation.getCategory(),
+                accommodation.getImageUrl(),
+                accommodation.getDescription(),
+                accommodation.getDetailDescription(),
+                accommodation.getServices(),
                 accommodation.getLentDiscountRate(),
                 accommodation.getLentTime(),
                 accommodation.getLentOriginPrice(),
@@ -63,6 +75,10 @@ public record AccommodationDto(
                 document.getName(),
                 document.getScore() != null ? document.getScore() : 0.0,
                 document.getCategory(),
+                document.getImageUrl(),
+                document.getDescription(),
+                document.getDetailDescription(),
+                document.getServices(),
                 document.getLentDiscountRate() != null ? document.getLentDiscountRate() : 0L,
                 document.getLentTime() != null ? document.getLentTime() : 0,
                 document.getLentOriginPrice() != null ? document.getLentOriginPrice() : 0L,

@@ -1,9 +1,6 @@
 package com.example.Triple_clone.domain.accommodation.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +19,16 @@ public class Accommodation {
     private String name;
     private double score;
     private String category;
+    private String imageUrl;
+
+    @Lob
+    private String description;
+
+    @Lob
+    private String detailDescription;
+
+    @Lob
+    private String services;
     private long lentDiscountRate;
     private int lentTime;
     private long lentOriginPrice;
@@ -34,11 +41,18 @@ public class Accommodation {
     private boolean lodgmentStatus;
 
     @Builder
-    public Accommodation(String local, String name, double score, String category, long lentDiscountRate, int lentTime, long lentOriginPrice, long lentPrice, boolean lentStatus, String enterTime, long lodgmentDiscountRate, long lodgmentOriginPrice, long lodgmentPrice, boolean lodgmentStatus) {
+    public Accommodation(String local, String name, double score, String category, long lentDiscountRate, int lentTime,
+                         long lentOriginPrice, long lentPrice, boolean lentStatus, String enterTime, long lodgmentDiscountRate,
+                         long lodgmentOriginPrice, long lodgmentPrice, boolean lodgmentStatus, String imageUrl, String description,
+                         String detailDescription, String services) {
         this.local = local;
         this.name = name;
         this.score = score;
         this.category = category;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.detailDescription = detailDescription;
+        this.services = services;
         this.lentDiscountRate = lentDiscountRate;
         this.lentTime = lentTime;
         this.lentOriginPrice = lentOriginPrice;
