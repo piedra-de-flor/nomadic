@@ -5,66 +5,102 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
 @Entity
+@Table(name = "accommodations")
 public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String local;
+    @Column(length = 500)
+    private String image;
+    @Column(length = 255)
     private String name;
-    private double score;
+    @Column(length = 100)
     private String category;
-    private String imageUrl;
-
+    @Column(length = 50)
+    private String grade;
+    private Float rating;
+    private Integer reviewCount;
+    @Column(length = 100)
+    private String region;
+    @Column(length = 500)
+    private String address;
+    @Column(length = 200)
+    private String landmarkDistance;
+    private Boolean hasDayuseDiscount;
+    private Integer dayusePrice;
+    private Integer dayuseSalePrice;
+    private Boolean dayuseSoldout;
+    @Column(length = 50)
+    private String dayuseTime;
+    private Boolean hasStayDiscount;
+    private Integer stayPrice;
+    private Integer staySalePrice;
+    private Boolean staySoldout;
+    @Column(length = 50)
+    private String stayCheckinTime;
     @Lob
-    private String description;
-
+    private String intro;
     @Lob
-    private String detailDescription;
-
+    private String amenities;
     @Lob
-    private String services;
-    private long lentDiscountRate;
-    private int lentTime;
-    private long lentOriginPrice;
-    private long lentPrice;
-    private boolean lentStatus;
-    private LocalTime enterTime;
-    private long lodgmentDiscountRate;
-    private long lodgmentOriginPrice;
-    private long lodgmentPrice;
-    private boolean lodgmentStatus;
+    private String info;
+
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Room> rooms = new ArrayList<>();
+
 
     @Builder
-    public Accommodation(String local, String name, double score, String category, long lentDiscountRate, int lentTime,
-                         long lentOriginPrice, long lentPrice, boolean lentStatus, String enterTime, long lodgmentDiscountRate,
-                         long lodgmentOriginPrice, long lodgmentPrice, boolean lodgmentStatus, String imageUrl, String description,
-                         String detailDescription, String services) {
-        this.local = local;
+    public Accommodation(
+            String image,
+            String name,
+            String category,
+            String grade,
+            Float rating,
+            Integer reviewCount,
+            String region,
+            String address,
+            String landmarkDistance,
+            Boolean hasDayuseDiscount,
+            Integer dayusePrice,
+            Integer dayuseSalePrice,
+            Boolean dayuseSoldout,
+            String dayuseTime,
+            Boolean hasStayDiscount,
+            Integer stayPrice,
+            Integer staySalePrice,
+            Boolean staySoldout,
+            String stayCheckinTime,
+            String intro,
+            String amenities,
+            String info
+    ) {
+        this.image = image;
         this.name = name;
-        this.score = score;
         this.category = category;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.detailDescription = detailDescription;
-        this.services = services;
-        this.lentDiscountRate = lentDiscountRate;
-        this.lentTime = lentTime;
-        this.lentOriginPrice = lentOriginPrice;
-        this.lentPrice = lentPrice;
-        this.lentStatus = lentStatus;
-        this.enterTime = null;
-        if (enterTime != null) {
-            this.enterTime = LocalTime.parse(enterTime, DateTimeFormatter.ofPattern("HH:mm"));
-        }
-        this.lodgmentDiscountRate = lodgmentDiscountRate;
-        this.lodgmentOriginPrice = lodgmentOriginPrice;
-        this.lodgmentPrice = lodgmentPrice;
-        this.lodgmentStatus = lodgmentStatus;
+        this.grade = grade;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
+        this.region = region;
+        this.address = address;
+        this.landmarkDistance = landmarkDistance;
+        this.hasDayuseDiscount = hasDayuseDiscount;
+        this.dayusePrice = dayusePrice;
+        this.dayuseSalePrice = dayuseSalePrice;
+        this.dayuseSoldout = dayuseSoldout;
+        this.dayuseTime = dayuseTime;
+        this.hasStayDiscount = hasStayDiscount;
+        this.stayPrice = stayPrice;
+        this.staySalePrice = staySalePrice;
+        this.staySoldout = staySoldout;
+        this.stayCheckinTime = stayCheckinTime;
+        this.intro = intro;
+        this.amenities = amenities;
+        this.info = info;
     }
 }
