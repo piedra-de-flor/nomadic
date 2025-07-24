@@ -13,7 +13,7 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccommodationDocument {
-    private Integer id;
+    private long id;
     private String image;
     private String name;
     private String category;

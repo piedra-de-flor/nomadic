@@ -11,7 +11,7 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoomDocument {
-    private Integer id;
+    private long id;
     private String name;
     private Integer dayusePrice;
     private String dayuseTime;

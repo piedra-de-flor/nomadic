@@ -4,91 +4,110 @@ import com.example.Triple_clone.domain.accommodation.domain.Accommodation;
 import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
 
 public record AccommodationDto(
-        String local,
+        long id,
+        String image,
         String name,
-        double score,
         String category,
-        String imageUrl,
-        String description,
-        String detailDescription,
-        String services,
-        long lentDiscountRate,
-        int lentTime,
-        long lentOriginPrice,
-        long lentPrice,
-        boolean lentStatus,
-        String enterTime,
-        long lodgmentDiscountRate,
-        long lodgmentOriginPrice,
-        long lodgmentPrice,
-        boolean lodgmentStatus
+        String grade,
+        Float rating,
+        Integer reviewCount,
+        String region,
+        String address,
+        String landmarkDistance,
+        Boolean hasDayuseDiscount,
+        Integer dayusePrice,
+        Integer dayuseSalePrice,
+        Boolean dayuseSoldout,
+        String dayuseTime,
+        Boolean hasStayDiscount,
+        Integer stayPrice,
+        Integer staySalePrice,
+        Boolean staySoldout,
+        String stayCheckinTime,
+        String intro,
+        String amenities,
+        String info
 ) {
-    public Accommodation toEntity() {
-        return Accommodation.builder()
-                .local(local)
-                .name(name)
-                .score(score)
-                .category(category)
-                .imageUrl(imageUrl)
-                .description(description)
-                .detailDescription(detailDescription)
-                .services(services)
-                .lentTime(lentTime)
-                .lentPrice(lentPrice)
-                .lentOriginPrice(lentOriginPrice)
-                .lentStatus(lentStatus)
-                .lentDiscountRate(lentDiscountRate)
-                .lodgmentPrice(lodgmentPrice)
-                .lodgmentStatus(lodgmentStatus)
-                .lodgmentOriginPrice(lodgmentOriginPrice)
-                .lodgmentDiscountRate(lodgmentDiscountRate)
-                .enterTime(enterTime)
-                .build();
-    }
-
     public AccommodationDto(Accommodation accommodation) {
         this(
-                accommodation.getLocal(),
+                accommodation.getId(),
+                accommodation.getImage(),
                 accommodation.getName(),
-                accommodation.getScore(),
                 accommodation.getCategory(),
-                accommodation.getImageUrl(),
-                accommodation.getDescription(),
-                accommodation.getDetailDescription(),
-                accommodation.getServices(),
-                accommodation.getLentDiscountRate(),
-                accommodation.getLentTime(),
-                accommodation.getLentOriginPrice(),
-                accommodation.getLentPrice(),
-                accommodation.isLentStatus(),
-                String.valueOf(accommodation.getEnterTime()),
-                accommodation.getLodgmentDiscountRate(),
-                accommodation.getLodgmentOriginPrice(),
-                accommodation.getLodgmentPrice(),
-                accommodation.isLodgmentStatus()
+                accommodation.getGrade(),
+                accommodation.getRating(),
+                accommodation.getReviewCount(),
+                accommodation.getRegion(),
+                accommodation.getAddress(),
+                accommodation.getLandmarkDistance(),
+                accommodation.getHasDayuseDiscount(),
+                accommodation.getDayusePrice(),
+                accommodation.getDayuseSalePrice(),
+                accommodation.getDayuseSoldout(),
+                accommodation.getDayuseTime(),
+                accommodation.getHasStayDiscount(),
+                accommodation.getStayPrice(),
+                accommodation.getStaySalePrice(),
+                accommodation.getStaySoldout(),
+                accommodation.getStayCheckinTime(),
+                accommodation.getIntro(),
+                accommodation.getAmenities(),
+                accommodation.getInfo()
         );
     }
 
-    public AccommodationDto(AccommodationDocument document) {
+    public AccommodationDto(AccommodationDocument doc) {
         this(
-                document.getLocal(),
-                document.getName(),
-                document.getScore() != null ? document.getScore() : 0.0,
-                document.getCategory(),
-                document.getImageUrl(),
-                document.getDescription(),
-                document.getDetailDescription(),
-                document.getServices(),
-                document.getLentDiscountRate() != null ? document.getLentDiscountRate() : 0L,
-                document.getLentTime() != null ? document.getLentTime() : 0,
-                document.getLentOriginPrice() != null ? document.getLentOriginPrice() : 0L,
-                document.getLentPrice() != null ? document.getLentPrice() : 0L,
-                document.getLentStatus() != null ? document.getLentStatus() : false,
-                document.getEnterTime() != null ? document.getEnterTime() : "",
-                document.getLodgmentDiscountRate() != null ? document.getLodgmentDiscountRate() : 0L,
-                document.getLodgmentOriginPrice() != null ? document.getLodgmentOriginPrice() : 0L,
-                document.getLodgmentPrice() != null ? document.getLodgmentPrice() : 0L,
-                document.getLodgmentStatus() != null ? document.getLodgmentStatus() : false
+                Long.parseLong(String.valueOf(doc.getId())),
+                doc.getImage(),
+                doc.getName(),
+                doc.getCategory(),
+                doc.getGrade(),
+                doc.getRating(),
+                doc.getReviewCount(),
+                doc.getRegion(),
+                doc.getAddress(),
+                doc.getLandmarkDistance(),
+                doc.getHasDayuseDiscount(),
+                doc.getDayusePrice(),
+                doc.getDayuseSalePrice(),
+                doc.getDayuseSoldout(),
+                doc.getDayuseTime(),
+                doc.getHasStayDiscount(),
+                doc.getStayPrice(),
+                doc.getStaySalePrice(),
+                doc.getStaySoldout(),
+                doc.getStayCheckinTime(),
+                doc.getIntro(),
+                doc.getAmenities(),
+                doc.getInfo()
         );
+    }
+
+    public Accommodation toEntity() {
+        return Accommodation.builder()
+                .image(image)
+                .name(name)
+                .category(category)
+                .grade(grade)
+                .rating(rating)
+                .reviewCount(reviewCount)
+                .region(region)
+                .address(address)
+                .landmarkDistance(landmarkDistance)
+                .hasDayuseDiscount(hasDayuseDiscount)
+                .dayusePrice(dayusePrice)
+                .dayuseSalePrice(dayuseSalePrice)
+                .dayuseSoldout(dayuseSoldout)
+                .dayuseTime(dayuseTime)
+                .hasStayDiscount(hasStayDiscount)
+                .stayPrice(stayPrice)
+                .staySalePrice(staySalePrice)
+                .staySoldout(staySoldout)
+                .stayCheckinTime(stayCheckinTime)
+                .intro(intro)
+                .amenities(amenities)
+                .info(info)
+                .build();
     }
 }

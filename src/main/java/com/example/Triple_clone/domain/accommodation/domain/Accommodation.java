@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.accommodation.domain;
 
+import com.example.Triple_clone.domain.accommodation.web.dto.AccommodationDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
@@ -102,5 +104,38 @@ public class Accommodation {
         this.intro = intro;
         this.amenities = amenities;
         this.info = info;
+    }
+
+    public void update(AccommodationDto dto) {
+        if (dto.image() != null) this.image = dto.image();
+        if (dto.name() != null) this.name = dto.name();
+        if (dto.category() != null) this.category = dto.category();
+        if (dto.grade() != null) this.grade = dto.grade();
+        if (dto.rating() != null) this.rating = dto.rating();
+        if (dto.reviewCount() != null) this.reviewCount = dto.reviewCount();
+        if (dto.region() != null) this.region = dto.region();
+        if (dto.address() != null) this.address = dto.address();
+        if (dto.landmarkDistance() != null) this.landmarkDistance = dto.landmarkDistance();
+        if (dto.hasDayuseDiscount() != null) this.hasDayuseDiscount = dto.hasDayuseDiscount();
+        if (dto.dayusePrice() != null) this.dayusePrice = dto.dayusePrice();
+        if (dto.dayuseSalePrice() != null) this.dayuseSalePrice = dto.dayuseSalePrice();
+        if (dto.dayuseSoldout() != null) this.dayuseSoldout = dto.dayuseSoldout();
+        if (dto.dayuseTime() != null) this.dayuseTime = dto.dayuseTime();
+        if (dto.hasStayDiscount() != null) this.hasStayDiscount = dto.hasStayDiscount();
+        if (dto.stayPrice() != null) this.stayPrice = dto.stayPrice();
+        if (dto.staySalePrice() != null) this.staySalePrice = dto.staySalePrice();
+        if (dto.staySoldout() != null) this.staySoldout = dto.staySoldout();
+        if (dto.stayCheckinTime() != null) this.stayCheckinTime = dto.stayCheckinTime();
+        if (dto.intro() != null) this.intro = dto.intro();
+        if (dto.amenities() != null) this.amenities = dto.amenities();
+        if (dto.info() != null) this.info = dto.info();
+    }
+
+    public void addRoom(Room room) {
+        boolean exists = rooms.stream()
+                .anyMatch(r -> Objects.equals(r.getName(), room.getName()));
+        if (!exists) {
+            rooms.add(room);
+        }
     }
 }
