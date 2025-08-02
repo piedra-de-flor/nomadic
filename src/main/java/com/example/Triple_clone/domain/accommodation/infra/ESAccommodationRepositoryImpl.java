@@ -87,6 +87,49 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
 
     @Override
     public List<String> autocompleteName(String prefix) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        try {
+            SearchResponse<AccommodationDocument> response = elasticsearchClient.search(s -> s
+                    .index("accommodation")
+                    .query(q -> q
+                            .bool(b -> b
+                                    .should(sh -> sh
+                                            .matchPhrasePrefix(m -> m
+                                                    .field("name")
+                                                    .query(prefix)
+                                            )
+                                    )
+                                    .should(sh -> sh
+                                            .match(m -> m
+                                                    .field("name.ngram")
+                                                    .query(prefix)
+                                            )
+                                    )
+                                    .should(sh -> sh
+                                            .match(m -> m
+                                                    .field("name.edge")
+                                                    .query(prefix)
+                                            )
+                                    )
+                                    .minimumShouldMatch("1")
+                            )
+                    )
+                    .size(10), AccommodationDocument.class);
+
+            return response.hits().hits().stream()
+                    .sorted((a, b) -> {
+                        float scoreB = b.score() != null ? b.score().floatValue() : 0f;
+                        float scoreA = a.score() != null ? a.score().floatValue() : 0f;
+                        return Float.compare(scoreB, scoreA);
+                    })
+                    .map(Hit::source)
+                    .map(AccommodationDocument::getName)
+                    .distinct()
+                    .limit(10)
+                    .collect(Collectors.toList());
+
+        } catch (IOException e) {
+            log.error("[ES 자동완성 오류] {}", e.getMessage());
+            throw new RuntimeException("자동완성 검색 중 오류: " + e.getMessage(), e);
+        }
     }
 }
