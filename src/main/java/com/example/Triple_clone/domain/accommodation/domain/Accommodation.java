@@ -13,7 +13,6 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "accommodations")
 public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

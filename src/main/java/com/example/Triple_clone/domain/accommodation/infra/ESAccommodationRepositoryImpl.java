@@ -62,14 +62,25 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
                 : Query.of(q -> q.bool(b -> b.must(mustQueries)));
 
         try {
-            SearchRequest request = new SearchRequest.Builder()
+            SearchRequest.Builder builder = new SearchRequest.Builder()
                     .index("accommodation")
                     .query(finalQuery)
                     .from((int) pageable.getOffset())
-                    .size(pageable.getPageSize())
-                    .build();
+                    .size(pageable.getPageSize());
 
-            SearchResponse<AccommodationDocument> response = elasticsearchClient.search(request, AccommodationDocument.class);
+            if (sortOption != null) {
+                builder.sort(s -> switch (sortOption) {
+                    case REVIEW_DESC -> s.field(f -> f.field("review_count").order(co.elastic.clients.elasticsearch._types.SortOrder.Desc));
+                    case RATING_DESC -> s.field(f -> f.field("rating").order(co.elastic.clients.elasticsearch._types.SortOrder.Desc));
+                    case STAY_PRICE_ASC -> s.field(f -> f.field("min_stay_price").order(co.elastic.clients.elasticsearch._types.SortOrder.Asc));
+                    case STAY_PRICE_DESC -> s.field(f -> f.field("min_stay_price").order(co.elastic.clients.elasticsearch._types.SortOrder.Desc));
+                    default -> s;
+                });
+            }
+
+            SearchRequest finalRequest = builder.build();
+
+            SearchResponse<AccommodationDocument> response = elasticsearchClient.search(finalRequest, AccommodationDocument.class);
 
             List<AccommodationDocument> results = response.hits().hits().stream()
                     .map(Hit::source)

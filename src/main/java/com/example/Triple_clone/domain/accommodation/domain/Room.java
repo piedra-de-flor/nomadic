@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "rooms")
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
