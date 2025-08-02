@@ -18,13 +18,21 @@ public class Room {
     @Column(length = 255)
     private String name;
     private Integer dayusePrice;
+    private Integer dayuseSalePrice;
+    private Boolean hasDayuseDiscount;
+    private Boolean dayuseSoldout;
+
     @Column(length = 50)
     private String dayuseTime;
+
+    private Integer stayPrice;
+    private Integer staySalePrice;
+    private Boolean hasStayDiscount;
+    private Boolean staySoldout;
     @Column(length = 50)
     private String stayCheckinTime;
     @Column(length = 50)
     private String stayCheckoutTime;
-    private Integer stayPrice;
     private Integer capacity;
     private Integer maxCapacity;
 }
