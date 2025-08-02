@@ -1,0 +1,195 @@
+package com.example.Triple_clone.domain.accommodation.infra;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.JsonData;
+import com.example.Triple_clone.common.logging.logMessage.ESLogMessage;
+import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.domain.SortOption;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
+@RequiredArgsConstructor
+@Repository
+public class ESAccommodationRepositoryImpl2 implements ESAccommodationRepository {
+
+    private final ElasticsearchClient elasticsearchClient;
+
+    @Override
+    public Page<AccommodationDocument> searchByConditionsFromES(
+            String searchKeyword,
+            String category,
+            Float ratingMin, Float ratingMax,
+            String region,
+            Integer dayusePriceMin, Integer dayusePriceMax,
+            Boolean dayuseAvailable,
+            Boolean hasDayuseDiscount,
+            Integer stayPriceMin, Integer stayPriceMax,
+            Boolean stayAvailable,
+            Boolean hasStayDiscount,
+            Integer roomPriceMin, Integer roomPriceMax,
+            Integer roomCapacityMin, Integer roomCapacityMax,
+            String roomCheckoutTime,
+            SortOption sortOption,
+            Pageable pageable
+    ) {
+        List<Query> mustQueries = new ArrayList<>();
+
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            mustQueries.add(QueryBuilders.multiMatch(m -> m
+                    .fields("name^5", "address", "region^2", "category", "intro", "info", "rooms.name^3")
+                    .query(searchKeyword)
+                    .fuzziness("AUTO")
+                    .type(TextQueryType.BestFields)
+            ));
+        }
+
+        if (category != null && !category.isEmpty())
+            mustQueries.add(QueryBuilders.term(t -> t.field("category.keyword").value(category)));
+        if (ratingMin != null)
+            mustQueries.add(QueryBuilders.range(r -> r.field("rating").gte(JsonData.of(ratingMin))));
+        if (ratingMax != null)
+            mustQueries.add(QueryBuilders.range(r -> r.field("rating").lte(JsonData.of(ratingMax))));
+        if (region != null && !region.isEmpty())
+            mustQueries.add(QueryBuilders.term(t -> t.field("region.keyword").value(region)));
+
+        if (dayusePriceMin != null)
+            mustQueries.add(QueryBuilders.range(r -> r.field("dayuse_price").gte(JsonData.of(dayusePriceMin))));
+        if (dayusePriceMax != null)
+            mustQueries.add(QueryBuilders.range(r -> r.field("dayuse_price").lte(JsonData.of(dayusePriceMax))));
+        if (dayuseAvailable != null)
+            mustQueries.add(QueryBuilders.term(t -> t.field("dayuse_soldout").value(!dayuseAvailable)));
+        if (hasDayuseDiscount != null)
+            mustQueries.add(QueryBuilders.term(t -> t.field("has_dayuse_discount").value(hasDayuseDiscount)));
+
+        if (stayPriceMin != null)
+            mustQueries.add(QueryBuilders.range(r -> r.field("stay_price").gte(JsonData.of(stayPriceMin))));
+        if (stayPriceMax != null)
+            mustQueries.add(QueryBuilders.range(r -> r.field("stay_price").lte(JsonData.of(stayPriceMax))));
+        if (stayAvailable != null)
+            mustQueries.add(QueryBuilders.term(t -> t.field("stay_soldout").value(!stayAvailable)));
+        if (hasStayDiscount != null)
+            mustQueries.add(QueryBuilders.term(t -> t.field("has_stay_discount").value(hasStayDiscount)));
+
+        List<Query> roomMust = new ArrayList<>();
+        if (roomPriceMin != null)
+            roomMust.add(QueryBuilders.range(r -> r.field("rooms.stay_price").gte(JsonData.of(roomPriceMin))));
+        if (roomPriceMax != null)
+            roomMust.add(QueryBuilders.range(r -> r.field("rooms.stay_price").lte(JsonData.of(roomPriceMax))));
+        if (roomCapacityMin != null)
+            roomMust.add(QueryBuilders.range(r -> r.field("rooms.capacity").gte(JsonData.of(roomCapacityMin))));
+        if (roomCapacityMax != null)
+            roomMust.add(QueryBuilders.range(r -> r.field("rooms.capacity").lte(JsonData.of(roomCapacityMax))));
+        if (roomCheckoutTime != null && !roomCheckoutTime.isEmpty())
+            roomMust.add(QueryBuilders.match(m -> m.field("rooms.stay_checkout_time").query(roomCheckoutTime)));
+
+        if (!roomMust.isEmpty()) {
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.bool(b -> b.must(roomMust)))
+                    .innerHits(i -> i.size(10))
+            ));
+        }
+
+        BoolQuery boolQuery = new BoolQuery.Builder()
+                .must(mustQueries)
+                .build();
+
+        try {
+            SearchRequest.Builder searchBuilder = new SearchRequest.Builder()
+                    .index("accommodation")
+                    .query(q -> q.bool(boolQuery))
+                    .from((int) pageable.getOffset())
+                    .size(pageable.getPageSize());
+
+            if (sortOption != null) {
+                switch (sortOption) {
+                    case REVIEW_DESC -> searchBuilder.sort(ss -> ss.field(f -> f.field("review_count").order(SortOrder.Desc)));
+                    case DAYUSE_PRICE_ASC -> searchBuilder.sort(ss -> ss.field(f -> f.field("dayuse_price").order(SortOrder.Asc)));
+                    case DAYUSE_PRICE_DESC -> searchBuilder.sort(ss -> ss.field(f -> f.field("dayuse_price").order(SortOrder.Desc)));
+                    case STAY_PRICE_ASC -> searchBuilder.sort(ss -> ss.field(f -> f.field("stay_price").order(SortOrder.Asc)));
+                    case STAY_PRICE_DESC -> searchBuilder.sort(ss -> ss.field(f -> f.field("stay_price").order(SortOrder.Desc)));
+                    case ROOM_PRICE_ASC -> searchBuilder.sort(ss -> ss.field(f ->
+                            f.field("rooms.stay_price")
+                                    .order(SortOrder.Asc)
+                                    .nested(n -> n.path("rooms"))
+                    ));
+                    case ROOM_PRICE_DESC -> searchBuilder.sort(ss -> ss.field(f ->
+                            f.field("rooms.stay_price")
+                                    .order(SortOrder.Desc)
+                                    .nested(n -> n.path("rooms"))
+                    ));
+                    case RATING_DESC -> searchBuilder.sort(ss -> ss.field(f -> f.field("rating").order(SortOrder.Desc)));
+                }
+            }
+
+            SearchResponse<AccommodationDocument> response = elasticsearchClient.search(
+                    searchBuilder.build(),
+                    AccommodationDocument.class
+            );
+
+            List<AccommodationDocument> results = response.hits().hits().stream()
+                    .map(Hit::source)
+                    .collect(Collectors.toList());
+
+            long total = response.hits().total() != null ? response.hits().total().value() : results.size();
+
+            return new PageImpl<>(results, pageable, total);
+
+        } catch (IOException e) {
+            log.error(ESLogMessage.ES_SEARCH_ERROR.format(e.getMessage()));
+            throw new RuntimeException("Elasticsearch 검색 오류: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<String> autocompleteName(String prefix) {
+        try {
+            SearchResponse<Void> response = elasticsearchClient.search(
+                    s -> s
+                            .index("accommodation")
+                            .suggest(su -> su
+                                    .suggesters("name-autocomplete", sg -> sg
+                                            .prefix(prefix)
+                                            .completion(c -> c.field("name_autocomplete"))
+                                    )
+                            ),
+                    Void.class
+            );
+
+            List<String> suggestions = new ArrayList<>();
+            if (response.suggest() != null && response.suggest().get("name-autocomplete") != null) {
+                response.suggest().get("name-autocomplete").forEach(suggestion -> {
+                    if (suggestion.completion() != null && suggestion.completion().options() != null) {
+                        suggestion.completion().options().forEach(option -> {
+                            suggestions.add(option.text());
+                        });
+                    }
+                });
+            }
+            return suggestions;
+
+        } catch (IOException e) {
+            log.error(ESLogMessage.ES_SEARCH_ERROR.format("자동완성 검색 오류 - " + e.getMessage()));
+            throw new RuntimeException("자동완성 검색 중 오류: " + e.getMessage(), e);
+        }
+    }
+}
+
