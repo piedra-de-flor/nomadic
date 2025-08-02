@@ -14,10 +14,16 @@ public class RoomDocument {
     private long id;
     private String name;
     private Integer dayusePrice;
+    private Integer dayuseSalePrice;
+    private Boolean hasDayuseDiscount;
+    private Boolean dayuseSoldout;
     private String dayuseTime;
+    private Integer stayPrice;
+    private Integer staySalePrice;
+    private Boolean hasStayDiscount;
+    private Boolean staySoldout;
     private String stayCheckinTime;
     private String stayCheckoutTime;
-    private Integer stayPrice;
     private Integer capacity;
     private Integer maxCapacity;
 }

@@ -23,18 +23,10 @@ public class AccommodationDocument {
     private String region;
     private String address;
     private String landmarkDistance;
-    private Boolean hasDayuseDiscount;
-    private Integer dayusePrice;
-    private Integer dayuseSalePrice;
-    private Boolean dayuseSoldout;
-    private String dayuseTime;
-    private Boolean hasStayDiscount;
-    private Integer stayPrice;
-    private Integer staySalePrice;
-    private Boolean staySoldout;
-    private String stayCheckinTime;
     private String intro;
     private String amenities;
     private String info;
+    private Integer minStayPrice;
+    private RoomDocument previewRoom;
     private List<RoomDocument> rooms;
 }
