@@ -1,6 +1,5 @@
 package com.example.Triple_clone.domain.accommodation.domain;
 
-import com.example.Triple_clone.domain.accommodation.web.dto.AccommodationDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -73,19 +72,8 @@ public class Accommodation {
         this.info = info;
     }
 
-    public void update(AccommodationDto dto) {
-        if (dto.image() != null) this.image = dto.image();
-        if (dto.name() != null) this.name = dto.name();
-        if (dto.category() != null) this.category = dto.category();
-        if (dto.grade() != null) this.grade = dto.grade();
-        if (dto.rating() != null) this.rating = dto.rating();
-        if (dto.reviewCount() != null) this.reviewCount = dto.reviewCount();
-        if (dto.region() != null) this.region = dto.region();
-        if (dto.address() != null) this.address = dto.address();
-        if (dto.landmarkDistance() != null) this.landmarkDistance = dto.landmarkDistance();
-        if (dto.intro() != null) this.intro = dto.intro();
-        if (dto.amenities() != null) this.amenities = dto.amenities();
-        if (dto.info() != null) this.info = dto.info();
+    public void update() {
+        //구현해야함
     }
 
     public void addRoom(Room room) {

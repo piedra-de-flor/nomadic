@@ -2,112 +2,54 @@ package com.example.Triple_clone.domain.accommodation.web.dto;
 
 import com.example.Triple_clone.domain.accommodation.domain.Accommodation;
 import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import lombok.Builder;
+import lombok.Getter;
 
-public record AccommodationDto(
-        long id,
-        String image,
-        String name,
-        String category,
-        String grade,
-        Float rating,
-        Integer reviewCount,
-        String region,
-        String address,
-        String landmarkDistance,
-        Boolean hasDayuseDiscount,
-        Integer dayusePrice,
-        Integer dayuseSalePrice,
-        Boolean dayuseSoldout,
-        String dayuseTime,
-        Boolean hasStayDiscount,
-        Integer stayPrice,
-        Integer staySalePrice,
-        Boolean staySoldout,
-        String stayCheckinTime,
-        String intro,
-        String amenities,
-        String info
-) {
-    public AccommodationDto(Accommodation accommodation) {
-        this(
-                accommodation.getId(),
-                accommodation.getImage(),
-                accommodation.getName(),
-                accommodation.getCategory(),
-                accommodation.getGrade(),
-                accommodation.getRating(),
-                accommodation.getReviewCount(),
-                accommodation.getRegion(),
-                accommodation.getAddress(),
-                accommodation.getLandmarkDistance(),
-                accommodation.getHasDayuseDiscount(),
-                accommodation.getDayusePrice(),
-                accommodation.getDayuseSalePrice(),
-                accommodation.getDayuseSoldout(),
-                accommodation.getDayuseTime(),
-                accommodation.getHasStayDiscount(),
-                accommodation.getStayPrice(),
-                accommodation.getStaySalePrice(),
-                accommodation.getStaySoldout(),
-                accommodation.getStayCheckinTime(),
-                accommodation.getIntro(),
-                accommodation.getAmenities(),
-                accommodation.getInfo()
-        );
+@Getter
+@Builder
+public class AccommodationDto {
+    private long id;
+    private String image;
+    private String name;
+    private String category;
+    private String grade;
+    private Float rating;
+    private Integer reviewCount;
+    private String region;
+    private String address;
+    private String landmarkDistance;
+    private Integer minStayPrice;
+    private RoomDto previewRoom;
+
+    public static AccommodationDto fromDocument(AccommodationDocument doc) {
+        return AccommodationDto.builder()
+                .id(doc.getId())
+                .image(doc.getImage())
+                .name(doc.getName())
+                .category(doc.getCategory())
+                .grade(doc.getGrade())
+                .rating(doc.getRating())
+                .reviewCount(doc.getReviewCount())
+                .region(doc.getRegion())
+                .address(doc.getAddress())
+                .landmarkDistance(doc.getLandmarkDistance())
+                .minStayPrice(doc.getMinStayPrice())
+                .previewRoom(RoomDto.fromDocument(doc.getPreviewRoom()))
+                .build();
     }
 
-    public AccommodationDto(AccommodationDocument doc) {
-        this(
-                Long.parseLong(String.valueOf(doc.getId())),
-                doc.getImage(),
-                doc.getName(),
-                doc.getCategory(),
-                doc.getGrade(),
-                doc.getRating(),
-                doc.getReviewCount(),
-                doc.getRegion(),
-                doc.getAddress(),
-                doc.getLandmarkDistance(),
-                doc.getHasDayuseDiscount(),
-                doc.getDayusePrice(),
-                doc.getDayuseSalePrice(),
-                doc.getDayuseSoldout(),
-                doc.getDayuseTime(),
-                doc.getHasStayDiscount(),
-                doc.getStayPrice(),
-                doc.getStaySalePrice(),
-                doc.getStaySoldout(),
-                doc.getStayCheckinTime(),
-                doc.getIntro(),
-                doc.getAmenities(),
-                doc.getInfo()
-        );
-    }
-
-    public Accommodation toEntity() {
-        return Accommodation.builder()
-                .image(image)
-                .name(name)
-                .category(category)
-                .grade(grade)
-                .rating(rating)
-                .reviewCount(reviewCount)
-                .region(region)
-                .address(address)
-                .landmarkDistance(landmarkDistance)
-                .hasDayuseDiscount(hasDayuseDiscount)
-                .dayusePrice(dayusePrice)
-                .dayuseSalePrice(dayuseSalePrice)
-                .dayuseSoldout(dayuseSoldout)
-                .dayuseTime(dayuseTime)
-                .hasStayDiscount(hasStayDiscount)
-                .stayPrice(stayPrice)
-                .staySalePrice(staySalePrice)
-                .staySoldout(staySoldout)
-                .stayCheckinTime(stayCheckinTime)
-                .intro(intro)
-                .amenities(amenities)
-                .info(info)
+    public static AccommodationDto fromEntity(Accommodation entity) {
+        return AccommodationDto.builder()
+                .id(entity.getId())
+                .image(entity.getImage())
+                .name(entity.getName())
+                .category(entity.getCategory())
+                .grade(entity.getGrade())
+                .rating(entity.getRating())
+                .reviewCount(entity.getReviewCount())
+                .region(entity.getRegion())
+                .address(entity.getAddress())
+                .landmarkDistance(entity.getLandmarkDistance())
                 .build();
     }
 }

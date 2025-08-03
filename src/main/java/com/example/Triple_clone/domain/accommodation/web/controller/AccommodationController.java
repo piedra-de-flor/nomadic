@@ -1,32 +1,24 @@
 package com.example.Triple_clone.domain.accommodation.web.controller;
 
-import com.example.Triple_clone.domain.accommodation.application.AccommodationService;
+import com.example.Triple_clone.domain.accommodation.application.AccommodationQueryService;
 import com.example.Triple_clone.domain.accommodation.domain.SortOption;
 import com.example.Triple_clone.domain.accommodation.web.dto.AccommodationDto;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import com.example.Triple_clone.domain.accommodation.web.dto.RoomDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/accommodations")
 public class AccommodationController {
-    private final AccommodationService service;
+    private final AccommodationQueryService service;
 
-    @Operation(summary = "숙소 리스트 검색", description = "ES 기반으로 다양한 조건으로 숙소를 검색합니다.")
-    @ApiResponse(responseCode = "200", description = "성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
-    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @GetMapping("/accommodations")
-    public ResponseEntity<List<AccommodationDto>> readAll(
+    @GetMapping("/search")
+    public ResponseEntity<List<AccommodationDto>> searchAccommodations(
             @RequestParam(required = false) String searchKeyword,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Float ratingMin,
@@ -49,8 +41,7 @@ public class AccommodationController {
             Pageable pageable
     ) {
         List<AccommodationDto> result = service.searchES(
-                searchKeyword,
-                category,
+                searchKeyword, category,
                 ratingMin, ratingMax,
                 region,
                 dayusePriceMin, dayusePriceMax,
@@ -66,5 +57,10 @@ public class AccommodationController {
                 pageable
         );
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{id}/rooms")
+    public ResponseEntity<List<RoomDto>> getRoomsByAccommodationId(@PathVariable long id) {
+        return ResponseEntity.ok(service.findRoomsByAccommodationId(id));
     }
 }
