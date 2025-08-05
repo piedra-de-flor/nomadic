@@ -7,6 +7,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.JsonData;
 import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
 import com.example.Triple_clone.domain.accommodation.domain.SortOption;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,131 @@ public class ESAccommodationRepositoryImpl implements ESAccommodationRepository 
                     .query(searchKeyword)
                     .fuzziness("AUTO")
                     .type(TextQueryType.BestFields)
+            ));
+        }
+
+        if (category != null && !category.isEmpty()) {
+            mustQueries.add(QueryBuilders.term(t -> t.field("category").value(category)));
+        }
+
+        if (ratingMin != null) {
+            mustQueries.add(QueryBuilders.range(r -> r.field("rating").gte(JsonData.of(ratingMin))));
+        }
+        if (ratingMax != null) {
+            mustQueries.add(QueryBuilders.range(r -> r.field("rating").lte(JsonData.of(ratingMax))));
+        }
+
+        if (region != null && !region.isEmpty()) {
+            mustQueries.add(QueryBuilders.term(t -> t.field("region").value(region)));
+        }
+
+        if (dayusePriceMin != null || dayusePriceMax != null) {
+            List<Query> dayuseQueries = new ArrayList<>();
+            if (dayusePriceMin != null) {
+                dayuseQueries.add(QueryBuilders.range(r -> r.field("rooms.dayuse_price").gte(JsonData.of(dayusePriceMin))));
+            }
+            if (dayusePriceMax != null) {
+                dayuseQueries.add(QueryBuilders.range(r -> r.field("rooms.dayuse_price").lte(JsonData.of(dayusePriceMax))));
+            }
+
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.bool(b -> b.must(dayuseQueries)))
+            ));
+        }
+
+        if (dayuseAvailable != null && dayuseAvailable) {
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.bool(b -> b
+                            .must(QueryBuilders.exists(e -> e.field("rooms.dayuse_price")))
+                            .mustNot(QueryBuilders.term(t -> t.field("rooms.dayuse_soldout").value(true)))
+                    ))
+            ));
+        }
+
+        if (hasDayuseDiscount != null && hasDayuseDiscount) {
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.term(t -> t.field("rooms.has_dayuse_discount").value(true)))
+            ));
+        }
+
+        if (stayPriceMin != null || stayPriceMax != null) {
+            List<Query> stayQueries = new ArrayList<>();
+            if (stayPriceMin != null) {
+                stayQueries.add(QueryBuilders.range(r -> r.field("rooms.stay_price").gte(JsonData.of(stayPriceMin))));
+            }
+            if (stayPriceMax != null) {
+                stayQueries.add(QueryBuilders.range(r -> r.field("rooms.stay_price").lte(JsonData.of(stayPriceMax))));
+            }
+
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.bool(b -> b.must(stayQueries)))
+            ));
+        }
+
+        if (stayAvailable != null && stayAvailable) {
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.bool(b -> b
+                            .must(QueryBuilders.exists(e -> e.field("rooms.stay_price")))
+                            .mustNot(QueryBuilders.term(t -> t.field("rooms.stay_soldout").value(true)))
+                    ))
+            ));
+        }
+
+        if (hasStayDiscount != null && hasStayDiscount) {
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.term(t -> t.field("rooms.has_stay_discount").value(true)))
+            ));
+        }
+
+        if (roomPriceMin != null || roomPriceMax != null) {
+            List<Query> roomPriceQueries = new ArrayList<>();
+
+            if (roomPriceMin != null) {
+                roomPriceQueries.add(QueryBuilders.bool(b -> b
+                        .should(QueryBuilders.range(r -> r.field("rooms.dayuse_price").gte(JsonData.of(roomPriceMin))))
+                        .should(QueryBuilders.range(r -> r.field("rooms.stay_price").gte(JsonData.of(roomPriceMin))))
+                        .minimumShouldMatch("1")
+                ));
+            }
+            if (roomPriceMax != null) {
+                roomPriceQueries.add(QueryBuilders.bool(b -> b
+                        .should(QueryBuilders.range(r -> r.field("rooms.dayuse_price").lte(JsonData.of(roomPriceMax))))
+                        .should(QueryBuilders.range(r -> r.field("rooms.stay_price").lte(JsonData.of(roomPriceMax))))
+                        .minimumShouldMatch("1")
+                ));
+            }
+
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.bool(b -> b.must(roomPriceQueries)))
+            ));
+        }
+
+        if (roomCapacityMin != null || roomCapacityMax != null) {
+            List<Query> capacityQueries = new ArrayList<>();
+            if (roomCapacityMin != null) {
+                capacityQueries.add(QueryBuilders.range(r -> r.field("rooms.capacity").gte(JsonData.of(roomCapacityMin))));
+            }
+            if (roomCapacityMax != null) {
+                capacityQueries.add(QueryBuilders.range(r -> r.field("rooms.capacity").lte(JsonData.of(roomCapacityMax))));
+            }
+
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.bool(b -> b.must(capacityQueries)))
+            ));
+        }
+
+        if (roomCheckoutTime != null && !roomCheckoutTime.isEmpty()) {
+            mustQueries.add(QueryBuilders.nested(n -> n
+                    .path("rooms")
+                    .query(q -> q.term(t -> t.field("rooms.stay_checkout_time").value(roomCheckoutTime)))
             ));
         }
 
