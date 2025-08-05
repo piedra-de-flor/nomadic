@@ -1,3 +1,4 @@
+/*
 package com.example.Triple_clone.domain.accommodation.application;
 
 import com.example.Triple_clone.domain.accommodation.infra.AccommodationRepository;
@@ -25,3 +26,4 @@ public class AccommodationCommandService {
     }
 }
 
+*/
