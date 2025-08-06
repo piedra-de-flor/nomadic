@@ -1,14 +1,22 @@
 package com.example.Triple_clone.domain.accommodation.application;
 
-import com.example.Triple_clone.domain.accommodation.web.dto.SearchParams;
+import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.domain.SearchKeywords;
+import com.example.Triple_clone.domain.accommodation.domain.RegionKeywords;
+import com.example.Triple_clone.domain.accommodation.domain.PriceRangeKeywords;
+import com.example.Triple_clone.domain.accommodation.domain.SearchSuggestionKeywords;
+import com.example.Triple_clone.domain.accommodation.infra.ESAccommodationRepositoryImpl;
+import com.example.Triple_clone.domain.accommodation.web.dto.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -19,72 +27,87 @@ import java.util.stream.Collectors;
 public class NaturalLanguageSearchService {
 
     private final SpellCheckService spellCheckService;
+    private final ESAccommodationRepositoryImpl esRepository;
+    private final SearchAnalyticsService searchAnalyticsService;
 
-    private static final Map<String, List<String>> LOCATION_KEYWORDS = Map.of(
-            "바다뷰", Arrays.asList("바다", "오션뷰", "씨뷰", "해변", "해안", "비치", "바닷가", "해변가", "오션", "sea", "ocean", "beach"),
-            "산뷰", Arrays.asList("산", "산뷰", "마운틴뷰", "산악", "등산", "mountain", "산속", "산기슭"),
-            "도심", Arrays.asList("도심", "시내", "중심가", "번화가", "downtown", "시티", "도시", "중앙"),
-            "강변", Arrays.asList("강", "강변", "리버뷰", "river", "한강", "강가"),
-            "공원", Arrays.asList("공원", "park", "숲", "자연", "녹지")
-    );
+    // ========== 메인 검색 비즈니스 로직 ==========
+    public SearchResponse executeNaturalLanguageSearch(String query, Pageable pageable, HttpServletRequest request) {
+        Instant startTime = Instant.now();
 
-    private static final Map<String, List<String>> PRICE_KEYWORDS = Map.of(
-            "30000", Arrays.asList("3만원", "삼만원", "30000", "3만", "30k"),
-            "50000", Arrays.asList("5만원", "오만원", "50000", "5만", "50k"),
-            "100000", Arrays.asList("10만원", "십만원", "100000", "10만", "100k"),
-            "150000", Arrays.asList("15만원", "십오만원", "150000", "15만", "150k"),
-            "200000", Arrays.asList("20만원", "이십만원", "200000", "20만", "200k"),
-            "300000", Arrays.asList("30만원", "삼십만원", "300000", "30만", "300k")
-    );
+        // 사용자 정보 추출
+        String userAgent = request.getHeader("User-Agent");
+        String clientIp = getClientIpAddress(request);
+        log.info("자연어 검색 실행: query='{}', ip='{}', userAgent='{}'", query, clientIp, userAgent);
 
-    private static final Map<String, List<String>> TIME_KEYWORDS = Map.of(
-            "late_checkout", Arrays.asList("퇴실이 늦은", "늦은 퇴실", "레이트 체크아웃", "늦게 나가는", "퇴실 늦은", "체크아웃 늦은",
-                    "늦은 체크아웃", "퇴실시간 늦은", "체크아웃 연장", "퇴실연장", "late checkout"),
-            "early_checkin", Arrays.asList("일찍 들어가는", "얼리 체크인", "early checkin", "이른 체크인", "입실 빠른", "체크인 빠른"),
-            "long_stay", Arrays.asList("장기", "긴 숙박", "오래", "연박", "장기 숙박")
-    );
+        // 자연어 파싱
+        SearchParams params = parseAdvancedNaturalLanguage(query);
+        params.setOriginalQuery(query);
 
-    private static final Map<String, List<String>> FACILITY_KEYWORDS = Map.of(
-            "pool", Arrays.asList("수영장", "풀", "pool", "워터파크", "물놀이"),
-            "spa", Arrays.asList("스파", "사우나", "온천", "찜질방", "spa", "목욕탕"),
-            "gym", Arrays.asList("헬스장", "피트니스", "gym", "운동", "운동시설"),
-            "parking", Arrays.asList("주차", "주차장", "parking", "주차 가능", "무료주차"),
-            "wifi", Arrays.asList("와이파이", "wifi", "인터넷", "무선인터넷", "무료와이파이"),
-            "pet", Arrays.asList("반려동물", "펫", "pet", "강아지", "고양이", "애완동물"),
-            "breakfast", Arrays.asList("조식", "아침식사", "breakfast", "조식포함", "무료조식"),
-            "bbq", Arrays.asList("바베큐", "bbq", "고기구이", "바비큐", "그릴")
-    );
+        // ES 검색 실행
+        Page<AccommodationDocument> searchResults = esRepository.advancedNaturalLanguageSearch(params, pageable);
 
-    private static final Map<String, List<String>> DISCOUNT_KEYWORDS = Map.of(
-            "discount", Arrays.asList("할인", "세일", "저렴한", "싼", "특가", "프로모션", "이벤트", "할인중", "세일중",
-                    "discount", "sale", "cheap", "저가", "할인가", "특별가", "기획상품")
-    );
+        // 검색 제안 생성
+        SearchSuggestionResponse suggestions = esRepository.getSearchSuggestions(query);
 
-    private static final Map<String, List<String>> CATEGORY_KEYWORDS = Map.of(
-            "HOTEL", Arrays.asList("호텔", "hotel", "비즈니스호텔", "시티호텔", "부티크호텔"),
-            "PENSION", Arrays.asList("펜션", "pension", "별장", "빌라", "독채"),
-            "RESORT", Arrays.asList("리조트", "resort", "콘도", "콘도미니엄"),
-            "MOTEL", Arrays.asList("모텔", "motel"),
-            "GUESTHOUSE", Arrays.asList("게스트하우스", "민박", "guesthouse", "홈스테이")
-    );
+        // 응답 구성
+        SearchResponse response = SearchResponse.builder()
+                .results(searchResults)
+                .searchParams(params)
+                .suggestions(suggestions)
+                .searchTime(Duration.between(startTime, Instant.now()).toMillis())
+                .totalResults(searchResults.getTotalElements())
+                .build();
 
-    private static final Map<String, List<String>> ROOM_TYPE_KEYWORDS = Map.of(
-            "ocean_view", Arrays.asList("오션뷰", "바다뷰", "씨뷰", "ocean view", "sea view"),
-            "city_view", Arrays.asList("시티뷰", "도심뷰", "city view"),
-            "suite", Arrays.asList("스위트", "suite", "스위트룸", "대형객실"),
-            "twin", Arrays.asList("트윈", "twin", "트윈베드", "침대 2개"),
-            "double", Arrays.asList("더블", "double", "더블베드", "킹베드", "퀸베드"),
-            "ondol", Arrays.asList("온돌", "한실", "바닥난방", "한국식")
-    );
+        // 검색 분석 데이터 수집
+        searchAnalyticsService.recordSearch(SearchEvent.builder()
+                .query(query)
+                .parsedParams(params)
+                .resultCount(searchResults.getTotalElements())
+                .searchTime(response.getSearchTime())
+                .userIp(clientIp)
+                .userAgent(userAgent)
+                .timestamp(Instant.now())
+                .build());
 
-    private static final Map<String, List<String>> CAPACITY_KEYWORDS = Map.of(
-            "2", Arrays.asList("2인", "두명", "커플", "couple", "둘이", "2명"),
-            "3", Arrays.asList("3인", "세명", "3명", "셋이"),
-            "4", Arrays.asList("4인", "네명", "가족", "family", "4명", "넷이"),
-            "6", Arrays.asList("6인", "여섯명", "6명", "대가족", "단체"),
-            "8", Arrays.asList("8인", "여덟명", "8명", "대형", "단체숙박")
-    );
+        log.info("자연어 검색 완료: query='{}', 결과={}건, 소요시간={}ms",
+                query, searchResults.getTotalElements(), response.getSearchTime());
 
+        return response;
+    }
+
+    // ========== 자동완성 비즈니스 로직 ==========
+    public List<AutocompleteResult> getSmartAutocomplete(String query, int limit) {
+        if (query.length() < 2) {
+            return List.of();
+        }
+
+        List<AutocompleteResult> results = esRepository.smartAutocomplete(query);
+
+        // 결과를 타입별로 정렬
+        return results.stream()
+                .sorted((a, b) -> {
+                    // 타입별 우선순위
+                    Map<String, Integer> typeOrder = Map.of(
+                            "exact", 1, "partial", 2, "region", 3, "room", 4, "corrected", 5
+                    );
+                    int orderA = typeOrder.getOrDefault(a.getType(), 6);
+                    int orderB = typeOrder.getOrDefault(b.getType(), 6);
+
+                    if (orderA != orderB) {
+                        return Integer.compare(orderA, orderB);
+                    }
+                    return Double.compare(b.getScore(), a.getScore());
+                })
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    // ========== 검색 제안 비즈니스 로직 ==========
+    public SearchSuggestionResponse getSearchSuggestions(String query) {
+        return esRepository.getSearchSuggestions(query);
+    }
+
+    // ========== 자연어 파싱 메서드 (완전 enum 기반) ==========
     public SearchParams parseAdvancedNaturalLanguage(String query) {
         String correctedQuery = spellCheckService.correctSpelling(query.toLowerCase());
         log.info("원본 쿼리: '{}' → 교정된 쿼리: '{}'", query, correctedQuery);
@@ -95,18 +118,21 @@ public class NaturalLanguageSearchService {
         params.setOriginalQuery(query);
         params.setCorrectedQuery(correctedQuery);
 
-        for (Map.Entry<String, List<String>> entry : LOCATION_KEYWORDS.entrySet()) {
+        // 위치 키워드 파싱 (enum 사용)
+        Map<String, List<String>> locationKeywords = SearchKeywords.getLocationKeywords();
+        for (Map.Entry<String, List<String>> entry : locationKeywords.entrySet()) {
             if (containsAnyKeyword(correctedQuery, entry.getValue())) {
                 searchKeywords.add(entry.getKey());
                 params.addLocationContext(entry.getKey());
             }
         }
 
+        // 가격 범위 추출 (enum 사용)
         Integer priceMax = extractPriceRange(correctedQuery);
         if (priceMax != null) {
-            if (containsAnyKeyword(correctedQuery, Arrays.asList("이하", "아래", "미만", "까지", "대 이하", "원 이하"))) {
+            if (PriceRangeKeywords.isBelowExpression(correctedQuery)) {
                 params.setRoomPriceMax(priceMax);
-            } else if (containsAnyKeyword(correctedQuery, Arrays.asList("이상", "위", "초과", "부터", "대 이상", "원 이상"))) {
+            } else if (PriceRangeKeywords.isAboveExpression(correctedQuery)) {
                 params.setRoomPriceMin(priceMax);
             } else {
                 params.setRoomPriceMin((int)(priceMax * 0.8));
@@ -114,48 +140,63 @@ public class NaturalLanguageSearchService {
             }
         }
 
-        if (containsAnyKeyword(correctedQuery, TIME_KEYWORDS.get("late_checkout"))) {
+        // 시간 관련 키워드 파싱 (enum 사용)
+        Map<String, List<String>> timeKeywords = SearchKeywords.getTimeKeywords();
+        if (timeKeywords.get("late_checkout") != null &&
+                containsAnyKeyword(correctedQuery, timeKeywords.get("late_checkout"))) {
             params.setLateCheckout(true);
             searchKeywords.add("레이트체크아웃");
         }
 
-        if (containsAnyKeyword(correctedQuery, TIME_KEYWORDS.get("early_checkin"))) {
+        if (timeKeywords.get("early_checkin") != null &&
+                containsAnyKeyword(correctedQuery, timeKeywords.get("early_checkin"))) {
             params.setEarlyCheckin(true);
             searchKeywords.add("얼리체크인");
         }
 
-        for (Map.Entry<String, List<String>> entry : FACILITY_KEYWORDS.entrySet()) {
+        // 시설 키워드 파싱 (enum 사용)
+        Map<String, List<String>> facilityKeywords = SearchKeywords.getFacilityKeywords();
+        for (Map.Entry<String, List<String>> entry : facilityKeywords.entrySet()) {
             if (containsAnyKeyword(correctedQuery, entry.getValue())) {
                 searchKeywords.add(entry.getKey());
                 params.addFacility(entry.getKey());
             }
         }
 
-        if (containsAnyKeyword(correctedQuery, DISCOUNT_KEYWORDS.get("discount"))) {
+        // 할인 키워드 파싱 (enum 사용)
+        Map<String, List<String>> discountKeywords = SearchKeywords.getDiscountKeywords();
+        if (discountKeywords.get("discount") != null &&
+                containsAnyKeyword(correctedQuery, discountKeywords.get("discount"))) {
             params.setHasDiscount(true);
             searchKeywords.add("할인");
         }
 
-        for (Map.Entry<String, List<String>> entry : CATEGORY_KEYWORDS.entrySet()) {
+        // 카테고리 키워드 파싱 (enum 사용)
+        Map<String, List<String>> categoryKeywords = SearchKeywords.getCategoryKeywords();
+        for (Map.Entry<String, List<String>> entry : categoryKeywords.entrySet()) {
             if (containsAnyKeyword(correctedQuery, entry.getValue())) {
                 params.setCategory(entry.getKey());
                 break;
             }
         }
 
+        // 수용인원 파싱 (enum 사용)
         Integer capacity = extractCapacity(correctedQuery);
         if (capacity != null) {
             params.setRoomCapacityMin(capacity);
         }
 
-        for (Map.Entry<String, List<String>> entry : ROOM_TYPE_KEYWORDS.entrySet()) {
+        // 객실 타입 파싱 (enum 사용)
+        Map<String, List<String>> roomTypeKeywords = SearchKeywords.getRoomTypeKeywords();
+        for (Map.Entry<String, List<String>> entry : roomTypeKeywords.entrySet()) {
             if (containsAnyKeyword(correctedQuery, entry.getValue())) {
                 searchKeywords.add(entry.getValue().get(0)); // 첫 번째 키워드 사용
                 params.addRoomType(entry.getKey());
             }
         }
 
-        String region = extractRegion(correctedQuery);
+        // 지역 파싱 (enum 사용)
+        String region = RegionKeywords.extractRegion(correctedQuery);
         if (region != null) {
             params.setRegion(region);
             searchKeywords.add(region);
@@ -163,11 +204,22 @@ public class NaturalLanguageSearchService {
 
         searchKeywords.add(correctedQuery);
         params.setSearchKeyword(String.join(" ", searchKeywords));
-
-        params.setSuggestions(generateSearchSuggestions(correctedQuery));
+        params.setSuggestions(SearchSuggestionKeywords.generateSearchSuggestions(correctedQuery));
 
         log.info("파싱 결과: {}", params);
         return params;
+    }
+
+    // ========== Private 유틸리티 메서드들 ==========
+    private String getClientIpAddress(HttpServletRequest request) {
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null || clientIp.isEmpty() || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getHeader("X-Real-IP");
+        }
+        if (clientIp == null || clientIp.isEmpty() || "unknown".equalsIgnoreCase(clientIp)) {
+            clientIp = request.getRemoteAddr();
+        }
+        return clientIp;
     }
 
     private Integer extractPriceRange(String query) {
@@ -188,7 +240,9 @@ public class NaturalLanguageSearchService {
             }
         }
 
-        for (Map.Entry<String, List<String>> entry : PRICE_KEYWORDS.entrySet()) {
+        // enum 사용
+        Map<String, List<String>> priceKeywords = SearchKeywords.getPriceKeywords();
+        for (Map.Entry<String, List<String>> entry : priceKeywords.entrySet()) {
             if (containsAnyKeyword(query, entry.getValue())) {
                 return Integer.valueOf(entry.getKey());
             }
@@ -205,68 +259,15 @@ public class NaturalLanguageSearchService {
             return Integer.parseInt(matcher.group(1));
         }
 
-        // 키워드 기반 인원 추출
-        for (Map.Entry<String, List<String>> entry : CAPACITY_KEYWORDS.entrySet()) {
+        // enum 사용
+        Map<String, List<String>> capacityKeywords = SearchKeywords.getCapacityKeywords();
+        for (Map.Entry<String, List<String>> entry : capacityKeywords.entrySet()) {
             if (containsAnyKeyword(query, entry.getValue())) {
                 return Integer.valueOf(entry.getKey());
             }
         }
 
         return null;
-    }
-
-    private String extractRegion(String query) {
-        Map<String, List<String>> regionKeywords = Map.of(
-                "서울", Arrays.asList("서울", "강남", "강북", "홍대", "명동", "이태원", "압구정", "신촌"),
-                "부산", Arrays.asList("부산", "해운대", "광안리", "남포동", "서면"),
-                "제주", Arrays.asList("제주", "제주도", "서귀포", "중문"),
-                "경기", Arrays.asList("경기", "수원", "성남", "고양", "인천", "분당"),
-                "강원", Arrays.asList("강원", "춘천", "강릉", "속초", "평창", "원주"),
-                "경남", Arrays.asList("경남", "통영", "거제", "남해", "창원"),
-                "전남", Arrays.asList("전남", "여수", "순천", "광주", "목포"),
-                "충남", Arrays.asList("충남", "천안", "아산", "보령", "대전"),
-                "경북", Arrays.asList("경북", "경주", "안동", "포항", "대구")
-        );
-
-        for (Map.Entry<String, List<String>> entry : regionKeywords.entrySet()) {
-            if (containsAnyKeyword(query, entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-
-        return null;
-    }
-
-    private List<String> generateSearchSuggestions(String query) {
-        List<String> suggestions = new ArrayList<>();
-
-        // 유사한 검색어 제안
-        if (query.contains("바다")) {
-            suggestions.add("바다뷰 오션뷰 해변 숙소");
-            suggestions.add("해변가 근처 호텔");
-        }
-
-        if (query.contains("할인")) {
-            suggestions.add("특가 할인 프로모션 숙소");
-            suggestions.add("세일 중인 호텔");
-        }
-
-        if (query.contains("가족")) {
-            suggestions.add("가족 단위 4인실 숙소");
-            suggestions.add("어린이 동반 가능한 호텔");
-        }
-
-        if (query.contains("커플")) {
-            suggestions.add("커플 전용 펜션");
-            suggestions.add("로맨틱 호텔 스위트룸");
-        }
-
-        if (query.contains("수영장")) {
-            suggestions.add("수영장 있는 리조트");
-            suggestions.add("풀빌라 독채");
-        }
-
-        return suggestions.stream().limit(5).collect(Collectors.toList());
     }
 
     private boolean containsAnyKeyword(String text, List<String> keywords) {

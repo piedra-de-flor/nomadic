@@ -15,6 +15,6 @@ import java.util.List;
 public class SpellCheckResponse {
     private String originalQuery;
     private String correctedQuery;
-    private Boolean hasCorrectionl;
+    private Boolean hasCorrection;
     private List<String> suggestions = new ArrayList<>();
 }

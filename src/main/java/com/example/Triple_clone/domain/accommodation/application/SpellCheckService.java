@@ -1,5 +1,7 @@
 package com.example.Triple_clone.domain.accommodation.application;
 
+import com.example.Triple_clone.domain.accommodation.domain.SearchSuggestionKeywords;
+import com.example.Triple_clone.domain.accommodation.web.dto.SpellCheckResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -63,6 +65,27 @@ public class SpellCheckService {
         typos.put("50k", "50000");
     }
 
+    // ========== 메인 오타 교정 비즈니스 로직 ==========
+    public SpellCheckResponse checkSpelling(String query) {
+        String corrected = correctSpelling(query);
+        boolean hasCorrection = !query.equals(corrected);
+
+        SpellCheckResponse response = SpellCheckResponse.builder()
+                .originalQuery(query)
+                .correctedQuery(corrected)
+                .hasCorrection(hasCorrection)
+                .build();
+
+        if (hasCorrection) {
+            List<String> suggestions = generateSpellSuggestions(corrected);
+            response.setSuggestions(suggestions);
+            log.info("오타 교정됨: '{}' → '{}'", query, corrected);
+        }
+
+        return response;
+    }
+
+    // ========== 기존 단순 교정 메서드 ==========
     public String correctSpelling(String input) {
         String corrected = input;
         for (Map.Entry<String, String> entry : COMMON_TYPOS.entrySet()) {
@@ -73,7 +96,7 @@ public class SpellCheckService {
         return corrected;
     }
 
-    // 레벤슈타인 거리 기반 유사도 검사
+    // ========== 레벤슈타인 거리 기반 유사도 검사 ==========
     public List<String> getSuggestions(String input, List<String> candidates) {
         return candidates.stream()
                 .filter(candidate -> levenshteinDistance(input, candidate) <= 2)
@@ -85,6 +108,7 @@ public class SpellCheckService {
                 .collect(Collectors.toList());
     }
 
+    // ========== Private 메서드들 ==========
     private int levenshteinDistance(String a, String b) {
         int[][] dp = new int[a.length() + 1][b.length() + 1];
 
@@ -101,5 +125,9 @@ public class SpellCheckService {
             }
         }
         return dp[a.length()][b.length()];
+    }
+
+    private List<String> generateSpellSuggestions(String correctedQuery) {
+        return SearchSuggestionKeywords.generateSpellCheckSuggestions(correctedQuery);
     }
 }
