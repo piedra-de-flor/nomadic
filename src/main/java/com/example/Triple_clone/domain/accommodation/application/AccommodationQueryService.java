@@ -17,16 +17,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AccommodationQueryService {
-
-    // Repository
     private final AccommodationRepository repository;
 
-    // 전문 서비스들
     private final NaturalLanguageSearchService naturalLanguageSearchService;
     private final SearchAnalyticsService searchAnalyticsService;
     private final SpellCheckService spellCheckService;
 
-    // ========== 기본 MySQL 조회 메서드 ==========
     public Accommodation findById(long accommodationId) {
         Accommodation accommodation = repository.findById(accommodationId)
                 .orElseThrow(() -> {
@@ -35,21 +31,6 @@ public class AccommodationQueryService {
                 });
 
         return accommodation;
-    }
-
-    // ========== 자연어 검색 관련 메서드 ==========
-    public SearchResponse naturalLanguageSearch(String query, Pageable pageable, HttpServletRequest request) {
-        try {
-            log.info("자연어 검색 API 요청: query='{}'", query);
-            SearchResponse response = naturalLanguageSearchService.executeNaturalLanguageSearch(query, pageable, request);
-            log.info("자연어 검색 API 완료: query='{}', 결과={}건", query, response.getTotalResults());
-            return response;
-        } catch (Exception e) {
-            log.error("자연어 검색 API 오류: query='{}', error='{}'", query, e.getMessage(), e);
-            return SearchResponse.builder()
-                    .error("검색 중 오류가 발생했습니다.")
-                    .build();
-        }
     }
 
     // ========== 자동완성 관련 메서드 ==========
