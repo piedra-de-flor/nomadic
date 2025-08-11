@@ -117,7 +117,7 @@ public class DataMigrationController {
                 .intro(accommodation.getIntro())
                 .amenities(accommodation.getAmenities())
                 .info(accommodation.getInfo())
-                .minStayPrice(minStayPrice)  // 계산된 값
+                .minStayPrice(minStayPrice)
                 .previewRoom(previewRoom)
                 .rooms(roomDocuments)
                 .build();

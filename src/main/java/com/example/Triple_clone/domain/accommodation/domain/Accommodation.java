@@ -42,7 +42,6 @@ public class Accommodation {
     @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Room> rooms = new ArrayList<>();
 
-
     @Builder
     public Accommodation(
             String image,
@@ -72,8 +71,28 @@ public class Accommodation {
         this.info = info;
     }
 
-    public void update() {
-        //구현해야함
+    public void update(
+            String image,
+            String name,
+            String category,
+            String grade,
+            String region,
+            String address,
+            String landmarkDistance,
+            String intro,
+            String amenities,
+            String info
+    ) {
+        if (image != null) this.image = image;
+        if (name != null) this.name = name;
+        if (category != null) this.category = category;
+        if (grade != null) this.grade = grade;
+        if (region != null) this.region = region;
+        if (address != null) this.address = address;
+        if (landmarkDistance != null) this.landmarkDistance = landmarkDistance;
+        if (intro != null) this.intro = intro;
+        if (amenities != null) this.amenities = amenities;
+        if (info != null) this.info = info;
     }
 
     public void addRoom(Room room) {
@@ -82,5 +101,13 @@ public class Accommodation {
         if (!exists) {
             rooms.add(room);
         }
+    }
+
+    public void removeRoom(Room room) {
+        rooms.remove(room);
+    }
+
+    public boolean containsRoom(Room room) {
+        return rooms.contains(room);
     }
 }
