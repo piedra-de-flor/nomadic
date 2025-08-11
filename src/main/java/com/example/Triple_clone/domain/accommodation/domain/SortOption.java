@@ -1,6 +1,7 @@
 package com.example.Triple_clone.domain.accommodation.domain;
 
 public enum SortOption {
+    ID_ASC,
     REVIEW_DESC,
     DAYUSE_PRICE_ASC,
     DAYUSE_PRICE_DESC,

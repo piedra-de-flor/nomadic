@@ -1,6 +1,8 @@
 package com.example.Triple_clone.domain.accommodation.web.controller;
 
 import com.example.Triple_clone.domain.accommodation.application.AccommodationQueryService;
+import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.domain.SortOption;
 import com.example.Triple_clone.domain.accommodation.web.dto.AutocompleteResult;
 import com.example.Triple_clone.domain.accommodation.web.dto.SpellCheckResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +36,16 @@ public class AccommodationController {
     ) {
         SpellCheckResponse response = accommodationQueryService.checkSpelling(query);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<AccommodationDocument>> searchAccommodations(
+            @RequestParam(required = false) String q,
+            @RequestParam(defaultValue = "ID_ASC") SortOption sort,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        List<AccommodationDocument> results = accommodationQueryService.searchAccommodations(q, sort, page, size);
+        return ResponseEntity.ok(results);
     }
 }

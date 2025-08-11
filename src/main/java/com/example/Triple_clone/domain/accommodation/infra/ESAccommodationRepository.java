@@ -1,8 +1,10 @@
 package com.example.Triple_clone.domain.accommodation.infra;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.domain.SortOption;
 import com.example.Triple_clone.domain.accommodation.web.dto.AutocompleteResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -123,6 +125,67 @@ public class ESAccommodationRepository {
             log.error("유사 호텔명 검색 오류: {}", e.getMessage(), e);
             return Collections.emptyList();
         }
+    }
+
+    public List<AccommodationDocument> searchAccommodationsWithSort(String query, SortOption sortOption, int page, int size) {
+        try {
+            SearchResponse<AccommodationDocument> response = elasticsearchClient.search(s -> s
+                    .index("accommodation")
+                    .query(q -> {
+                        if (query == null || query.trim().isEmpty()) {
+                            return q.matchAll(m -> m);
+                        } else {
+                            return q.bool(b -> b
+                                    .should(sh -> sh.match(m -> m.field("name").query(query).boost(3.0f)))
+                                    .should(sh -> sh.match(m -> m.field("address").query(query).boost(2.0f)))
+                                    .should(sh -> sh.match(m -> m.field("region").query(query).boost(2.0f)))
+                                    .should(sh -> sh.match(m -> m.field("amenities").query(query).boost(1.0f)))
+                            );
+                        }
+                    })
+                    .sort(buildSortQuery(sortOption))
+                    .from(page * size)
+                    .size(size), AccommodationDocument.class);
+
+            return response.hits().hits().stream()
+                    .map(hit -> hit.source())
+                    .collect(Collectors.toList());
+
+        } catch (IOException e) {
+            log.error("정렬 검색 오류: {}", e.getMessage(), e);
+            return Collections.emptyList();
+        }
+    }
+
+    private co.elastic.clients.elasticsearch._types.SortOptions buildSortQuery(SortOption sortOption) {
+        return switch (sortOption) {
+            case ID_ASC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("id").order(SortOrder.Asc)));
+
+            case REVIEW_DESC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("reviewCount").order(SortOrder.Desc)));
+
+            case RATING_DESC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("rating").order(SortOrder.Desc)));
+
+            case DAYUSE_PRICE_ASC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("rooms.dayusePrice").order(SortOrder.Asc).missing("_last")));
+
+            case DAYUSE_PRICE_DESC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("rooms.dayusePrice").order(SortOrder.Desc).missing("_last")));
+
+            case STAY_PRICE_ASC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("rooms.stayPrice").order(SortOrder.Asc).missing("_last")));
+
+            case STAY_PRICE_DESC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("rooms.stayPrice").order(SortOrder.Desc).missing("_last")));
+
+            case ROOM_PRICE_ASC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("minStayPrice").order(SortOrder.Asc).missing("_last")));
+
+            case ROOM_PRICE_DESC -> co.elastic.clients.elasticsearch._types.SortOptions.of(s -> s
+                    .field(f -> f.field("minStayPrice").order(SortOrder.Desc).missing("_last")));
+        };
     }
 
     private String determineMatchType(String query, String result) {

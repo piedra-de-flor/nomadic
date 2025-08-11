@@ -2,6 +2,8 @@ package com.example.Triple_clone.domain.accommodation.application;
 
 import com.example.Triple_clone.common.logging.logMessage.RecommendLogMessage;
 import com.example.Triple_clone.domain.accommodation.domain.Accommodation;
+import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.domain.SortOption;
 import com.example.Triple_clone.domain.accommodation.infra.AccommodationRepository;
 import com.example.Triple_clone.domain.accommodation.web.dto.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,7 +30,6 @@ public class AccommodationQueryService {
         return accommodation;
     }
 
-    // ========== 자동완성 관련 메서드 ==========
     public List<AutocompleteResult> getSmartAutocomplete(String query, int limit) {
         try {
             log.debug("자동완성 요청: q='{}', limit={}", query, limit);
@@ -41,7 +42,6 @@ public class AccommodationQueryService {
         }
     }
 
-    // ========== 오타 교정 관련 메서드 ==========
     public SpellCheckResponse checkSpelling(String query) {
         try {
             log.debug("오타 교정 요청: query='{}'", query);
@@ -55,6 +55,18 @@ public class AccommodationQueryService {
                     .correctedQuery(query)
                     .hasCorrection(false)
                     .build();
+        }
+    }
+
+    public List<AccommodationDocument> searchAccommodations(String query, SortOption sortOption, int page, int size) {
+        try {
+            log.debug("정렬 검색 요청: query='{}', sort={}, page={}, size={}", query, sortOption, page, size);
+            List<AccommodationDocument> results = searchService.searchWithSort(query, sortOption, page, size);
+            log.debug("정렬 검색 완료: query='{}', sort={}, 결과={}건", query, sortOption, results.size());
+            return results;
+        } catch (Exception e) {
+            log.error("정렬 검색 오류: query='{}', sort={}, error='{}'", query, sortOption, e.getMessage(), e);
+            return List.of();
         }
     }
 }
