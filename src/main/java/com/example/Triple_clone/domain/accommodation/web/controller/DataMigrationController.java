@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class DataMigrationController {
 
@@ -85,7 +85,6 @@ public class DataMigrationController {
     }
 
     private AccommodationDocument convertToDocument(Accommodation accommodation) {
-        // 1. Room 데이터 변환
         List<RoomDocument> roomDocuments = null;
         RoomDocument previewRoom = null;
         Integer minStayPrice = null;
@@ -95,10 +94,8 @@ public class DataMigrationController {
                     .map(this::convertToRoomDocument)
                     .collect(Collectors.toList());
 
-            // 2. 첫 번째 방을 preview room으로 설정
             previewRoom = roomDocuments.get(0);
 
-            // 3. minStayPrice 계산 (MySQL에 없는 필드)
             minStayPrice = accommodation.getRooms().stream()
                     .filter(room -> room.getStayPrice() != null && room.getStayPrice() > 0)
                     .mapToInt(Room::getStayPrice)
@@ -106,7 +103,6 @@ public class DataMigrationController {
                     .orElse(0);
         }
 
-        // 4. AccommodationDocument 생성
         return AccommodationDocument.builder()
                 .id(accommodation.getId())
                 .image(accommodation.getImage())
@@ -150,7 +146,6 @@ public class DataMigrationController {
     @GetMapping("/es-status")
     public ResponseEntity<Map<String, Object>> getESStatus() {
         try {
-            // ES 인덱스 상태 확인
             var countResponse = elasticsearchClient.count(c -> c.index("accommodation"));
 
             Map<String, Object> status = new HashMap<>();
