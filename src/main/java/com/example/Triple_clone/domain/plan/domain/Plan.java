@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +36,11 @@ public class Plan {
 
     private Date endDay;
 
-    @OneToMany(mappedBy = "plan")
-    private List<DetailPlan> plans;
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    private List<DetailPlan> plans = new ArrayList<>();
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlanShare> planShares = new ArrayList<>();
 
     @Builder
     public Plan(Member member, String place, Partner partner, Date startDay, Date endDay, List<Style> styles) {

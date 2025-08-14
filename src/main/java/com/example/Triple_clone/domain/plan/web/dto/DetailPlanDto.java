@@ -5,6 +5,7 @@ import com.example.Triple_clone.domain.plan.domain.Place;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public record DetailPlanDto(
@@ -13,7 +14,10 @@ public record DetailPlanDto(
         Location location,
         @NotNull(message = "Date can not be null")
         Date date,
-        String time
+        String time,
+        Long version,
+        Long lastModifiedBy,
+        LocalDateTime lastModifiedAt
 ) {
     public Place toEntity(Plan plan) {
         return new Place(plan,
