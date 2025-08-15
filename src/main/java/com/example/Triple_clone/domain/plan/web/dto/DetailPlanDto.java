@@ -15,9 +15,7 @@ public record DetailPlanDto(
         @NotNull(message = "Date can not be null")
         Date date,
         String time,
-        Long version,
-        Long lastModifiedBy,
-        LocalDateTime lastModifiedAt
+        Long version
 ) {
     public Place toEntity(Plan plan) {
         return new Place(plan,

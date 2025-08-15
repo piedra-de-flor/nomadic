@@ -63,4 +63,8 @@ public class Plan {
     public boolean isMine(long userId) {
         return this.member.getId() == userId;
     }
+
+    public void addDetailPlan(DetailPlan detailPlan) {
+        plans.add(detailPlan);
+    }
 }

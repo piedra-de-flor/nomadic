@@ -25,29 +25,19 @@ public class DetailPlan {
 
     @Version
     private Long version;
-    private Long lastModifiedBy;
-    private LocalDateTime lastModifiedAt;
-    private Long createdBy;
-    private LocalDateTime createdAt;
 
     @Builder
-    public DetailPlan(Plan plan, Location location, Date date, String time, Long createdBy) {
+    public DetailPlan(Plan plan, Location location, Date date, String time) {
         this.plan = plan;
         this.location = location;
         this.date = date;
         this.time = time;
-        this.createdBy = createdBy;
-        this.createdAt = LocalDateTime.now();
-        this.lastModifiedBy = createdBy;
-        this.lastModifiedAt = LocalDateTime.now();
     }
 
-    public void update(Location location, Date date, String time, Long modifiedBy) {
+    public void update(Location location, Date date, String time) {
         this.location = location;
         this.date = date;
         this.time = time;
-        this.lastModifiedBy = modifiedBy;
-        this.lastModifiedAt = LocalDateTime.now();
     }
 
     public DetailPlanDto toDto() {
@@ -56,13 +46,7 @@ public class DetailPlan {
                 this.location,
                 this.date,
                 this.time,
-                this.version,
-                this.lastModifiedBy,
-                this.lastModifiedAt
+                this.version
         );
-    }
-
-    public boolean isModifiedAfter(LocalDateTime checkTime) {
-        return this.lastModifiedAt.isAfter(checkTime);
     }
 }
