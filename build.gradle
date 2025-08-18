@@ -87,6 +87,9 @@ dependencies {
 
 	//influxDB
 	implementation 'com.influxdb:influxdb-client-java:6.11.0'
+
+	//websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 sourceSets {
