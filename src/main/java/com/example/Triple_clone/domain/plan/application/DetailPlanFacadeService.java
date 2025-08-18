@@ -15,6 +15,7 @@ import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class DetailPlanFacadeService {
     private final RecommendService recommendService;
     private final AccommodationQueryService accommodationService;
 
+    @Transactional
     public DetailPlanDto create(DetailPlanDto detailPlanDto) {
         Plan plan = planService.findById(detailPlanDto.planId());
         DetailPlan detailPlan = detailPlanDto.toEntity(plan);
@@ -37,6 +39,7 @@ public class DetailPlanFacadeService {
         return detailPlanDto;
     }
 
+    @Transactional
     public DetailPlanDto addRecommendation(long recommendationId, long planId) {
         Plan plan = planService.findById(planId);
         Recommendation recommendation = recommendService.findById(recommendationId);
@@ -47,6 +50,7 @@ public class DetailPlanFacadeService {
         return detailPlanDto;
     }
 
+    @Transactional
     public ReservationCreateDto createReservation(ReservationCreateDto reservationCreateDto) {
         Plan plan = planService.findById(reservationCreateDto.planId());
         Accommodation accommodation = accommodationService.findById(reservationCreateDto.accommodationId());
@@ -67,19 +71,20 @@ public class DetailPlanFacadeService {
         return response;
     }
 
+    @Transactional
     public DetailPlanDto update(DetailPlanUpdateDto updateDto) {
         Plan plan = planService.findById(updateDto.planId());
         DetailPlan detailPlan = detailPlanService.findById(updateDto.detailPlanId());
 
         if (isContain(plan, detailPlan)) {
-            detailPlanService.update(detailPlan, updateDto);
+            DetailPlan updatedDetailPlan = detailPlanService.update(detailPlan, updateDto);
 
             return new DetailPlanDto(
-                    detailPlan.getId(),
-                    detailPlan.getLocation(),
-                    detailPlan.getDate(),
-                    detailPlan.getTime(),
-                    detailPlan.getVersion()
+                    updatedDetailPlan.getId(),
+                    updatedDetailPlan.getLocation(),
+                    updatedDetailPlan.getDate(),
+                    updatedDetailPlan.getTime(),
+                    updatedDetailPlan.getVersion()
                     );
         }
 
@@ -87,6 +92,7 @@ public class DetailPlanFacadeService {
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
+    @Transactional
     public DetailPlan delete(long planId, long detailPlanId) {
         Plan plan = planService.findById(planId);
         DetailPlan detailPlan = detailPlanService.findById(detailPlanId);

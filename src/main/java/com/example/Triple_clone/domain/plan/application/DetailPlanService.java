@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -27,10 +28,13 @@ public class DetailPlanService {
         repository.save(detailPlan);
     }
 
-    public void update(DetailPlan detailPlan, DetailPlanUpdateDto updateDto) {
+    @Transactional
+    public DetailPlan update(DetailPlan detailPlan, DetailPlanUpdateDto updateDto) {
         detailPlan.update(updateDto.location(),
                 updateDto.date(),
                 updateDto.time());
+
+        return repository.save(detailPlan);
     }
 
     public void delete(DetailPlan detailPlan) {
