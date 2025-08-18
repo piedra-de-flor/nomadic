@@ -41,15 +41,7 @@ public class DetailPlanFacadeService {
         Plan plan = planService.findById(planId);
         Recommendation recommendation = recommendService.findById(recommendationId);
 
-        DetailPlanDto detailPlanDto = new DetailPlanDto(
-                planId,
-                recommendation.getLocation(),
-                plan.getStartDay(),
-                "00:00",
-                null,
-                null,
-                null
-        );
+        DetailPlanDto detailPlanDto = new DetailPlanDto(planId, recommendation.getLocation(), plan.getStartDay(), "00:00", null);
         this.create(detailPlanDto);
 
         return detailPlanDto;
@@ -75,20 +67,20 @@ public class DetailPlanFacadeService {
         return response;
     }
 
-    public DetailPlanDto update(DetailPlanUpdateDto updateDto, String userId) {
+    public DetailPlanDto update(DetailPlanUpdateDto updateDto) {
         Plan plan = planService.findById(updateDto.planId());
         DetailPlan detailPlan = detailPlanService.findById(updateDto.detailPlanId());
 
         if (isContain(plan, detailPlan)) {
-            detailPlanService.update(detailPlan, updateDto, userId);
+            detailPlanService.update(detailPlan, updateDto);
 
-            return new DetailPlanDto(updateDto.planId(),
-                    updateDto.location(),
-                    updateDto.date(),
-                    updateDto.time(),
-                    detailPlan.getVersion(),
-                    detailPlan.getLastModifiedBy(),
-                    detailPlan.getLastModifiedAt());
+            return new DetailPlanDto(
+                    detailPlan.getId(),
+                    detailPlan.getLocation(),
+                    detailPlan.getDate(),
+                    detailPlan.getTime(),
+                    detailPlan.getVersion()
+                    );
         }
 
         log.warn(PlanLogMessage.PLAN_DOESNT_HAVE_THE_DETAIL_PLAN.format("세부 계획 수정 실패", plan.getId(), detailPlan.getId()));
