@@ -49,18 +49,4 @@ public class PlanChangeHistory {
         this.changeData = changeData;
         this.createdAt = LocalDateTime.now();
     }
-
-    public static PlanChangeHistory createDetailPlanChange(Plan plan, Member member,
-                                                           ChangeType changeType,
-                                                           DetailPlan detailPlan,
-                                                           String changeData) {
-        return PlanChangeHistory.builder()
-                .plan(plan)
-                .changedBy(member)
-                .changeType(changeType)
-                .targetId(detailPlan.getId())
-                .targetType("DetailPlan")
-                .changeData(changeData)
-                .build();
-    }
 }
