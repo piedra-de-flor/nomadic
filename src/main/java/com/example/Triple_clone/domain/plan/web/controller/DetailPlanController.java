@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.plan.web.controller;
 
+import com.example.Triple_clone.common.auth.MemberEmailAspect;
 import com.example.Triple_clone.domain.plan.application.DetailPlanFacadeService;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.plan.web.dto.DetailPlanDto;
@@ -29,8 +30,9 @@ public class DetailPlanController {
     @PostMapping("/detail-plan")
     public ResponseEntity<DetailPlanDto> create(
             @Parameter(description = "세부 계획 생성 요청 정보", required = true)
-            @RequestBody DetailPlanDto detailPlanDto) {
-        DetailPlanDto response = service.create(detailPlanDto);
+            @RequestBody DetailPlanDto detailPlanDto,
+            @MemberEmailAspect String email) {
+        DetailPlanDto response = service.create(detailPlanDto, email);
         return ResponseEntity.ok(response);
     }
 
@@ -44,8 +46,9 @@ public class DetailPlanController {
             @Parameter(description = "추가할 추천 장소 ID", required = true)
             @RequestParam long target,
             @Parameter(description = "추천 장소를 생성할 PLAN ID", required = true)
-            @RequestParam long planId) {
-        DetailPlanDto response = service.addRecommendation(target, planId);
+            @RequestParam long planId,
+            @MemberEmailAspect String email) {
+        DetailPlanDto response = service.addRecommendation(target, planId, email);
         return ResponseEntity.ok(response);
     }
 
@@ -57,8 +60,9 @@ public class DetailPlanController {
     @PostMapping("/detail-plan/reservation")
     public ResponseEntity<ReservationCreateDto> create(
             @Parameter(description = "예약 생성 요청 정보", required = true)
-            @RequestBody ReservationCreateDto reservationCreateDto) {
-        ReservationCreateDto response = service.createReservation(reservationCreateDto);
+            @RequestBody ReservationCreateDto reservationCreateDto,
+            @MemberEmailAspect String email) {
+        ReservationCreateDto response = service.createReservation(reservationCreateDto, email);
         return ResponseEntity.ok(response);
     }
 
@@ -70,8 +74,9 @@ public class DetailPlanController {
     @GetMapping("/detail-plans")
     public ResponseEntity<List<DetailPlanDto>> readAll(
             @Parameter(description = "세부 계획 전체 조회 요청 정보", required = true)
-            @RequestParam long planId) {
-        List<DetailPlanDto> response = service.readAll(planId);
+            @RequestParam long planId,
+            @MemberEmailAspect String email) {
+        List<DetailPlanDto> response = service.readAll(planId, email);
         return ResponseEntity.ok(response);
     }
 
@@ -83,8 +88,9 @@ public class DetailPlanController {
     @PatchMapping("/detail-plan")
     public ResponseEntity<DetailPlanDto> update(
             @Parameter(description = "세부 계획 수정 요청 정보", required = true)
-            @RequestBody DetailPlanUpdateDto updateDto) {
-        DetailPlanDto response = service.update(updateDto);
+            @RequestBody DetailPlanUpdateDto updateDto,
+            @MemberEmailAspect String email) {
+        DetailPlanDto response = service.update(updateDto, email);
         return ResponseEntity.ok(response);
     }
 
@@ -98,8 +104,9 @@ public class DetailPlanController {
             @Parameter(description = "삭제할 세부 계획이 포함된 계획 ID", required = true)
             @RequestParam long planId,
             @Parameter(description = "삭제할 세부 계획 ID", required = true)
-            @RequestParam long detailPlanId) {
-        DetailPlan detailPlan = service.delete(planId, detailPlanId);
+            @RequestParam long detailPlanId,
+            @MemberEmailAspect String email) {
+        DetailPlan detailPlan = service.delete(planId, detailPlanId, email);
         return ResponseEntity.ok(detailPlan);
     }
 }

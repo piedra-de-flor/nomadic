@@ -6,6 +6,7 @@ import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
 import com.example.Triple_clone.domain.member.application.UserService;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.Plan;
+import com.example.Triple_clone.domain.plan.domain.PlanShare;
 import com.example.Triple_clone.domain.plan.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ import java.util.List;
 public class PlanFacadeService {
     private final UserService userService;
     private final PlanService planService;
+    private final PlanShareService planShareService;
+    private final PlanPermissionUtils planPermissionUtils;
 
     @Transactional
     public PlanCreateDto create(PlanCreateDto createDto, String email) {
@@ -34,7 +37,7 @@ public class PlanFacadeService {
         Member member = userService.findByEmail(email);
         Plan plan = planService.findById(readRequestDto.planId());
 
-        if (plan.isMine(member.getId())) {
+        if (plan.isMine(member.getId()) || planPermissionUtils.hasViewPermission(plan, member)) {
             return new PlanReadResponseDto(plan);
         }
 
@@ -49,6 +52,14 @@ public class PlanFacadeService {
         for (Plan plan : member.getPlans()) {
             plans.add(new PlanReadResponseDto(plan));
         }
+
+        List<PlanShare> sharedPlans = planShareService.findByMemberId(member.getId());
+        for (PlanShare planShare : sharedPlans) {
+            if (planShare.canView()) {
+                plans.add(new PlanReadResponseDto(planShare.getPlan()));
+            }
+        }
+
         return new PlanReadAllResponseDto(plans);
     }
 
@@ -57,7 +68,7 @@ public class PlanFacadeService {
         Member member = userService.findByEmail(email);
         Plan plan = planService.findById(updateDto.planDto().planId());
 
-        if (plan.isMine(member.getId())) {
+        if (plan.isMine(member.getId()) || planPermissionUtils.hasEditPermission(plan, member)) {
             planService.updateStyle(updateDto);
             return updateDto;
         }
@@ -71,7 +82,7 @@ public class PlanFacadeService {
         Member member = userService.findByEmail(email);
         Plan plan = planService.findById(updateDto.planDto().planId());
 
-        if (plan.isMine(member.getId())) {
+        if (plan.isMine(member.getId()) || planPermissionUtils.hasEditPermission(plan, member)) {
             planService.updatePartner(updateDto);
             return updateDto;
         }
