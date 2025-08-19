@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum ShareRole {
-    OWNER("소유자"),
     EDITOR("편집자"),
     VIEWER("조회자");
 

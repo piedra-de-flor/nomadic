@@ -60,11 +60,14 @@ public class PlanShare {
     }
 
     public boolean canEdit() {
-        return this.status == ShareStatus.ACCEPTED &&
-                (this.role == ShareRole.EDITOR || this.role == ShareRole.OWNER);
+        return this.status == ShareStatus.ACCEPTED && this.role == ShareRole.EDITOR;
     }
 
     public boolean canView() {
-        return this.status == ShareStatus.ACCEPTED;
+        return this.status == ShareStatus.ACCEPTED && this.role != null;
+    }
+
+    public boolean isSharedWith(Member member) {
+        return this.member.getId() == member.getId();
     }
 }
