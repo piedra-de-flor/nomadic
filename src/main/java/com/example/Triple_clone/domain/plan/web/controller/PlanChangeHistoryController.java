@@ -3,7 +3,7 @@ package com.example.Triple_clone.domain.plan.web.controller;
 import com.example.Triple_clone.common.auth.MemberEmailAspect;
 import com.example.Triple_clone.domain.plan.application.PlanChangeHistoryFacadeService;
 import com.example.Triple_clone.domain.plan.domain.ChangeType;
-import com.example.Triple_clone.domain.plan.web.dto.PlanChangeHistoryResponseDto;
+import com.example.Triple_clone.domain.plan.web.dto.planhistory.PlanChangeHistoryResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

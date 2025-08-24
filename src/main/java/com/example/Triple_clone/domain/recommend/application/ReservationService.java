@@ -3,7 +3,7 @@ package com.example.Triple_clone.domain.recommend.application;
 import com.example.Triple_clone.common.logging.logMessage.MemberLogMessage;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.member.domain.Member;
-import com.example.Triple_clone.domain.plan.web.dto.DetailPlanDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanDto;
 import com.example.Triple_clone.domain.member.infra.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;

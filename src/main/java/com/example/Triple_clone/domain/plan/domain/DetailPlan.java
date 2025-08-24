@@ -1,10 +1,9 @@
 package com.example.Triple_clone.domain.plan.domain;
 
-import com.example.Triple_clone.domain.plan.web.dto.DetailPlanDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanDto;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter

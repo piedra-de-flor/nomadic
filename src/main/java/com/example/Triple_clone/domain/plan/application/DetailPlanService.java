@@ -1,7 +1,7 @@
 package com.example.Triple_clone.domain.plan.application;
 
 import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
-import com.example.Triple_clone.domain.plan.web.dto.DetailPlanUpdateDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateDto;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.plan.infra.DetailPlanRepository;
 import jakarta.persistence.EntityNotFoundException;

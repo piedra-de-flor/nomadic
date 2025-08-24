@@ -7,7 +7,7 @@ import com.example.Triple_clone.domain.member.application.UserService;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.domain.PlanShare;
-import com.example.Triple_clone.domain.plan.web.dto.*;
+import com.example.Triple_clone.domain.plan.web.dto.plan.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

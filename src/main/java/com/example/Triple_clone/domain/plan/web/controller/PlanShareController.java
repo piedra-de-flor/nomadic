@@ -2,8 +2,8 @@ package com.example.Triple_clone.domain.plan.web.controller;
 
 import com.example.Triple_clone.common.auth.MemberEmailAspect;
 import com.example.Triple_clone.domain.plan.application.PlanShareFacadeService;
-import com.example.Triple_clone.domain.plan.web.dto.PlanShareCreateDto;
-import com.example.Triple_clone.domain.plan.web.dto.PlanShareResponseDto;
+import com.example.Triple_clone.domain.plan.web.dto.planshare.PlanShareCreateDto;
+import com.example.Triple_clone.domain.plan.web.dto.planshare.PlanShareResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

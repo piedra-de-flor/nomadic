@@ -7,7 +7,7 @@ import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.ChangeType;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.domain.PlanChangeHistory;
-import com.example.Triple_clone.domain.plan.web.dto.PlanChangeHistoryResponseDto;
+import com.example.Triple_clone.domain.plan.web.dto.planhistory.PlanChangeHistoryResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
