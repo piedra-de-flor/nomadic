@@ -11,8 +11,13 @@ import com.example.Triple_clone.domain.plan.domain.PlanShare;
 import com.example.Triple_clone.domain.plan.domain.ShareRole;
 import com.example.Triple_clone.domain.plan.web.dto.planshare.PlanShareCreateDto;
 import com.example.Triple_clone.domain.plan.web.dto.planshare.PlanShareResponseDto;
+import com.example.Triple_clone.domain.plan.web.dto.planshare.event.PlanSharedEvent;
+import com.example.Triple_clone.domain.plan.web.dto.planshare.event.PlanUnSharedEvent;
+import com.example.Triple_clone.domain.plan.web.dto.planshare.event.ShareAcceptedEvent;
+import com.example.Triple_clone.domain.plan.web.dto.planshare.event.ShareRejectedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +31,7 @@ public class PlanShareFacadeService {
     private final PlanShareService planShareService;
     private final PlanService planService;
     private final UserService userService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public PlanShareCreateDto sharePlan(PlanShareCreateDto createDto, String ownerEmail) {
@@ -50,6 +56,8 @@ public class PlanShareFacadeService {
                 .build();
 
         planShareService.save(planShare);
+
+        eventPublisher.publishEvent(new PlanSharedEvent(this, plan, owner, sharedMember, ShareRole.valueOf(createDto.role())));
         return createDto;
     }
 
@@ -97,6 +105,8 @@ public class PlanShareFacadeService {
         }
 
         PlanShare acceptedShare = planShareService.acceptShare(shareId);
+
+        eventPublisher.publishEvent(new ShareAcceptedEvent(this, planShare.getPlan(), member, planShare));
         return new PlanShareResponseDto(acceptedShare);
     }
 
@@ -111,6 +121,8 @@ public class PlanShareFacadeService {
         }
 
         PlanShare rejectedShare = planShareService.rejectShare(shareId);
+
+        eventPublisher.publishEvent(new ShareRejectedEvent(this, planShare.getPlan(), member, planShare));
         return new PlanShareResponseDto(rejectedShare);
     }
 
@@ -131,5 +143,7 @@ public class PlanShareFacadeService {
         }
 
         planShareService.delete(planShare);
+
+        eventPublisher.publishEvent(new PlanUnSharedEvent(this, plan, member, planShare.getMember(), planShare.getRole()));
     }
 }

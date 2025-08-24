@@ -8,8 +8,13 @@ import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.domain.PlanShare;
 import com.example.Triple_clone.domain.plan.web.dto.plan.*;
+import com.example.Triple_clone.domain.plan.web.dto.plan.event.PlanCreatedEvent;
+import com.example.Triple_clone.domain.plan.web.dto.plan.event.PlanDeletedEvent;
+import com.example.Triple_clone.domain.plan.web.dto.plan.event.PlanPartnerUpdatedEvent;
+import com.example.Triple_clone.domain.plan.web.dto.plan.event.PlanStyleUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +29,15 @@ public class PlanFacadeService {
     private final PlanService planService;
     private final PlanShareService planShareService;
     private final PlanPermissionUtils planPermissionUtils;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public PlanCreateDto create(PlanCreateDto createDto, String email) {
         Member member = userService.findByEmail(email);
         Plan plan = createDto.toEntity(member);
         planService.save(plan);
+
+        eventPublisher.publishEvent(new PlanCreatedEvent(this, plan, member));
         return createDto;
     }
 
@@ -69,7 +77,12 @@ public class PlanFacadeService {
         Plan plan = planService.findById(updateDto.planDto().planId());
 
         if (plan.isMine(member.getId()) || planPermissionUtils.hasEditPermission(plan, member)) {
+            List<String> oldStyles = plan.getStyles().stream()
+                    .map(Enum::name)
+                    .toList();
             planService.updateStyle(updateDto);
+
+            eventPublisher.publishEvent(new PlanStyleUpdatedEvent(this, plan, member, oldStyles, updateDto.styles()));
             return updateDto;
         }
 
@@ -83,7 +96,10 @@ public class PlanFacadeService {
         Plan plan = planService.findById(updateDto.planDto().planId());
 
         if (plan.isMine(member.getId()) || planPermissionUtils.hasEditPermission(plan, member)) {
+            String oldPartner = plan.getPartner() != null ? plan.getPartner().name() : null;
             planService.updatePartner(updateDto);
+
+            eventPublisher.publishEvent(new PlanPartnerUpdatedEvent(this, plan, member, oldPartner, updateDto.partner()));
             return updateDto;
         }
 
@@ -98,6 +114,8 @@ public class PlanFacadeService {
 
         if (plan.isMine(member.getId())) {
             planService.delete(plan);
+
+            eventPublisher.publishEvent(new PlanDeletedEvent(this, plan, member));
             return deleteDto;
         }
 

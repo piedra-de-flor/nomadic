@@ -12,10 +12,14 @@ import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanDto;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateDto;
 import com.example.Triple_clone.domain.plan.web.dto.ReservationCreateDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanCreatedEvent;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanDeletedEvent;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanUpdatedEvent;
 import com.example.Triple_clone.domain.recommend.application.RecommendService;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,7 @@ public class DetailPlanFacadeService {
     private final UserService userService;
     private final AccommodationQueryService accommodationService;
     private final PlanPermissionUtils planPermissionUtils;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public DetailPlanDto create(DetailPlanDto detailPlanDto, String email) {
@@ -46,6 +51,8 @@ public class DetailPlanFacadeService {
 
         detailPlanService.save(detailPlan);
         plan.addDetailPlan(detailPlan);
+
+        eventPublisher.publishEvent(new DetailPlanCreatedEvent(this, plan, member, detailPlan));
         return detailPlanDto;
     }
 
@@ -74,6 +81,7 @@ public class DetailPlanFacadeService {
 
         detailPlanService.save(detailPlan);
 
+        eventPublisher.publishEvent(new DetailPlanCreatedEvent(this, plan, member, detailPlan));
         return reservationCreateDto;
     }
 
@@ -97,6 +105,11 @@ public class DetailPlanFacadeService {
     public DetailPlanDto update(DetailPlanUpdateDto updateDto, String email) {
         Plan plan = planService.findById(updateDto.planId());
         DetailPlan detailPlan = detailPlanService.findById(updateDto.detailPlanId());
+        DetailPlan oldDetailPlan = DetailPlan.builder()
+                .location(detailPlan.getLocation())
+                .date(detailPlan.getDate())
+                .time(detailPlan.getTime())
+                .build();
         Member member = userService.findByEmail(email);
 
         if (!planPermissionUtils.hasEditPermission(plan, member)) {
@@ -107,6 +120,7 @@ public class DetailPlanFacadeService {
         if (isContain(plan, detailPlan)) {
             DetailPlan updatedDetailPlan = detailPlanService.update(detailPlan, updateDto);
 
+            eventPublisher.publishEvent(new DetailPlanUpdatedEvent(this, plan, member, updatedDetailPlan, oldDetailPlan));
             return new DetailPlanDto(
                     updatedDetailPlan.getId(),
                     updatedDetailPlan.getLocation(),
@@ -133,6 +147,8 @@ public class DetailPlanFacadeService {
 
         if (isContain(plan, detailPlan)) {
             detailPlanService.delete(detailPlan);
+
+            eventPublisher.publishEvent(new DetailPlanDeletedEvent(this, plan, member, detailPlan));
             return detailPlan;
         }
 

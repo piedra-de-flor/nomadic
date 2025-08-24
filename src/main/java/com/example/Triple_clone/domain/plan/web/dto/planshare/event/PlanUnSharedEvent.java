@@ -1,4 +1,4 @@
-package com.example.Triple_clone.domain.plan.web.dto.planshare;
+package com.example.Triple_clone.domain.plan.web.dto.planshare.event;
 
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.ChangeType;
@@ -6,6 +6,7 @@ import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.domain.ShareRole;
 import com.example.Triple_clone.domain.plan.domain.TargetType;
 import com.example.Triple_clone.domain.plan.web.dto.plan.event.PlanChangeEvent;
+import com.example.Triple_clone.domain.plan.web.dto.planshare.PlanShareChangeData;
 import lombok.Getter;
 
 @Getter
