@@ -21,7 +21,7 @@ public abstract class NotificationSender {
         notificationSaveService.save(saveRequest);
     }
 
-    protected abstract NotificationSaveRequest prepareAndSend(NotificationDto dto);
+    public abstract NotificationSaveRequest prepareAndSend(NotificationDto dto);
 
     public abstract boolean supports(NotificationType type);
 
