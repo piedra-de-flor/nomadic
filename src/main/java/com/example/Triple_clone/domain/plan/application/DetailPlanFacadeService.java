@@ -12,6 +12,7 @@ import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanDto;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateDto;
 import com.example.Triple_clone.domain.plan.web.dto.ReservationCreateDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateResultDto;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanCreatedEvent;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanDeletedEvent;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanUpdatedEvent;
@@ -105,11 +106,6 @@ public class DetailPlanFacadeService {
     public DetailPlanDto update(DetailPlanUpdateDto updateDto, String email) {
         Plan plan = planService.findById(updateDto.planId());
         DetailPlan detailPlan = detailPlanService.findById(updateDto.detailPlanId());
-        DetailPlan oldDetailPlan = DetailPlan.builder()
-                .location(detailPlan.getLocation())
-                .date(detailPlan.getDate())
-                .time(detailPlan.getTime())
-                .build();
         Member member = userService.findByEmail(email);
 
         if (!planPermissionUtils.hasEditPermission(plan, member)) {
@@ -118,19 +114,22 @@ public class DetailPlanFacadeService {
         }
 
         if (isContain(plan, detailPlan)) {
-            DetailPlan updatedDetailPlan = detailPlanService.update(detailPlan, updateDto);
+            DetailPlanUpdateResultDto result = detailPlanService.update(detailPlan, updateDto);
 
-            eventPublisher.publishEvent(new DetailPlanUpdatedEvent(this, plan, member, updatedDetailPlan, oldDetailPlan));
+            eventPublisher.publishEvent(new DetailPlanUpdatedEvent(
+                    this, plan, member, result.after(), result.before()));
+
             return new DetailPlanDto(
-                    updatedDetailPlan.getId(),
-                    updatedDetailPlan.getLocation(),
-                    updatedDetailPlan.getDate(),
-                    updatedDetailPlan.getTime(),
-                    updatedDetailPlan.getVersion()
-                    );
+                    updateDto.planId(),
+                    result.after().location(),
+                    result.after().date(),
+                    result.after().time(),
+                    result.after().version()
+            );
         }
 
-        log.warn(PlanLogMessage.PLAN_DOESNT_HAVE_THE_DETAIL_PLAN.format("세부 계획 수정 실패", plan.getId(), detailPlan.getId()));
+        log.warn(PlanLogMessage.PLAN_DOESNT_HAVE_THE_DETAIL_PLAN.format(
+                "세부 계획 수정 실패", plan.getId(), detailPlan.getId()));
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
