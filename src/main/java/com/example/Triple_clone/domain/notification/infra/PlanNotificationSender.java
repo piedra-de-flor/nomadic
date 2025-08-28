@@ -35,7 +35,6 @@ public class PlanNotificationSender extends NotificationSender {
         return type == NotificationType.USER_MESSAGE;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public NotificationSaveRequest prepareAndSend(NotificationDto dto) {
         PlanNotificationEvent event = (PlanNotificationEvent) dto.payload();
