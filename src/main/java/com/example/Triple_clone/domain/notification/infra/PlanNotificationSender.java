@@ -39,7 +39,7 @@ public class PlanNotificationSender extends NotificationSender {
     public NotificationSaveRequest prepareAndSend(NotificationDto dto) {
         PlanNotificationEvent event = (PlanNotificationEvent) dto.payload();
 
-        log.info("Processing plan notification - Plan: {}, Action: {}, Actor: {}, Receiver: {}",
+        log.debug("Processing plan notification - Plan: {}, Action: {}, Actor: {}, Receiver: {}",
                 event.getPlan().getId(),
                 event.getAction(),
                 event.getActor().getEmail(),
