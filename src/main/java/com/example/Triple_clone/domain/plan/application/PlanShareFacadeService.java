@@ -31,6 +31,7 @@ public class PlanShareFacadeService {
     private final PlanShareService planShareService;
     private final PlanService planService;
     private final UserService userService;
+    private final PlanPermissionUtils permissionUtils;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -38,10 +39,7 @@ public class PlanShareFacadeService {
         Member owner = userService.findByEmail(ownerEmail);
         Plan plan = planService.findById(createDto.planId());
 
-        if (!plan.isMine(owner.getId())) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(ownerEmail, plan));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        permissionUtils.hasOwnership(plan, owner);
 
         Member sharedMember = userService.findByEmail(createDto.sharedMemberEmail());
 
@@ -84,9 +82,8 @@ public class PlanShareFacadeService {
         Plan plan = planService.findById(planId);
         List<PlanShare> planShares = planShareService.findByPlanId(plan.getId());
 
-        if (planShares.stream().noneMatch(planShare -> planShare.isSharedWith(member))) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, planId));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+        for (PlanShare planShare : planShares) {
+            permissionUtils.hasSharedWith(planShare, member);
         }
 
         return planShares.stream()
@@ -98,11 +95,7 @@ public class PlanShareFacadeService {
     public PlanShareResponseDto acceptShare(Long shareId, String email) {
         Member member = userService.findByEmail(email);
         PlanShare planShare = planShareService.findById(shareId);
-
-        if (!planShare.isSharedWith(member)) {
-            log.warn(PlanLogMessage.PLAN_SHARE_AUTH_FAILED.format(email, shareId));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        permissionUtils.hasSharedWith(planShare, member);
 
         PlanShare acceptedShare = planShareService.acceptShare(shareId);
 
@@ -114,11 +107,7 @@ public class PlanShareFacadeService {
     public PlanShareResponseDto rejectShare(Long shareId, String email) {
         Member member = userService.findByEmail(email);
         PlanShare planShare = planShareService.findById(shareId);
-
-        if (!planShare.isSharedWith(member)) {
-            log.warn(PlanLogMessage.PLAN_SHARE_AUTH_FAILED.format(email, shareId));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        permissionUtils.hasSharedWith(planShare, member);
 
         PlanShare rejectedShare = planShareService.rejectShare(shareId);
 
@@ -132,15 +121,8 @@ public class PlanShareFacadeService {
         PlanShare planShare = planShareService.findById(shareId);
         Plan plan = planShare.getPlan();
 
-        if (!plan.isMine(member.getId())) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan.getId()));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
-
-        if (!planShare.isSharedWith(member)) {
-            log.warn(PlanLogMessage.PLAN_SHARE_AUTH_FAILED.format(email, shareId));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        permissionUtils.hasOwnership(plan, member);
+        permissionUtils.hasSharedWith(planShare, member);
 
         planShareService.delete(planShare);
 
