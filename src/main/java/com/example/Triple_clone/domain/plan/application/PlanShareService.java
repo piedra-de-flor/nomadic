@@ -1,5 +1,7 @@
 package com.example.Triple_clone.domain.plan.application;
 
+import com.example.Triple_clone.common.error.InvalidShareStatusException;
+import com.example.Triple_clone.common.error.RestApiException;
 import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
 import com.example.Triple_clone.domain.plan.domain.PlanShare;
 import com.example.Triple_clone.domain.plan.domain.ShareStatus;
@@ -60,14 +62,28 @@ public class PlanShareService {
     @Transactional
     public PlanShare acceptShare(Long shareId) {
         PlanShare planShare = findById(shareId);
-        planShare.accept();
+
+        try {
+            planShare.accept();
+        } catch (IllegalStateException e) {
+            log.warn(PlanLogMessage.PLAN_SHARE_NOT_PENDING.format(), shareId, planShare.getStatus());
+            throw new RestApiException(InvalidShareStatusException.INVALID_SHARE_STATUS_EXCEPTION);
+        }
+
         return repository.save(planShare);
     }
 
     @Transactional
     public PlanShare rejectShare(Long shareId) {
         PlanShare planShare = findById(shareId);
-        planShare.reject();
+
+        try {
+            planShare.reject();
+        } catch (IllegalStateException e) {
+            log.warn(PlanLogMessage.PLAN_SHARE_NOT_PENDING.format(), shareId, planShare.getStatus());
+            throw new RestApiException(InvalidShareStatusException.INVALID_SHARE_STATUS_EXCEPTION);
+        }
+
         return repository.save(planShare);
     }
 }
