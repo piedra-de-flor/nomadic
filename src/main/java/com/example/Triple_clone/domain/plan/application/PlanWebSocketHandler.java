@@ -16,9 +16,12 @@ import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -223,7 +226,6 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
 
     private void handleRealTimeChange(WebSocketSession session, WebSocketMessage message,
                                       Long planId, String userEmail, String userName) throws IOException {
-        @SuppressWarnings("unchecked")
         Map<String, Object> data = (Map<String, Object>) message.data();
         RealTimeChangeMessage changeMessage = objectMapper.convertValue(data, RealTimeChangeMessage.class);
 
@@ -330,9 +332,9 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
         return editingInfo;
     }
 
-    private java.util.List<Map<String, String>> getConnectedUsers(Long planId) {
+    private List<Map<String, String>> getConnectedUsers(Long planId) {
         CopyOnWriteArraySet<WebSocketSession> sessions = planSessions.get(planId);
-        if (sessions == null) return java.util.Collections.emptyList();
+        if (sessions == null) return Collections.emptyList();
 
         return sessions.stream()
                 .filter(WebSocketSession::isOpen)
@@ -340,7 +342,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
                         "userEmail", (String) session.getAttributes().get("userEmail"),
                         "userName", (String) session.getAttributes().get("userName")
                 ))
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
         @Getter
