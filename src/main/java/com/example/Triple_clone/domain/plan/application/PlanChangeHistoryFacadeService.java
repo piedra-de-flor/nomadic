@@ -1,7 +1,5 @@
 package com.example.Triple_clone.domain.plan.application;
 
-import com.example.Triple_clone.common.error.AuthErrorCode;
-import com.example.Triple_clone.common.error.RestApiException;
 import com.example.Triple_clone.domain.member.application.UserService;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.ChangeType;
@@ -21,7 +19,7 @@ public class PlanChangeHistoryFacadeService {
     private final PlanChangeHistoryService historyService;
     private final PlanService planService;
     private final UserService userService;
-    private final PlanPermissionUtils planPermissionUtils;
+    private final PlanShareService planShareService;
 
     public Page<PlanChangeHistoryResponseDto> getPlanHistory(Long planId, String email, Pageable pageable) {
         validateViewPermission(planId, email);
@@ -48,8 +46,6 @@ public class PlanChangeHistoryFacadeService {
         Member member = userService.findByEmail(email);
         Plan plan = planService.findById(planId);
 
-        if (!planPermissionUtils.hasViewPermission(plan, member)) {
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        PlanPermissionUtils.validateViewPermission(plan, member, planShareService);
     }
 }

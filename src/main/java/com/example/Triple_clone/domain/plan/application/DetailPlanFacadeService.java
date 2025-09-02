@@ -36,7 +36,7 @@ public class DetailPlanFacadeService {
     private final RecommendService recommendService;
     private final UserService userService;
     private final AccommodationQueryService accommodationService;
-    private final PlanPermissionUtils planPermissionUtils;
+    private final PlanShareService planShareService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -45,10 +45,7 @@ public class DetailPlanFacadeService {
         DetailPlan detailPlan = detailPlanDto.toEntity(plan);
         Member member = userService.findByEmail(email);
 
-        if (!planPermissionUtils.hasEditPermission(plan, member)) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        PlanPermissionUtils.validateEditPermission(plan, member, planShareService);
 
         detailPlanService.save(detailPlan);
         plan.addDetailPlan(detailPlan);
@@ -75,10 +72,7 @@ public class DetailPlanFacadeService {
         DetailPlan detailPlan = reservationCreateDto.toEntity(plan, accommodation);
         Member member = userService.findByEmail(email);
 
-        if (!planPermissionUtils.hasEditPermission(plan, member)) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        PlanPermissionUtils.validateEditPermission(plan, member, planShareService);
 
         detailPlanService.save(detailPlan);
 
@@ -91,10 +85,7 @@ public class DetailPlanFacadeService {
         Member member = userService.findByEmail(email);
         List<DetailPlanDto> response = new ArrayList<>();
 
-        if (!planPermissionUtils.hasViewPermission(plan, member)) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        PlanPermissionUtils.validateViewPermission(plan, member, planShareService);
 
         for (DetailPlan detailPlan : plan.getPlans()) {
             response.add(detailPlan.toDto());
@@ -108,10 +99,7 @@ public class DetailPlanFacadeService {
         DetailPlan detailPlan = detailPlanService.findById(updateDto.detailPlanId());
         Member member = userService.findByEmail(email);
 
-        if (!planPermissionUtils.hasEditPermission(plan, member)) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        PlanPermissionUtils.validateEditPermission(plan, member, planShareService);
 
         if (isContain(plan, detailPlan)) {
             DetailPlanUpdateResultDto result = detailPlanService.update(detailPlan, updateDto);
@@ -139,10 +127,7 @@ public class DetailPlanFacadeService {
         DetailPlan detailPlan = detailPlanService.findById(detailPlanId);
         Member member = userService.findByEmail(email);
 
-        if (!planPermissionUtils.hasEditPermission(plan, member)) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
-        }
+        PlanPermissionUtils.validateEditPermission(plan, member, planShareService);
 
         if (isContain(plan, detailPlan)) {
             detailPlanService.delete(detailPlan);

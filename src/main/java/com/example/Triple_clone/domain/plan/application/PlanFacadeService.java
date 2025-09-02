@@ -28,7 +28,6 @@ public class PlanFacadeService {
     private final UserService userService;
     private final PlanService planService;
     private final PlanShareService planShareService;
-    private final PlanPermissionUtils planPermissionUtils;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -45,11 +44,11 @@ public class PlanFacadeService {
         Member member = userService.findByEmail(email);
         Plan plan = planService.findById(readRequestDto.planId());
 
-        if (plan.isMine(member.getId()) || planPermissionUtils.hasViewPermission(plan, member)) {
+        if (plan.isMine(member.getId()) || PlanPermissionUtils.hasViewPermission(plan, member, planShareService)) {
             return new PlanReadResponseDto(plan);
         }
 
-        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
+        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan.getId()));
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
@@ -76,7 +75,7 @@ public class PlanFacadeService {
         Member member = userService.findByEmail(email);
         Plan plan = planService.findById(updateDto.planDto().planId());
 
-        if (plan.isMine(member.getId()) || planPermissionUtils.hasEditPermission(plan, member)) {
+        if (plan.isMine(member.getId()) || PlanPermissionUtils.hasEditPermission(plan, member, planShareService)) {
             List<String> oldStyles = plan.getStyles().stream()
                     .map(Enum::name)
                     .toList();
@@ -86,7 +85,7 @@ public class PlanFacadeService {
             return updateDto;
         }
 
-        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
+        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan.getId()));
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
@@ -95,7 +94,7 @@ public class PlanFacadeService {
         Member member = userService.findByEmail(email);
         Plan plan = planService.findById(updateDto.planDto().planId());
 
-        if (plan.isMine(member.getId()) || planPermissionUtils.hasEditPermission(plan, member)) {
+        if (plan.isMine(member.getId()) || PlanPermissionUtils.hasEditPermission(plan, member, planShareService)) {
             String oldPartner = plan.getPartner() != null ? plan.getPartner().name() : null;
             planService.updatePartner(updateDto);
 
@@ -103,7 +102,7 @@ public class PlanFacadeService {
             return updateDto;
         }
 
-        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
+        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan.getId()));
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 
@@ -119,7 +118,7 @@ public class PlanFacadeService {
             return deleteDto;
         }
 
-        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan));
+        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan.getId()));
         throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 }

@@ -6,41 +6,81 @@ import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.domain.PlanShare;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Slf4j
-@Component
-@RequiredArgsConstructor
-public class PlanPermissionUtils {
-    private final PlanShareService planShareService;
+public final class PlanPermissionUtils {
 
-    public boolean hasViewPermission(Plan plan, Member member) {
-        hasOwnership(plan, member);
-        Optional<PlanShare> planShare = planShareService.findByPlanIdAndMemberId(plan.getId(), member.getId());
-        return planShare.isPresent() && planShare.get().canView();
+    private PlanPermissionUtils() {
+        throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 
-    public boolean hasEditPermission(Plan plan, Member member) {
-        hasOwnership(plan, member);
-        Optional<PlanShare> planShare = planShareService.findByPlanIdAndMemberId(plan.getId(), member.getId());
-        return planShare.isPresent() && planShare.get().canEdit();
+    public static void validateOwnership(Plan plan, Member member) {
+        if (!plan.isMine(member.getId())) {
+            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(member.getEmail(), plan.getId()));
+            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+        }
     }
 
-    public void hasSharedWith(PlanShare planShare, Member member) {
+    public static void validateSharedWith(PlanShare planShare, Member member) {
         if (!planShare.isSharedWith(member)) {
             log.warn(PlanLogMessage.PLAN_SHARE_AUTH_FAILED.format(member.getEmail(), planShare.getId()));
             throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
         }
     }
 
-    public void hasOwnership(Plan plan, Member member) {
-        if (!plan.isMine(member.getId())) {
-            log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(member.getEmail(), plan.getId()));
-            throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+    public static void validateEditPermission(Plan plan, Member member, PlanShareService planShareService) {
+        if (plan.isMine(member.getId())) {
+            return;
         }
+
+        planShareService.findByPlanIdAndMemberId(plan.getId(), member.getId())
+                .filter(PlanShare::canEdit)
+                .orElseThrow(() -> {
+                    log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(member.getEmail(), plan.getId()));
+                    return new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+                });
+    }
+
+    public static void validateViewPermission(Plan plan, Member member, PlanShareService planShareService) {
+        // 먼저 소유권 확인
+        if (plan.isMine(member.getId())) {
+            return;
+        }
+
+        planShareService.findByPlanIdAndMemberId(plan.getId(), member.getId())
+                .filter(PlanShare::canView)
+                .orElseThrow(() -> {
+                    log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(member.getEmail(), plan.getId()));
+                    return new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+                });
+    }
+
+    public static boolean hasViewPermission(Plan plan, Member member, PlanShareService planShareService) {
+        if (plan.isMine(member.getId())) {
+            return true;
+        }
+
+        return planShareService.findByPlanIdAndMemberId(plan.getId(), member.getId())
+                .map(PlanShare::canView)
+                .orElse(false);
+    }
+
+    public static boolean hasEditPermission(Plan plan, Member member, PlanShareService planShareService) {
+        if (plan.isMine(member.getId())) {
+            return true;
+        }
+
+        return planShareService.findByPlanIdAndMemberId(plan.getId(), member.getId())
+                .map(planShare -> planShare.canEdit())
+                .orElse(false);
+    }
+
+    public static boolean hasViewPermission(PlanShare planShare) {
+        return planShare != null && planShare.canView();
+    }
+
+    public static boolean hasEditPermission(PlanShare planShare) {
+        return planShare != null && planShare.canEdit();
     }
 }

@@ -31,7 +31,6 @@ public class PlanShareFacadeService {
     private final PlanShareService planShareService;
     private final PlanService planService;
     private final UserService userService;
-    private final PlanPermissionUtils permissionUtils;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -39,7 +38,7 @@ public class PlanShareFacadeService {
         Member owner = userService.findByEmail(ownerEmail);
         Plan plan = planService.findById(createDto.planId());
 
-        permissionUtils.hasOwnership(plan, owner);
+        PlanPermissionUtils.validateOwnership(plan, owner);
 
         Member sharedMember = userService.findByEmail(createDto.sharedMemberEmail());
 
@@ -83,7 +82,7 @@ public class PlanShareFacadeService {
         List<PlanShare> planShares = planShareService.findByPlanId(plan.getId());
 
         for (PlanShare planShare : planShares) {
-            permissionUtils.hasSharedWith(planShare, member);
+            PlanPermissionUtils.validateSharedWith(planShare, member);
         }
 
         return planShares.stream()
@@ -95,7 +94,8 @@ public class PlanShareFacadeService {
     public PlanShareResponseDto acceptShare(Long shareId, String email) {
         Member member = userService.findByEmail(email);
         PlanShare planShare = planShareService.findById(shareId);
-        permissionUtils.hasSharedWith(planShare, member);
+
+        PlanPermissionUtils.validateSharedWith(planShare, member);
 
         PlanShare acceptedShare = planShareService.acceptShare(shareId);
 
@@ -107,7 +107,8 @@ public class PlanShareFacadeService {
     public PlanShareResponseDto rejectShare(Long shareId, String email) {
         Member member = userService.findByEmail(email);
         PlanShare planShare = planShareService.findById(shareId);
-        permissionUtils.hasSharedWith(planShare, member);
+
+        PlanPermissionUtils.validateSharedWith(planShare, member);
 
         PlanShare rejectedShare = planShareService.rejectShare(shareId);
 
@@ -121,8 +122,8 @@ public class PlanShareFacadeService {
         PlanShare planShare = planShareService.findById(shareId);
         Plan plan = planShare.getPlan();
 
-        permissionUtils.hasOwnership(plan, member);
-        permissionUtils.hasSharedWith(planShare, member);
+        PlanPermissionUtils.validateOwnership(plan, member);
+        PlanPermissionUtils.validateSharedWith(planShare, member);
 
         planShareService.delete(planShare);
 
