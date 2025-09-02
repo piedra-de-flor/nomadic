@@ -6,6 +6,7 @@ import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateR
 import com.example.Triple_clone.domain.plan.web.dto.websocket.WebSocketMessage;
 import com.example.Triple_clone.domain.plan.web.dto.websocket.EditingStateMessage;
 import com.example.Triple_clone.domain.plan.web.dto.websocket.RealTimeChangeMessage;
+import com.example.Triple_clone.domain.plan.web.dto.websocket.WebSocketMessageType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
         planSessions.computeIfAbsent(planId, k -> new CopyOnWriteArraySet<>()).add(session);
 
         WebSocketMessage joinMessage = WebSocketMessage.createUserMessage(
-                "PLAN_JOINED",
+                WebSocketMessageType.PLAN_JOINED,
                 Map.of(
                         "currentEditing", getCurrentEditingInfo(planId),
                         "connectedUsers", getConnectedUsers(planId)
@@ -53,7 +54,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
         sendToSession(session, joinMessage);
 
         WebSocketMessage userJoinedMessage = WebSocketMessage.createUserMessage(
-                "USER_JOINED",
+                WebSocketMessageType.USER_JOINED,
                 Map.of(
                         "userEmail", userEmail,
                         "userName", userName,
@@ -82,16 +83,16 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
             }
 
             switch (wsMessage.type()) {
-                case "START_EDIT":
+                case START_EDIT:
                     handleStartEdit(session, wsMessage, planId, userEmail, userName, hasEditPermission);
                     break;
-                case "UPDATE_DETAIL_PLAN":
+                case UPDATE_DETAIL_PLAN:
                     handleUpdateDetailPlan(session, wsMessage, planId, userEmail, userName, hasEditPermission);
                     break;
-                case "CANCEL_EDIT":
+                case CANCEL_EDIT:
                     handleCancelEdit(session, wsMessage, planId, userEmail, userName);
                     break;
-                case "REAL_TIME_CHANGE":
+                case REAL_TIME_CHANGE:
                     handleRealTimeChange(session, wsMessage, planId, userEmail, userName);
                     break;
                 default:
@@ -135,7 +136,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
 
             EditingStateMessage editingState = EditingStateMessage.createStart(detailPlanId, userEmail, userName);
             WebSocketMessage editStartedMessage = WebSocketMessage.createPlanMessage(
-                    "EDIT_STARTED", editingState, detailPlanId, userEmail, userName);
+                    WebSocketMessageType.EDIT_STARTED, editingState, detailPlanId, userEmail, userName);
 
             broadcastToPlan(planId, editStartedMessage, null);
 
@@ -180,7 +181,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
             editingPlans.remove(detailPlanId);
 
             WebSocketMessage updateMessage = WebSocketMessage.createPlanMessage(
-                    "DETAIL_PLAN_UPDATED",
+                    WebSocketMessageType.DETAIL_PLAN_UPDATED,
                     Map.of(
                             "detailPlanId", detailPlanId,
                             "updateResult", result,
@@ -214,7 +215,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
 
             EditingStateMessage editingState = EditingStateMessage.createStop(detailPlanId, userEmail, userName);
             WebSocketMessage cancelMessage = WebSocketMessage.createPlanMessage(
-                    "EDIT_CANCELLED", editingState, detailPlanId, userEmail, userName);
+                    WebSocketMessageType.EDIT_CANCELLED, editingState, detailPlanId, userEmail, userName);
 
             broadcastToPlan(planId, cancelMessage, null);
         }
@@ -229,7 +230,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
         RealTimeChangeMessage messageWithUser = changeMessage.withUserInfo(userEmail, userName);
 
         WebSocketMessage realtimeMessage = WebSocketMessage.createPlanMessage(
-                "REAL_TIME_CHANGE", messageWithUser, message.detailPlanId(), userEmail, userName);
+                WebSocketMessageType.REAL_TIME_CHANGE, messageWithUser, message.detailPlanId(), userEmail, userName);
 
         broadcastToPlan(planId, realtimeMessage, session);
     }
@@ -254,10 +255,9 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
             editingPlans.entrySet().removeIf(entry -> {
                 if (entry.getValue().sessionId().equals(session.getId())) {
                     try {
-                        EditingStateMessage editingState = EditingStateMessage.createStop(
-                                entry.getKey(), userEmail, userName);
+                        EditingStateMessage editingState = EditingStateMessage.createStop(entry.getKey(), userEmail, userName);
                         WebSocketMessage cancelMessage = WebSocketMessage.createPlanMessage(
-                                "EDIT_CANCELLED", editingState, entry.getKey(), userEmail, userName);
+                                WebSocketMessageType.EDIT_CANCELLED, editingState, entry.getKey(), userEmail, userName);
                         broadcastToPlan(planId, cancelMessage, null);
                     } catch (IOException e) {
                         log.error("편집 취소 알림 전송 실패", e);
@@ -269,7 +269,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
 
             try {
                 WebSocketMessage userLeftMessage = WebSocketMessage.createUserMessage(
-                        "USER_LEFT",
+                        WebSocketMessageType.USER_LEFT,
                         Map.of(
                                 "userEmail", userEmail,
                                 "userName", userName,
@@ -312,8 +312,7 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
         String userEmail = (String) session.getAttributes().get("userEmail");
         String userName = (String) session.getAttributes().get("userName");
 
-        WebSocketMessage errorMsg = WebSocketMessage.createUserMessage(
-                "ERROR", Map.of("message", errorMessage), userEmail, userName);
+        WebSocketMessage errorMsg = WebSocketMessage.error(errorMessage, userEmail, userName);
         sendToSession(session, errorMsg);
     }
 
