@@ -168,7 +168,6 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
         }
 
         try {
-            @SuppressWarnings("unchecked")
             Map<String, Object> data = (Map<String, Object>) message.data();
             DetailPlanUpdateDto updateDto = objectMapper.convertValue(data, DetailPlanUpdateDto.class);
 
