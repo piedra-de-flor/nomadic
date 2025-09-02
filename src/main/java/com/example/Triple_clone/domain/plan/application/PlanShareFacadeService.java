@@ -1,9 +1,7 @@
 package com.example.Triple_clone.domain.plan.application;
 
-import com.example.Triple_clone.common.error.AuthErrorCode;
 import com.example.Triple_clone.common.error.DuplicatedProcessErrorCode;
 import com.example.Triple_clone.common.error.RestApiException;
-import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
 import com.example.Triple_clone.domain.member.application.UserService;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.Plan;

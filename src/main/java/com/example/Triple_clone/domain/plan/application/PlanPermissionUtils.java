@@ -43,7 +43,6 @@ public final class PlanPermissionUtils {
     }
 
     public static void validateViewPermission(Plan plan, Member member, PlanShareService planShareService) {
-        // 먼저 소유권 확인
         if (plan.isMine(member.getId())) {
             return;
         }
@@ -72,15 +71,7 @@ public final class PlanPermissionUtils {
         }
 
         return planShareService.findByPlanIdAndMemberId(plan.getId(), member.getId())
-                .map(planShare -> planShare.canEdit())
+                .map(PlanShare::canEdit)
                 .orElse(false);
-    }
-
-    public static boolean hasViewPermission(PlanShare planShare) {
-        return planShare != null && planShare.canView();
-    }
-
-    public static boolean hasEditPermission(PlanShare planShare) {
-        return planShare != null && planShare.canEdit();
     }
 }
