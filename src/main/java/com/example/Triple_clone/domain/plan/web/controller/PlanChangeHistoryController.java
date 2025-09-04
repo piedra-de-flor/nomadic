@@ -26,6 +26,9 @@ public class PlanChangeHistoryController {
 
     @Operation(summary = "계획 변경 이력 전체 조회", description = "특정 계획의 모든 변경 이력을 페이징으로 조회합니다")
     @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/plan/{planId}/history")
     public ResponseEntity<Page<PlanChangeHistoryResponseDto>> getPlanHistory(
             @Parameter(description = "계획 ID", required = true)
@@ -43,6 +46,9 @@ public class PlanChangeHistoryController {
 
     @Operation(summary = "특정 타입 변경사항 조회", description = "특정 변경 타입의 이력만 페이징으로 조회합니다")
     @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/plan/{planId}/history/type/{changeType}")
     public ResponseEntity<Page<PlanChangeHistoryResponseDto>> getChangesByType(
             @Parameter(description = "계획 ID", required = true)
@@ -62,6 +68,9 @@ public class PlanChangeHistoryController {
 
     @Operation(summary = "내 활동 내역 조회", description = "내가 한 모든 변경사항을 페이징으로 조회합니다")
     @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/my/activity")
     public ResponseEntity<Page<PlanChangeHistoryResponseDto>> getMyActivity(
             @Parameter(description = "페이지 번호 (0부터 시작)", example = "0")
