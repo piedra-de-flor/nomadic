@@ -9,6 +9,9 @@ import com.example.Triple_clone.domain.accommodation.web.dto.AutocompleteResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import co.elastic.clients.elasticsearch.core.search.Rescore;
+import co.elastic.clients.elasticsearch.core.search.RescoreQuery;
+
 
 import java.io.IOException;
 import java.util.Collections;
@@ -136,13 +139,18 @@ public class ESAccommodationRepository {
                             return q.matchAll(m -> m);
                         } else {
                             return q.bool(b -> b
-                                    .should(sh -> sh.match(m -> m.field("name").query(query).boost(3.0f)))
-                                    .should(sh -> sh.match(m -> m.field("address").query(query).boost(2.0f)))
-                                    .should(sh -> sh.match(m -> m.field("region").query(query).boost(2.0f)))
+                                    .should(sh -> sh.term(t -> t.field("name.keyword").value(query).boost(10.0f)))
+                                    .should(sh -> sh.matchPhrasePrefix(m -> m.field("name").query(query).boost(5.0f)))
+                                    .should(sh -> sh.fuzzy(f -> f.field("name").value(query).fuzziness("AUTO").boost(3.0f)))
+                                    .should(sh -> sh.match(m -> m.field("name").query(query).boost(2.0f)))
+                                    .should(sh -> sh.match(m -> m.field("address").query(query).boost(1.5f)))
+                                    .should(sh -> sh.match(m -> m.field("region").query(query).boost(1.5f)))
                                     .should(sh -> sh.match(m -> m.field("amenities").query(query).boost(1.0f)))
+                                    .minimumShouldMatch("1")
                             );
                         }
                     })
+                    .sort(so -> so.score(sc -> sc.order(SortOrder.Desc)))
                     .sort(buildSortQuery(sortOption))
                     .from(page * size)
                     .size(size), AccommodationDocument.class);
