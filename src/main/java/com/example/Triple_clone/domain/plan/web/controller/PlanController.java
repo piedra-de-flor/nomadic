@@ -2,7 +2,7 @@ package com.example.Triple_clone.domain.plan.web.controller;
 
 import com.example.Triple_clone.common.auth.MemberEmailAspect;
 import com.example.Triple_clone.domain.plan.application.PlanFacadeService;
-import com.example.Triple_clone.domain.plan.web.dto.*;
+import com.example.Triple_clone.domain.plan.web.dto.plan.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

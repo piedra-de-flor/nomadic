@@ -37,7 +37,6 @@ public class ReportNotificationSender extends NotificationSender {
         return type == NotificationType.REPORT_ALERT;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public NotificationSaveRequest prepareAndSend(NotificationDto dto) {
         ReportCreatedEvent event = (ReportCreatedEvent) dto.payload();

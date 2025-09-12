@@ -55,8 +55,8 @@ public class UserService {
         return jwtToken;
     }
 
-    public UserResponseDto read(long userId) {
-        Member member = findById(userId);
+    public UserResponseDto read(String email) {
+        Member member = findByEmail(email);
 
         return UserResponseDto.fromUser(member);
     }

@@ -57,8 +57,8 @@ public class UserController {
     @GetMapping("/user")
     public ResponseEntity<UserResponseDto> read(
             @Parameter(description = "회원 조회 요청 정보", required = true)
-            @RequestParam long userId) {
-        UserResponseDto responseDto = service.read(userId);
+            @MemberEmailAspect String email) {
+        UserResponseDto responseDto = service.read(email);
         return ResponseEntity.ok(responseDto);
     }
 

@@ -1,14 +1,14 @@
 package com.example.Triple_clone.domain.plan.application;
 
 import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
-import com.example.Triple_clone.domain.plan.web.dto.PlanStyleUpdateDto;
+import com.example.Triple_clone.domain.plan.web.dto.plan.PlanStyleUpdateDto;
 import com.example.Triple_clone.domain.plan.domain.Style;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.plan.domain.Partner;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.infra.PlanRepository;
-import com.example.Triple_clone.domain.plan.web.dto.PlanPartnerUpdateDto;
+import com.example.Triple_clone.domain.plan.web.dto.plan.PlanPartnerUpdateDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

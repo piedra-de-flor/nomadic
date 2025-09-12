@@ -1,4 +1,4 @@
-package com.example.Triple_clone.domain.plan.web.dto;
+package com.example.Triple_clone.domain.plan.web.dto.plan;
 
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.Style;

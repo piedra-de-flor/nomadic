@@ -3,15 +3,13 @@ package com.example.Triple_clone.domain.notification.application;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.member.infra.MemberRepository;
 import com.example.Triple_clone.domain.notification.domain.Notification;
-import com.example.Triple_clone.domain.notification.web.dto.NotificationSentEvent;
-import com.example.Triple_clone.domain.notification.infra.NotificationStatusQueue;
 import com.example.Triple_clone.domain.notification.domain.NotificationTarget;
 import com.example.Triple_clone.domain.notification.infra.NotificationRepository;
+import com.example.Triple_clone.domain.notification.infra.NotificationStatusQueue;
 import com.example.Triple_clone.domain.notification.web.dto.NotificationSaveRequest;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationSentEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +20,6 @@ public class NotificationSaveService {
     private final MemberRepository memberRepository;
     private final NotificationStatusQueue queue;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void save(NotificationSaveRequest request) {
         if (request.target() == NotificationTarget.GLOBAL) {
             List<String> userRole = List.of("USER");

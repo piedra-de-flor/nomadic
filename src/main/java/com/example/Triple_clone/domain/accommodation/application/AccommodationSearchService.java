@@ -54,32 +54,44 @@ public class AccommodationSearchService {
         try {
             log.debug("오타 교정 요청: query='{}'", query);
 
-            if (query == null || query.trim().isEmpty()) {
+            if (query == null) {
                 return SpellCheckResponse.builder()
-                        .originalQuery(query)
-                        .correctedQuery(query)
+                        .originalQuery(null)
+                        .correctedQuery(null)
                         .hasCorrection(false)
                         .build();
             }
 
-            String trimmedQuery = query.trim();
-            String bestMatch = esRepository.findBestMatch(trimmedQuery);
-
-            boolean hasCorrection = !trimmedQuery.equals(bestMatch);
-
-            SpellCheckResponse response = SpellCheckResponse.builder()
-                    .originalQuery(trimmedQuery)
-                    .correctedQuery(bestMatch)
-                    .hasCorrection(hasCorrection)
-                    .build();
-
-            if (hasCorrection) {
-                List<String> suggestions = esRepository.getSimilarAccommodationNames(bestMatch, 3);
-                response.setSuggestions(suggestions);
-                log.info("오타 교정됨: '{}' → '{}'", trimmedQuery, bestMatch);
+            final String original = query.trim();
+            if (original.isEmpty()) {
+                return SpellCheckResponse.builder()
+                        .originalQuery(original)
+                        .correctedQuery(original)
+                        .hasCorrection(false)
+                        .build();
             }
 
-            return response;
+            final String bestMatch = esRepository.findBestMatch(original);
+            final String corrected = (bestMatch == null || bestMatch.trim().isEmpty())
+                    ? original
+                    : bestMatch.trim();
+
+            final boolean hasCorrection = !original.equalsIgnoreCase(corrected);
+
+            SpellCheckResponse.SpellCheckResponseBuilder builder = SpellCheckResponse.builder()
+                    .originalQuery(original)
+                    .correctedQuery(corrected)
+                    .hasCorrection(hasCorrection);
+
+            if (hasCorrection) {
+                List<String> suggestions = esRepository.getSimilarAccommodationNames(corrected, 3);
+                if (suggestions != null && !suggestions.isEmpty()) {
+                    builder.suggestions(suggestions);
+                }
+                log.info("오타 교정됨: '{}' → '{}'", original, corrected);
+            }
+
+            return builder.build();
 
         } catch (Exception e) {
             log.error("오타 교정 오류: query='{}', error='{}'", query, e.getMessage(), e);

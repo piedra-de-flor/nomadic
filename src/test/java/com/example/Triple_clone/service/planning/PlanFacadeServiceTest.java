@@ -7,7 +7,7 @@ import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.domain.Style;
 import com.example.Triple_clone.domain.member.application.UserService;
 import com.example.Triple_clone.common.error.RestApiException;
-import com.example.Triple_clone.domain.plan.web.dto.*;
+import com.example.Triple_clone.domain.plan.web.dto.plan.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

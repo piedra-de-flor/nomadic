@@ -1,6 +1,6 @@
 package com.example.Triple_clone.domain.plan.domain;
 
-import com.example.Triple_clone.domain.plan.web.dto.DetailPlanDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +22,9 @@ public class DetailPlan {
     private Date date;
     private String time;
 
+    @Version
+    private Long version;
+
     @Builder
     public DetailPlan(Plan plan, Location location, Date date, String time) {
         this.plan = plan;
@@ -41,7 +44,8 @@ public class DetailPlan {
                 this.plan.getId(),
                 this.location,
                 this.date,
-                this.time
+                this.time,
+                this.version
         );
     }
 }
