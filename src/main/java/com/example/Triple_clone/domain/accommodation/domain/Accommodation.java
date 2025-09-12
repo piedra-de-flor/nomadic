@@ -100,6 +100,7 @@ public class Accommodation {
                 .anyMatch(r -> Objects.equals(r.getName(), room.getName()));
         if (!exists) {
             rooms.add(room);
+            room.setAccommodation(this);
         }
     }
 
