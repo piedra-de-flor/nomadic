@@ -1,57 +1,92 @@
 package com.example.Triple_clone.domain.accommodation.web.controller;
 
-import com.example.Triple_clone.domain.accommodation.application.AccommodationService;
-import com.example.Triple_clone.domain.accommodation.web.dto.AccommodationDto;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import com.example.Triple_clone.domain.accommodation.application.AccommodationCommandService;
+import com.example.Triple_clone.domain.accommodation.application.AccommodationQueryService;
+import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.domain.SortOption;
+import com.example.Triple_clone.domain.accommodation.web.dto.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
+@RequestMapping("/accommodations")
+@RequiredArgsConstructor
 public class AccommodationController {
-    private final AccommodationService service;
+    private final AccommodationCommandService accommodationCommandService;
+    private final AccommodationQueryService accommodationQueryService;
 
-    @Operation(summary = "숙소 리스트 전체 조회(지역별)", description = "지역별에 맞는 숙소를 전체 조회합니다")
-    @ApiResponse(responseCode = "200", description = "성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
-    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @GetMapping("/accommodations")
-    public ResponseEntity<List<AccommodationDto>> readAll(
-            @Parameter(description = "원하는 지역 이름", required = true)
-            @RequestParam String local,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String discountRate,
-            @RequestParam(required = false) String startLentPrice,
-            @RequestParam(required = false) String endLentPrice,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String score,
-            @RequestParam(required = false) String lentStatus,
-            @RequestParam(required = false) String enterTime,
-            @RequestParam(required = false) String startLodgmentPrice,
-            @RequestParam(required = false) String endLodgmentPrice,
-            @RequestParam(required = false) String lodgmentStatus,
-            Pageable pageable) {
-        return ResponseEntity.ok(service.searchES(local,
-                name,
-                discountRate,
-                startLentPrice,
-                endLentPrice,
-                category,
-                score,
-                lentStatus,
-                enterTime,
-                startLodgmentPrice,
-                endLodgmentPrice,
-                lodgmentStatus,
-                pageable));
+    @GetMapping("/autocomplete")
+    public ResponseEntity<List<AutocompleteResult>> smartAutocomplete(
+            @RequestParam String q,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        List<AutocompleteResult> results = accommodationQueryService.getSmartAutocomplete(q, limit);
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/typo-correction")
+    public ResponseEntity<SpellCheckResponse> checkSpelling(
+            @RequestParam String query
+    ) {
+        SpellCheckResponse response = accommodationQueryService.checkSpelling(query);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<AccommodationDocument>> searchAccommodations(
+            @RequestParam(required = false) String q,
+            @RequestParam(defaultValue = "ID_ASC") SortOption sort,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        List<AccommodationDocument> results = accommodationQueryService.searchAccommodations(q, sort, page, size);
+        return ResponseEntity.ok(results);
+    }
+
+    @PostMapping
+    public ResponseEntity<AccommodationDto> createAccommodation(
+            @Valid @RequestBody AccommodationCreateDto dto
+    ) {
+        AccommodationDto created = accommodationCommandService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PostMapping("/{accommodationId}/rooms")
+    public ResponseEntity<RoomAddDto> addRoom(
+            @PathVariable Long accommodationId,
+            @Valid @RequestBody RoomAddDto roomDto
+    ) {
+        accommodationCommandService.addRoom(accommodationId, roomDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomDto);
+    }
+
+    @PutMapping("/{accommodationId}/rooms/{roomId}")
+    public ResponseEntity<AccommodationDto> updateRoom(
+            @PathVariable Long accommodationId,
+            @PathVariable Long roomId,
+            @Valid @RequestBody RoomUpdateDto roomDto
+    ) {
+        accommodationCommandService.updateRoom(accommodationId, roomId, roomDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{accommodationId}/rooms/{roomId}")
+    public ResponseEntity<Void> removeRoom(
+            @PathVariable Long accommodationId,
+            @PathVariable Long roomId
+    ) {
+        accommodationCommandService.removeRoom(accommodationId, roomId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccommodation(@PathVariable Long id) {
+        accommodationCommandService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

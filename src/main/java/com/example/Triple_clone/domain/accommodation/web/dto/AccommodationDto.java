@@ -1,94 +1,70 @@
 package com.example.Triple_clone.domain.accommodation.web.dto;
 
 import com.example.Triple_clone.domain.accommodation.domain.Accommodation;
-import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
+import com.example.Triple_clone.domain.accommodation.domain.Room;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record AccommodationDto(
-        String local,
-        String name,
-        double score,
-        String category,
-        String imageUrl,
-        String description,
-        String detailDescription,
-        String services,
-        long lentDiscountRate,
-        int lentTime,
-        long lentOriginPrice,
-        long lentPrice,
-        boolean lentStatus,
-        String enterTime,
-        long lodgmentDiscountRate,
-        long lodgmentOriginPrice,
-        long lodgmentPrice,
-        boolean lodgmentStatus
-) {
-    public Accommodation toEntity() {
-        return Accommodation.builder()
-                .local(local)
-                .name(name)
-                .score(score)
-                .category(category)
-                .imageUrl(imageUrl)
-                .description(description)
-                .detailDescription(detailDescription)
-                .services(services)
-                .lentTime(lentTime)
-                .lentPrice(lentPrice)
-                .lentOriginPrice(lentOriginPrice)
-                .lentStatus(lentStatus)
-                .lentDiscountRate(lentDiscountRate)
-                .lodgmentPrice(lodgmentPrice)
-                .lodgmentStatus(lodgmentStatus)
-                .lodgmentOriginPrice(lodgmentOriginPrice)
-                .lodgmentDiscountRate(lodgmentDiscountRate)
-                .enterTime(enterTime)
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccommodationDto {
+    private Long id;
+    private String image;
+    private String name;
+    private String category;
+    private String grade;
+    private Float rating;
+    private Integer reviewCount;
+    private String region;
+    private String address;
+    private String landmarkDistance;
+    private String intro;
+    private String amenities;
+    private String info;
+    private List<RoomDto> rooms;
+
+    public static AccommodationDto from(Accommodation accommodation) {
+        return AccommodationDto.builder()
+                .id(accommodation.getId())
+                .image(accommodation.getImage())
+                .name(accommodation.getName())
+                .category(accommodation.getCategory())
+                .grade(accommodation.getGrade())
+                .rating(accommodation.getRating())
+                .reviewCount(accommodation.getReviewCount())
+                .region(accommodation.getRegion())
+                .address(accommodation.getAddress())
+                .landmarkDistance(accommodation.getLandmarkDistance())
+                .intro(accommodation.getIntro())
+                .amenities(accommodation.getAmenities())
+                .info(accommodation.getInfo())
+                .rooms(accommodation.getRooms().stream()
+                        .map(RoomDto::from)
+                        .collect(Collectors.toList()))
                 .build();
     }
 
-    public AccommodationDto(Accommodation accommodation) {
-        this(
-                accommodation.getLocal(),
-                accommodation.getName(),
-                accommodation.getScore(),
-                accommodation.getCategory(),
-                accommodation.getImageUrl(),
-                accommodation.getDescription(),
-                accommodation.getDetailDescription(),
-                accommodation.getServices(),
-                accommodation.getLentDiscountRate(),
-                accommodation.getLentTime(),
-                accommodation.getLentOriginPrice(),
-                accommodation.getLentPrice(),
-                accommodation.isLentStatus(),
-                String.valueOf(accommodation.getEnterTime()),
-                accommodation.getLodgmentDiscountRate(),
-                accommodation.getLodgmentOriginPrice(),
-                accommodation.getLodgmentPrice(),
-                accommodation.isLodgmentStatus()
-        );
-    }
-
-    public AccommodationDto(AccommodationDocument document) {
-        this(
-                document.getLocal(),
-                document.getName(),
-                document.getScore() != null ? document.getScore() : 0.0,
-                document.getCategory(),
-                document.getImageUrl(),
-                document.getDescription(),
-                document.getDetailDescription(),
-                document.getServices(),
-                document.getLentDiscountRate() != null ? document.getLentDiscountRate() : 0L,
-                document.getLentTime() != null ? document.getLentTime() : 0,
-                document.getLentOriginPrice() != null ? document.getLentOriginPrice() : 0L,
-                document.getLentPrice() != null ? document.getLentPrice() : 0L,
-                document.getLentStatus() != null ? document.getLentStatus() : false,
-                document.getEnterTime() != null ? document.getEnterTime() : "",
-                document.getLodgmentDiscountRate() != null ? document.getLodgmentDiscountRate() : 0L,
-                document.getLodgmentOriginPrice() != null ? document.getLodgmentOriginPrice() : 0L,
-                document.getLodgmentPrice() != null ? document.getLodgmentPrice() : 0L,
-                document.getLodgmentStatus() != null ? document.getLodgmentStatus() : false
-        );
+    public Accommodation toEntity() {
+        return Accommodation.builder()
+                .image(this.image)
+                .name(this.name)
+                .category(this.category)
+                .grade(this.grade)
+                .rating(this.rating)
+                .reviewCount(this.reviewCount)
+                .region(this.region)
+                .address(this.address)
+                .landmarkDistance(this.landmarkDistance)
+                .intro(this.intro)
+                .amenities(this.amenities)
+                .info(this.info)
+                .build();
     }
 }

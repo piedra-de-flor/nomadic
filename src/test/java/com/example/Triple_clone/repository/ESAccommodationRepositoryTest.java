@@ -9,7 +9,7 @@ import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
 import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import co.elastic.clients.elasticsearch.core.search.TotalHitsRelation;
 import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
-import com.example.Triple_clone.domain.accommodation.infra.ESAccommodationRepositoryImpl;
+import com.example.Triple_clone.domain.accommodation.infra.ESAccommodationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,16 +31,16 @@ import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ESAccommodationRepositoryImplTest {
+public class ESAccommodationRepositoryTest {
 
     @Mock
     private ElasticsearchClient elasticsearchClient;
 
-    private ESAccommodationRepositoryImpl repository;
+    private ESAccommodationRepository repository;
 
     @BeforeEach
     void setUp() {
-        repository = new ESAccommodationRepositoryImpl(elasticsearchClient);
+        repository = new ESAccommodationRepository(elasticsearchClient);
     }
 
     @Test

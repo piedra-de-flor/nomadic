@@ -2,7 +2,7 @@ package com.example.Triple_clone.service.accommodation;
 
 import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocument;
 import com.example.Triple_clone.domain.accommodation.web.dto.AccommodationDto;
-import com.example.Triple_clone.domain.accommodation.infra.ESAccommodationRepositoryImpl;
+import com.example.Triple_clone.domain.accommodation.infra.ESAccommodationRepository;
 import com.example.Triple_clone.domain.accommodation.application.AccommodationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 public class AccommodationServiceTest {
 
     @Mock
-    private ESAccommodationRepositoryImpl esRepository;
+    private ESAccommodationRepository esRepository;
 
     @InjectMocks
     private AccommodationService service;

@@ -1,17 +1,17 @@
 package com.example.Triple_clone.domain.plan.application;
 
+import com.example.Triple_clone.common.error.AuthErrorCode;
+import com.example.Triple_clone.common.error.RestApiException;
 import com.example.Triple_clone.common.logging.logMessage.PlanLogMessage;
+import com.example.Triple_clone.domain.accommodation.application.AccommodationQueryService;
 import com.example.Triple_clone.domain.accommodation.domain.Accommodation;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.web.dto.DetailPlanDto;
 import com.example.Triple_clone.domain.plan.web.dto.DetailPlanUpdateDto;
 import com.example.Triple_clone.domain.plan.web.dto.ReservationCreateDto;
-import com.example.Triple_clone.domain.recommend.domain.Recommendation;
-import com.example.Triple_clone.common.error.AuthErrorCode;
-import com.example.Triple_clone.domain.accommodation.application.AccommodationService;
 import com.example.Triple_clone.domain.recommend.application.RecommendService;
-import com.example.Triple_clone.common.error.RestApiException;
+import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class DetailPlanFacadeService {
     private final PlanService planService;
     private final DetailPlanService detailPlanService;
     private final RecommendService recommendService;
-    private final AccommodationService accommodationService;
+    private final AccommodationQueryService accommodationService;
 
     public DetailPlanDto create(DetailPlanDto detailPlanDto) {
         Plan plan = planService.findById(detailPlanDto.planId());

@@ -5,8 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor
@@ -15,56 +16,99 @@ public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String local;
+    @Column(length = 500)
+    private String image;
+    @Column(length = 255)
     private String name;
-    private double score;
+    @Column(length = 100)
     private String category;
-    private String imageUrl;
-
+    @Column(length = 50)
+    private String grade;
+    private Float rating;
+    private Integer reviewCount;
+    @Column(length = 100)
+    private String region;
+    @Column(length = 500)
+    private String address;
+    @Column(length = 200)
+    private String landmarkDistance;
     @Lob
-    private String description;
-
+    private String intro;
     @Lob
-    private String detailDescription;
-
+    private String amenities;
     @Lob
-    private String services;
-    private long lentDiscountRate;
-    private int lentTime;
-    private long lentOriginPrice;
-    private long lentPrice;
-    private boolean lentStatus;
-    private LocalTime enterTime;
-    private long lodgmentDiscountRate;
-    private long lodgmentOriginPrice;
-    private long lodgmentPrice;
-    private boolean lodgmentStatus;
+    private String info;
+
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Room> rooms = new ArrayList<>();
 
     @Builder
-    public Accommodation(String local, String name, double score, String category, long lentDiscountRate, int lentTime,
-                         long lentOriginPrice, long lentPrice, boolean lentStatus, String enterTime, long lodgmentDiscountRate,
-                         long lodgmentOriginPrice, long lodgmentPrice, boolean lodgmentStatus, String imageUrl, String description,
-                         String detailDescription, String services) {
-        this.local = local;
+    public Accommodation(
+            String image,
+            String name,
+            String category,
+            String grade,
+            Float rating,
+            Integer reviewCount,
+            String region,
+            String address,
+            String landmarkDistance,
+            String intro,
+            String amenities,
+            String info
+    ) {
+        this.image = image;
         this.name = name;
-        this.score = score;
         this.category = category;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.detailDescription = detailDescription;
-        this.services = services;
-        this.lentDiscountRate = lentDiscountRate;
-        this.lentTime = lentTime;
-        this.lentOriginPrice = lentOriginPrice;
-        this.lentPrice = lentPrice;
-        this.lentStatus = lentStatus;
-        this.enterTime = null;
-        if (enterTime != null) {
-            this.enterTime = LocalTime.parse(enterTime, DateTimeFormatter.ofPattern("HH:mm"));
+        this.grade = grade;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
+        this.region = region;
+        this.address = address;
+        this.landmarkDistance = landmarkDistance;
+        this.intro = intro;
+        this.amenities = amenities;
+        this.info = info;
+    }
+
+    public void update(
+            String image,
+            String name,
+            String category,
+            String grade,
+            String region,
+            String address,
+            String landmarkDistance,
+            String intro,
+            String amenities,
+            String info
+    ) {
+        if (image != null) this.image = image;
+        if (name != null) this.name = name;
+        if (category != null) this.category = category;
+        if (grade != null) this.grade = grade;
+        if (region != null) this.region = region;
+        if (address != null) this.address = address;
+        if (landmarkDistance != null) this.landmarkDistance = landmarkDistance;
+        if (intro != null) this.intro = intro;
+        if (amenities != null) this.amenities = amenities;
+        if (info != null) this.info = info;
+    }
+
+    public void addRoom(Room room) {
+        boolean exists = rooms.stream()
+                .anyMatch(r -> Objects.equals(r.getName(), room.getName()));
+        if (!exists) {
+            rooms.add(room);
+            room.setAccommodation(this);
         }
-        this.lodgmentDiscountRate = lodgmentDiscountRate;
-        this.lodgmentOriginPrice = lodgmentOriginPrice;
-        this.lodgmentPrice = lodgmentPrice;
-        this.lodgmentStatus = lodgmentStatus;
+    }
+
+    public void removeRoom(Room room) {
+        rooms.remove(room);
+    }
+
+    public boolean containsRoom(Room room) {
+        return rooms.contains(room);
     }
 }
