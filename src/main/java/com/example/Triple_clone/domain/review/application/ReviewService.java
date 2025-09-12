@@ -2,6 +2,7 @@ package com.example.Triple_clone.domain.review.application;
 
 import com.example.Triple_clone.common.logging.logMessage.ReviewLogMessage;
 import com.example.Triple_clone.domain.review.domain.Review;
+import com.example.Triple_clone.domain.review.domain.ReviewStatus;
 import com.example.Triple_clone.domain.review.infra.ReviewRepository;
 import com.example.Triple_clone.domain.review.web.dto.ReviewResponseDto;
 import com.example.Triple_clone.domain.review.web.dto.RootReviewResponseDto;
@@ -12,6 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,15 +46,35 @@ public class ReviewService {
                 });
     }
 
+    @Transactional(readOnly = true)
     public Page<RootReviewResponseDto> getRootReviews(Long recommendationId, Pageable pageable) {
-        return repository
-                .findByParentIsNullAndRecommendationIdAndDeletedFalseOrderByIdDesc(recommendationId, pageable)
-                .map(RootReviewResponseDto::new);
+        Page<Review> page = repository
+                .findByParentIsNullAndRecommendation_IdOrderByIdDesc(
+                        recommendationId, pageable);
+
+        List<Long> parentIds = page.getContent().stream()
+                .map(Review::getId)
+                .toList();
+
+        Map<Long, Integer> replyCountMap = parentIds.isEmpty()
+                ? Map.of()
+                : repository.countActiveChildrenByParentIds(parentIds).stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> ((Long) row[1]).intValue()
+                ));
+
+        return page.map(r ->
+                new RootReviewResponseDto(
+                        r,
+                        replyCountMap.getOrDefault(r.getId(), 0)
+                )
+        );
     }
 
+    @Transactional(readOnly = true)
     public Page<ReviewResponseDto> getReplies(Long parentId, Pageable pageable) {
-        return repository
-                .findByParentIdAndDeletedFalseOrderByIdAsc(parentId, pageable)
-                .map(ReviewResponseDto::new);
+        Page<Review> page = repository.findByParent_IdOrderByIdAsc(parentId, pageable);
+        return page.map(ReviewResponseDto::new);
     }
 }

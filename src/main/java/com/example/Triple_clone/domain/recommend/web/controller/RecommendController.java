@@ -2,9 +2,13 @@ package com.example.Triple_clone.domain.recommend.web.controller;
 
 import com.example.Triple_clone.common.auth.MemberEmailAspect;
 import com.example.Triple_clone.domain.recommend.application.RecommendService;
+import com.example.Triple_clone.domain.recommend.domain.Recommendation;
+import com.example.Triple_clone.domain.recommend.domain.RecommendationBlock;
+import com.example.Triple_clone.domain.recommend.domain.RecommendationType;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendLikeDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadTop10Dto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockReadDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -74,11 +78,11 @@ public class RecommendController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PutMapping("/recommendation/like")
-    public ResponseEntity<RecommendLikeDto> like(
+    public ResponseEntity<Long> toggleLike(
             @Parameter(description = "추천 장소 좋아요 요청 정보", required = true)
-            @RequestBody RecommendLikeDto recommendLikeDto) {
-        service.like(recommendLikeDto.placeId(), recommendLikeDto.userId());
-        return ResponseEntity.ok(recommendLikeDto);
+            @RequestParam long recommendationId, @RequestParam long memberId) {
+        service.toggleLike(recommendationId, memberId);
+        return ResponseEntity.ok(recommendationId);
     }
 
     @Operation(summary = "인기가 많은 상위 10개의 추천 장소 보기", description = "좋아요 상위 10개의 추천 장소들에 대해 조회를 합니다")
@@ -86,7 +90,7 @@ public class RecommendController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @PutMapping("/recommendations/top10")
+    @GetMapping("/recommendations/top10")
     public ResponseEntity<List<RecommendReadTop10Dto>> readTop10() {
         List<RecommendReadTop10Dto> response = service.findTop10();
         return ResponseEntity.ok(response);
@@ -107,5 +111,51 @@ public class RecommendController {
         redirectAttributes.addAttribute("placeId", placeId);
         redirectAttributes.addAttribute("planId", target);
         return "redirect:/" + REDIRECT_END_POINT_TO_PLANNING_SERVICE;
+    }
+
+    @Operation(summary = "추천 장소 블록 조회", description = "추천 장소의 모든 블록을 순서대로 조회합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
+    @GetMapping("/recommendation/{recommendationId}/blocks")
+    public ResponseEntity<List<RecommendationBlockReadDto>> getBlocks(
+            @Parameter(description = "추천 장소 ID", required = true)
+            @PathVariable Long recommendationId) {
+        Recommendation recommendation = service.findById(recommendationId);
+        List<RecommendationBlockReadDto> blocks = recommendation.getBlocks().stream()
+                .map(RecommendationBlockReadDto::from)
+                .toList();
+        return ResponseEntity.ok(blocks);
+    }
+
+    @Operation(summary = "추천 장소 검색", description = "키워드와 타입으로 추천 장소를 검색합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
+    @GetMapping("/recommendations/search")
+    public ResponseEntity<List<RecommendReadDto>> searchRecommendations(
+            @Parameter(description = "검색 키워드", required = false)
+            @RequestParam(required = false) String q,
+            @Parameter(description = "추천 타입 (PLACE, POST)", required = false)
+            @RequestParam(required = false) RecommendationType type) {
+        List<RecommendReadDto> results = service.searchRecommendations(q, type);
+        return ResponseEntity.ok(results);
+    }
+
+    @Operation(summary = "랜덤 추천 장소 조회", description = "타입별로 랜덤한 추천 장소를 조회합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
+    @GetMapping("/recommendations/random")
+    public ResponseEntity<List<RecommendReadDto>> getRandomRecommendations(
+            @Parameter(description = "추천 타입 (PLACE, POST)", required = false)
+            @RequestParam(required = false) RecommendationType type,
+            @Parameter(description = "조회할 개수", required = false)
+            @RequestParam(defaultValue = "10") int limit) {
+        List<RecommendReadDto> results = service.getRandomRecommendations(type, limit);
+        return ResponseEntity.ok(results);
     }
 }

@@ -1,6 +1,7 @@
+/*
 package com.example.Triple_clone.domain.plan.web.controller;
 
-import com.example.Triple_clone.domain.plan.web.dto.DetailPlanDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanDto;
 import com.example.Triple_clone.domain.recommend.application.ReservationService;
 import com.example.Triple_clone.common.auth.MemberEmailAspect;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,3 +32,4 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 }
+*/

@@ -100,7 +100,7 @@ public class ReviewController {
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PutMapping("/recommendation/review")
     public ResponseEntity<ReviewResponseDto> updateReview(
-            @Parameter(description = "이미지를 로딩할 리뷰 ID", required = true)
+            @Parameter(description = "수정할 리뷰 ID", required = true)
             @RequestBody ReviewUpdateDto updateDto, @MemberEmailAspect String email) {
         ReviewResponseDto response = service.updateReview(updateDto, email);
         return ResponseEntity.ok()

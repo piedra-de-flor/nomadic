@@ -8,6 +8,8 @@ import com.example.Triple_clone.domain.accommodation.domain.AccommodationDocumen
 import com.example.Triple_clone.domain.accommodation.domain.Room;
 import com.example.Triple_clone.domain.accommodation.domain.RoomDocument;
 import com.example.Triple_clone.domain.accommodation.infra.AccommodationRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,11 @@ public class DataMigrationController {
     private final AccommodationRepository accommodationRepository;
     private final ElasticsearchClient elasticsearchClient;
 
+    @Operation(summary = "객실 데이터를 migration합니다 (MySQL -> ES)", description = "필요시 한번만 호출됩니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PostMapping("/migrate-to-es")
     public ResponseEntity<String> migrateToES() {
         try {
@@ -143,6 +150,11 @@ public class DataMigrationController {
                 .build();
     }
 
+    @Operation(summary = "ES status 확인", description = "ES의 상태를 확입합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/es-status")
     public ResponseEntity<Map<String, Object>> getESStatus() {
         try {
