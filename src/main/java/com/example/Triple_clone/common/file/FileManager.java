@@ -22,12 +22,12 @@ import java.util.Queue;
 @Service
 @RequiredArgsConstructor
 public class FileManager {
-    private static final String BASE_PATH = "C:\\Users\\USER\\Desktop\\공부\\";
+    private static final String BASE_PATH = "C:\\Users\\USER\\Desktop\\Study\\";
 
     public FileDataDto readFile(String filePath) {
         Queue<String> datas = new LinkedList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(BASE_PATH + filePath + ".txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath + ".txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 datas.add(isBlank(line));
