@@ -50,6 +50,7 @@ public class NotificationService {
 
         notification.addStatus(status);
         status.read();
+        statusRepository.save(status);
     }
 }
 

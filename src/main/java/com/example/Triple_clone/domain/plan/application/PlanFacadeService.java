@@ -40,9 +40,9 @@ public class PlanFacadeService {
         return createDto;
     }
 
-    public PlanReadResponseDto findPlan(PlanDto readRequestDto, String email) {
+    public PlanReadResponseDto findPlan(long planId, String email) {
         Member member = userService.findByEmail(email);
-        Plan plan = planService.findById(readRequestDto.planId());
+        Plan plan = planService.findById(planId);
 
         if (plan.isMine(member.getId()) || PlanPermissionUtils.hasViewPermission(plan, member, planShareService)) {
             return new PlanReadResponseDto(plan);

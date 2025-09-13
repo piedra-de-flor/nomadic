@@ -55,6 +55,7 @@ public class PlanShare {
             throw new IllegalStateException("PENDING 상태에서만 수락할 수 있습니다. 현재 상태: " + this.status);
         }
         this.status = ShareStatus.ACCEPTED;
+        acceptedAt = LocalDateTime.now();
     }
 
     public void reject() {
@@ -62,6 +63,7 @@ public class PlanShare {
             throw new IllegalStateException("PENDING 상태에서만 거부할 수 있습니다. 현재 상태: " + this.status);
         }
         this.status = ShareStatus.REJECTED;
+        acceptedAt = LocalDateTime.now();
     }
 
     public boolean canEdit() {

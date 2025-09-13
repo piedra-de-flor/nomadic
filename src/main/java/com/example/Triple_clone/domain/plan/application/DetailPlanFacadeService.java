@@ -122,7 +122,7 @@ public class DetailPlanFacadeService {
     }
 
     @Transactional
-    public DetailPlan delete(long planId, long detailPlanId, String email) {
+    public void delete(long planId, long detailPlanId, String email) {
         Plan plan = planService.findById(planId);
         DetailPlan detailPlan = detailPlanService.findById(detailPlanId);
         Member member = userService.findByEmail(email);
@@ -133,7 +133,7 @@ public class DetailPlanFacadeService {
             detailPlanService.delete(detailPlan);
 
             eventPublisher.publishEvent(new DetailPlanDeletedEvent(this, plan, member, detailPlan));
-            return detailPlan;
+            return;
         }
 
         log.warn(PlanLogMessage.PLAN_DOESNT_HAVE_THE_DETAIL_PLAN.format("세부 계획 삭제 실패", plan.getId(), detailPlan.getId()));

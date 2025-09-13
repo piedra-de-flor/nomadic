@@ -344,7 +344,6 @@ public class PlanWebSocketHandler extends TextWebSocketHandler {
                 .collect(Collectors.toList());
     }
 
-        @Getter
         private record EditingInfo(String sessionId, String userEmail, String userName, long startTime, Long originalVersion) {
     }
 }

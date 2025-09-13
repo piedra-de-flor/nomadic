@@ -100,13 +100,13 @@ public class DetailPlanController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @DeleteMapping("/detailPlan")
-    public ResponseEntity<DetailPlan> delete(
+    public ResponseEntity<Long> delete(
             @Parameter(description = "삭제할 세부 계획이 포함된 계획 ID", required = true)
             @RequestParam long planId,
             @Parameter(description = "삭제할 세부 계획 ID", required = true)
             @RequestParam long detailPlanId,
             @MemberEmailAspect String email) {
-        DetailPlan detailPlan = service.delete(planId, detailPlanId, email);
-        return ResponseEntity.ok(detailPlan);
+        service.delete(planId, detailPlanId, email);
+        return ResponseEntity.ok(detailPlanId);
     }
 }

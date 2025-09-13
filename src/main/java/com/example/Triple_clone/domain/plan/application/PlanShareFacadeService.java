@@ -79,6 +79,12 @@ public class PlanShareFacadeService {
         Plan plan = planService.findById(planId);
         List<PlanShare> planShares = planShareService.findByPlanId(plan.getId());
 
+        if (plan.isMine(member.getId())) {
+            return planShares.stream()
+                    .map(PlanShareResponseDto::new)
+                    .collect(Collectors.toList());
+        }
+
         for (PlanShare planShare : planShares) {
             PlanPermissionUtils.validateSharedWith(planShare, member);
         }

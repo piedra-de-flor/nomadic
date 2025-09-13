@@ -1,47 +1,37 @@
-<html>
+<script th:inline="javascript">
+  /* 서버에서 온 locations를 JS 배열로 주입 */
+  const locations = /*[[${locations}]]*/ [];
+</script>
+<script>
+  function initMap() {
+    const map = new google.maps.Map(document.getElementById('map_div'), {
+      center: { lat: 36.3181, lng: 127.4212 }, // fallback
+      zoom: 5
+    });
 
-<head>
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM&v=3.exp&libraries=visualization"></script>
-  <script th:inline="javascript">
-    /*<![CDATA[*/
-    var locations = /*[[${locations}]]*/ [];
-    /*]]>*/
-  </script>
-  <script type="text/javascript">
-    function initMap() {
-      var map = new google.maps.Map(document.getElementById('map_div'), {
-        center: { lat: 36.3181, lng: 127.4212 }, // Set your initial center coordinates
-        zoom: 12
-      });
+    if (!locations || locations.length === 0) return;
 
-      var pathCoordinates = locations.map(function (location) {
-        return { lat: location.latitude, lng: location.longitude };
-      });
+    const bounds = new google.maps.LatLngBounds();
+    const path = [];
 
-      var polyline = new google.maps.Polyline({
-        path: pathCoordinates,
-        strokeColor: '#9400D3',
-        strokeOpacity: 1.0,
-        strokeWeight: 2
-      });
+    locations.forEach(l => {
+      // ✅ Location의 getter(getLatitude/getLongitude/getName)로 값이 직렬화되어 들어옵니다
+      const pos = { lat: Number(l.latitude), lng: Number(l.longitude) };
+      path.push(pos);
+      bounds.extend(pos);
+      const mk = new google.maps.Marker({ position: pos, map, title: l.name || '' });
+      const info = new google.maps.InfoWindow({ content: `<div>${l.name || ''}</div>` });
+      mk.addListener('click', () => info.open(map, mk));
+    });
 
-      polyline.setMap(map);
+    new google.maps.Polyline({ path, strokeColor: '#9400D3', strokeOpacity: 1.0, strokeWeight: 2, map });
 
-      // Add markers
-      locations.forEach(function (location) {
-        var marker = new google.maps.Marker({
-          position: { lat: location.latitude, lng: location.longitude },
-          map: map,
-          title: location.name
-        });
-      });
-    }
-  </script>
-</head>
+    if (locations.length === 1) { map.setCenter(path[0]); map.setZoom(14); }
+    else { map.fitBounds(bounds); }
+  }
+</script>
 
-<body>
-<div id="map_div" style="height: 500px; width: 900px"></div>
-<script async defer onload="initMap()" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDlrPUgoxyo4-R5t9FF_wmmr1gNBoyYQM&v=3.exp&libraries=visualization"></script>
-</body>
-
-</html>
+<div id="map_div" style="height:500px;width:100%;max-width:900px;margin:0 auto"></div>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlCI_PdY5Z4dL-EXaMdagQlyaUAe6GpIs&libraries=visualization&callback=initMap">
+</script>

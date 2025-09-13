@@ -35,11 +35,11 @@ public class PlanController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @GetMapping("/plan")
+    @GetMapping("/plan/{planId}")
     public ResponseEntity<PlanReadResponseDto> readPlan(
             @Parameter(description = "계획 단일 조회 요청 정보", required = true)
-            @RequestBody PlanDto readRequestDto, @MemberEmailAspect String email) {
-        PlanReadResponseDto responseDto = service.findPlan(readRequestDto, email);
+            @PathVariable long planId, @MemberEmailAspect String email) {
+        PlanReadResponseDto responseDto = service.findPlan(planId, email);
         return ResponseEntity.ok(responseDto);
     }
 
