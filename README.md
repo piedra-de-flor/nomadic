@@ -58,7 +58,7 @@ src/main/java/com/example/nomadic/
 ```
 ---
 
-## 📖 사용 예시
+## 사용 예시
 ### 1. 초기 로드 및 홈 화면
 <img width="486" height="600" alt="image" src="https://github.com/user-attachments/assets/237357d0-12b3-4672-ade1-c7770a106259" />
 
@@ -70,3 +70,10 @@ src/main/java/com/example/nomadic/
 
 ### 4. 계획 화면
 <img width="417" height="646" alt="image" src="https://github.com/user-attachments/assets/2d3d6f04-7689-416f-92fa-87751ac08b23" />
+
+
+
+---
+## 📖 기획서
+https://trite-chips-629.notion.site/1d49bff393c780b69030eac14bfe2dad?pvs=74
+
