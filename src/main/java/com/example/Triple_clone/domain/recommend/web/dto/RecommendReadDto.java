@@ -10,6 +10,7 @@ public record RecommendReadDto(
         long id,
         String title,
         String subTitle,
+        String author,
         Location location,
         LocalDateTime createdAt,
         String price,
@@ -19,10 +20,11 @@ public record RecommendReadDto(
         int viewsCount,
         boolean like) {
 
-    public RecommendReadDto(Recommendation recommendation, boolean like) {
+    public RecommendReadDto(Recommendation recommendation, String author, boolean like) {
         this(recommendation.getId(),
                 recommendation.getTitle(),
                 recommendation.getSubTitle(),
+                author,
                 recommendation.getLocation(),
                 recommendation.getCreatedAt(),
                 recommendation.getPrice(),

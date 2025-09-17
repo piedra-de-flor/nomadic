@@ -8,7 +8,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public enum Style {
     HEALING("healing"),
-    ACTIVITY("activity");
+    ACTIVITY("activity"),
+    FAMILY("family"),
+    NATURE("nature"),
+    CULTURE("culture"),
+    FOOD("food");
 
     private final String style;
 

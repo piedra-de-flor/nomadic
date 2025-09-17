@@ -6,7 +6,10 @@ import lombok.RequiredArgsConstructor;
 public enum Partner {
     ALONE("alone"),
     COUPLE("couple"),
-    FAMILY("family");
+    FAMILY("family"),
+    FRIEND("friend"),
+    BUSINESS("business"),
+    CLUB("club");
 
     private final String partner;
 }

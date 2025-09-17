@@ -1,42 +1,33 @@
 package com.example.Triple_clone.domain.recommend.application;
 
+import com.example.Triple_clone.common.file.FileManager;
 import com.example.Triple_clone.common.logging.logMessage.MemberLogMessage;
 import com.example.Triple_clone.common.logging.logMessage.RecommendLogMessage;
 import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.member.infra.MemberRepository;
-import com.example.Triple_clone.common.file.FileManager;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadTop10Dto;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
-import com.example.Triple_clone.domain.recommend.domain.RecommendationLike;
 import com.example.Triple_clone.domain.recommend.domain.RecommendationType;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
-import com.example.Triple_clone.domain.recommend.infra.RecommendationLikeRepository;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadTop10Dto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RecommendService {
+public class RecommendQueryService {
     private final static int PAGE_SIZE = 5;
-    // 메모리에서 좋아요 상태를 추적 (추천장소ID -> 사용자ID들의 Set)
-    // true: 좋아요 추가, false: 좋아요 제거
-    ConcurrentHashMap<Long, ConcurrentHashMap<Long, Boolean>> likes = new ConcurrentHashMap<>();
 
     private final RecommendationRepository recommendationRepository;
-    private final RecommendationLikeRepository likeRepository;
     private final MemberRepository memberRepository;
     private final FileManager fileManager;
 
@@ -60,7 +51,7 @@ public class RecommendService {
 
         boolean likeOrNot = recommendation.isLikedBy(member.getId());
 
-        return new RecommendReadDto(recommendation, likeOrNot);
+        return new RecommendReadDto(recommendation, member.getName(), likeOrNot);
     }
 
     public byte[] loadImageAsResource(Long recommendationId) {
@@ -107,7 +98,7 @@ public class RecommendService {
         }
 
         List<RecommendReadDto> dtos = placesPage.getContent().stream()
-                .map(place -> new RecommendReadDto(place, false))
+                .map(place -> new RecommendReadDto(place, place.getAuthor().getName(), false))
                 .toList();
 
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
@@ -130,24 +121,6 @@ public class RecommendService {
         return response;
     }
 
-    public void toggleLike(Long recommendationId, Long memberId) {
-        likes.compute(recommendationId, (rid, userMap) -> {
-            if (userMap == null) userMap = new ConcurrentHashMap<>();
-            userMap.compute(memberId, (uid, prev) -> (prev == null) ? Boolean.TRUE : null);
-            return userMap.isEmpty() ? null : userMap;
-        });
-    }
-
-    @Transactional(readOnly = true)
-    public List<RecommendationLike> getLikesByRecommendationId(Long recommendationId) {
-        return likeRepository.findByRecommendationId(recommendationId);
-    }
-
-    @Transactional(readOnly = true)
-    public boolean isLikedByUser(Long recommendationId, Long userId) {
-        return likeRepository.existsByRecommendation_IdAndId_UserId(recommendationId, userId);
-    }
-
     @Transactional(readOnly = true)
     public List<RecommendReadDto> searchRecommendations(String keyword, RecommendationType type) {
         List<Recommendation> recommendations = recommendationRepository.findAll().stream()
@@ -159,7 +132,7 @@ public class RecommendService {
                 .toList();
 
         return recommendations.stream()
-                .map(rec -> new RecommendReadDto(rec, false))
+                .map(rec -> new RecommendReadDto(rec, rec.getAuthor().getName(),  false))
                 .toList();
     }
 
@@ -186,27 +159,7 @@ public class RecommendService {
         
         return filteredRecommendations.stream()
                 .limit(limit)
-                .map(rec -> new RecommendReadDto(rec, false))
+                .map(rec -> new RecommendReadDto(rec, rec.getAuthor().getName(), false))
                 .toList();
-    }
-
-    @Scheduled(fixedRate = 5000)
-    @Transactional
-    public void saveLike() {
-        if (!likes.isEmpty()) {
-            log.info("좋아요 저장 스케쥴링");
-            likes.forEach((placeId, userActions) -> {
-                Recommendation target = recommendationRepository.findById(placeId)
-                        .orElseThrow(() -> {
-                            log.warn(RecommendLogMessage.RECOMMEND_SEARCH_FAILED.format("추천 장소 조회 실패", placeId));
-                            return new EntityNotFoundException("no place entity for like");
-                        });
-
-                userActions.forEach((userId, shouldLike) -> {
-                    target.like(userId);
-                });
-            });
-            likes.clear();
-        }
     }
 }

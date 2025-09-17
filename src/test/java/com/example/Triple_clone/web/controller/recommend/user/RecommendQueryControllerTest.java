@@ -1,9 +1,9 @@
 package com.example.Triple_clone.web.controller.recommend.user;
 
-import com.example.Triple_clone.domain.recommend.web.controller.RecommendController;
+import com.example.Triple_clone.domain.recommend.web.controller.RecommendQueryController;
 import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadDto;
-import com.example.Triple_clone.domain.recommend.application.RecommendService;
+import com.example.Triple_clone.domain.recommend.application.RecommendQueryService;
 import com.example.Triple_clone.web.filter.JwtSecurityConfigForTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(RecommendController.class)
+@WebMvcTest(RecommendQueryController.class)
 @Import(JwtSecurityConfigForTest.class)
-public class RecommendControllerTest {
+public class RecommendQueryControllerTest {
 
     @MockBean
-    private RecommendService recommendService;
+    private RecommendQueryService recommendQueryService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,7 +50,7 @@ public class RecommendControllerTest {
     @Test
     void Controller_레이어_장소_전체_조회_이름순_테스트() throws Exception {
         //given
-        when(recommendService.findAll("name", pageable)).thenReturn(placePage());
+        when(recommendQueryService.findAll("name", pageable)).thenReturn(placePage());
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get("/recommendations")

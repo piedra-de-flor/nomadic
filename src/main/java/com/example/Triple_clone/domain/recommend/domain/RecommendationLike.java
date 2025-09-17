@@ -3,31 +3,28 @@ package com.example.Triple_clone.domain.recommend.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
-@Table(name = "recommendation_like")
+@Embeddable
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecommendationLike {
+public class RecommendationLike implements Serializable {
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @EmbeddedId
-    private RecommendationLikeId id;
-
-    @MapsId("recommendationId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recommendation_id", nullable = false)
-    private Recommendation recommendation;
-
-    private LocalDateTime createdAt;
-
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RecommendationLike)) return false;
-        return Objects.equals(id, ((RecommendationLike)o).id);
+        RecommendationLike that = (RecommendationLike) o;
+        return Objects.equals(userId, that.userId);
     }
-    @Override public int hashCode() { return Objects.hash(id); }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
 }

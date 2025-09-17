@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,11 @@ public class Plan {
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlanShare> planShares = new ArrayList<>();
 
+    @OneToMany(mappedBy = "plan",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<PlanChangeHistory> changeHistories = new ArrayList<>();
+
     @Builder
     public Plan(Member member, String place, Partner partner, Date startDay, Date endDay, List<Style> styles) {
         this.member = member;
@@ -66,5 +72,18 @@ public class Plan {
 
     public void addDetailPlan(DetailPlan detailPlan) {
         plans.add(detailPlan);
+    }
+
+    public void addChangeHistory(PlanChangeHistory h) {
+        changeHistories.add(h);
+    }
+
+    public void updateName(String name) {
+        this.place = name;
+    }
+
+    public void updateDate(Date start, Date end) {
+        this.startDay = start;
+        this.endDay = end;
     }
 }

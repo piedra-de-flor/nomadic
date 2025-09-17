@@ -9,6 +9,7 @@ import com.example.Triple_clone.domain.plan.domain.Partner;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.infra.PlanRepository;
 import com.example.Triple_clone.domain.plan.web.dto.plan.PlanPartnerUpdateDto;
+import com.example.Triple_clone.domain.plan.web.dto.plan.PlanUpdateDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,18 @@ public class PlanService {
     public void updatePartner(PlanPartnerUpdateDto updateDto) {
         Plan plan = findById(updateDto.planDto().planId());
         plan.choosePartner(Partner.valueOf(updateDto.partner()));
+    }
+
+    public void updateNameAndDate(PlanUpdateDto updateDto) {
+        Plan plan = findById(updateDto.planDto().planId());
+
+        if (!updateDto.name().isEmpty()) {
+            plan.updateName(updateDto.name());
+        }
+
+        if (!updateDto.start().equals(plan.getStartDay()) || !updateDto.start().equals(plan.getEndDay())) {
+            plan.updateDate(updateDto.start(), updateDto.end());
+        }
     }
 
     public List<Location> addLocation(long planId, String name, double latitude, double longitude) {

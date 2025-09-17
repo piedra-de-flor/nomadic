@@ -6,7 +6,7 @@ import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendWriteReviewDto;
 import com.example.Triple_clone.domain.member.application.UserService;
-import com.example.Triple_clone.domain.recommend.application.RecommendService;
+import com.example.Triple_clone.domain.recommend.application.RecommendQueryService;
 import com.example.Triple_clone.common.file.FileManager;
 import com.example.Triple_clone.common.error.RestApiException;
 import com.example.Triple_clone.domain.review.application.ReviewFacadeService;
@@ -31,7 +31,7 @@ class ReviewFacadeServiceTest {
 
     private UserService userService;
     private ReviewService reviewService;
-    private RecommendService recommendService;
+    private RecommendQueryService recommendQueryService;
     private FileManager fileManager;
     private ReviewFacadeService facadeService;
 
@@ -39,9 +39,9 @@ class ReviewFacadeServiceTest {
     void setUp() {
         userService = mock(UserService.class);
         reviewService = mock(ReviewService.class);
-        recommendService = mock(RecommendService.class);
+        recommendQueryService = mock(RecommendQueryService.class);
         fileManager = mock(FileManager.class);
-        facadeService = new ReviewFacadeService(userService, reviewService, recommendService, fileManager);
+        facadeService = new ReviewFacadeService(userService, reviewService, recommendQueryService, fileManager);
     }
 
     @Test
@@ -56,7 +56,7 @@ class ReviewFacadeServiceTest {
         when(dto.parentId()).thenReturn(null);
         when(dto.toEntity(member, recommendation, null)).thenReturn(review);
 
-        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(recommendQueryService.findById(100L)).thenReturn(recommendation);
         when(userService.findByEmail("test")).thenReturn(member);
 
         facadeService.writeReview(dto, "test");
@@ -78,7 +78,7 @@ class ReviewFacadeServiceTest {
         when(dto.parentId()).thenReturn(10L);
         when(dto.toEntity(member, recommendation, parent)).thenReturn(child);
 
-        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(recommendQueryService.findById(100L)).thenReturn(recommendation);
         when(userService.findByEmail("test")).thenReturn(member);
         when(reviewService.findById(10L)).thenReturn(parent);
         when(parent.getParent()).thenReturn(null);
@@ -102,7 +102,7 @@ class ReviewFacadeServiceTest {
         when(dto.placeId()).thenReturn(100L);
         when(dto.parentId()).thenReturn(10L);
 
-        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(recommendQueryService.findById(100L)).thenReturn(recommendation);
         when(userService.findByEmail("test")).thenReturn(member);
         when(reviewService.findById(10L)).thenReturn(parent);
         when(parent.getParent()).thenReturn(grandParent);
@@ -124,7 +124,7 @@ class ReviewFacadeServiceTest {
         );
 
         when(userService.findByEmail(member.getEmail())).thenReturn(member);
-        when(recommendService.findById(100L)).thenReturn(recommendation);
+        when(recommendQueryService.findById(100L)).thenReturn(recommendation);
         when(reviewService.findById(anyLong())).thenReturn(parentReview);
 
         facadeService.writeReview(dto, member.getEmail());

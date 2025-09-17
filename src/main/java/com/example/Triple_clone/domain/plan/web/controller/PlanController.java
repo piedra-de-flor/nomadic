@@ -82,6 +82,19 @@ public class PlanController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @Operation(summary = "계획 이름 및 날짜 수정", description = "기존 계획의 이름이나 날짜를 수정합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
+    @PatchMapping("/plan")
+    public ResponseEntity<PlanUpdateDto> updatePlan(
+            @Parameter(description = "계획 이름 및 날짜 요청 정보", required = true)
+            @RequestBody PlanUpdateDto updateDto, @MemberEmailAspect String email) {
+        PlanUpdateDto responseDto = service.updateNameAndDate(updateDto, email);
+        return ResponseEntity.ok(responseDto);
+    }
+
     @Operation(summary = "계획 삭제", description = "기존의 계획을 삭제합니다")
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")

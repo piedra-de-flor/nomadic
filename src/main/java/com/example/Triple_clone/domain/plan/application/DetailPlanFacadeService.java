@@ -16,7 +16,7 @@ import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateR
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanCreatedEvent;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanDeletedEvent;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.event.DetailPlanUpdatedEvent;
-import com.example.Triple_clone.domain.recommend.application.RecommendService;
+import com.example.Triple_clone.domain.recommend.application.RecommendQueryService;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ import java.util.List;
 public class DetailPlanFacadeService {
     private final PlanService planService;
     private final DetailPlanService detailPlanService;
-    private final RecommendService recommendService;
+    private final RecommendQueryService recommendQueryService;
     private final UserService userService;
     private final AccommodationQueryService accommodationService;
     private final PlanShareService planShareService;
@@ -57,7 +57,7 @@ public class DetailPlanFacadeService {
     @Transactional
     public DetailPlanDto addRecommendation(long recommendationId, long planId, String email) {
         Plan plan = planService.findById(planId);
-        Recommendation recommendation = recommendService.findById(recommendationId);
+        Recommendation recommendation = recommendQueryService.findById(recommendationId);
 
         DetailPlanDto detailPlanDto = new DetailPlanDto(planId, recommendation.getLocation(), plan.getStartDay(), "00:00", null);
         this.create(detailPlanDto, email);

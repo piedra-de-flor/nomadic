@@ -107,6 +107,23 @@ public class PlanFacadeService {
     }
 
     @Transactional
+    public PlanUpdateDto updateNameAndDate(PlanUpdateDto updateDto, String email) {
+        Member member = userService.findByEmail(email);
+        Plan plan = planService.findById(updateDto.planDto().planId());
+
+        if (plan.isMine(member.getId()) || PlanPermissionUtils.hasEditPermission(plan, member, planShareService)) {
+            String oldName = plan.getPlace();
+            planService.updateNameAndDate(updateDto);
+
+            eventPublisher.publishEvent(new PlanPartnerUpdatedEvent(this, plan, member, oldName, updateDto.name()));
+            return updateDto;
+        }
+
+        log.warn(PlanLogMessage.PLAN_ACCESS_FAILED.format(email, plan.getId()));
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
+    }
+
+    @Transactional
     public PlanDto deletePlan(PlanDto deleteDto, String email) {
         Member member = userService.findByEmail(email);
         Plan plan = planService.findById(deleteDto.planId());

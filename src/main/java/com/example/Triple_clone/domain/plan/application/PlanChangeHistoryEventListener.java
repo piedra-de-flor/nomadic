@@ -40,7 +40,7 @@ public class PlanChangeHistoryEventListener {
                     .build();
 
             historyService.save(history);
-
+            event.getPlan().addChangeHistory(history);
         } catch (JsonProcessingException e) {
             log.error(JsonProcessingLogMessage.JSON_PROCESSING_LOG_MESSAGE.format(
                     event.getTargetType().getValue(), event.getChangeType().getDescription()));

@@ -1,12 +1,12 @@
 package com.example.Triple_clone.domain.recommend.web.controller;
-import com.example.Triple_clone.domain.recommend.application.AdminRecommendService;
+import com.example.Triple_clone.common.auth.MemberEmailAspect;
+import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.recommend.domain.RecommendationBlock;
-import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendCreateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockCreateDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockUpdateDto;
-import com.example.Triple_clone.domain.recommend.web.dto.TestBlockDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,20 +21,21 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "장소 추천(관리자) Controller", description = "RECOMMEND ADMIN API")
-public class AdminRecommendController {
-    private final AdminRecommendService service;
+@Tag(name = "장소 추천 command Controller", description = "RECOMMEND COMMAND API")
+public class RecommendCommandController {
+    private final RecommendCommandService service;
 
     @Operation(summary = "추천 장소 생성", description = "새로운 추천 장소를 생성합니다 (이미지 파일 포함)")
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @PostMapping("/admin/recommend")
+    @PostMapping("/recommend")
     public ResponseEntity<Recommendation> createPlace(
             @Parameter(description = "추천 장소 생성 요청 정보 (multipart/form-data)", required = true)
-            @ModelAttribute @Validated AdminRecommendCreateRecommendationDto createPlaceRequestDto) {
-        Recommendation createdRecommendation = service.createRecommendation(createPlaceRequestDto);
+            @ModelAttribute @Validated RecommendCreateRecommendationDto createPlaceRequestDto,
+            @MemberEmailAspect String email) {
+        Recommendation createdRecommendation = service.createRecommendation(createPlaceRequestDto, email);
         return ResponseEntity.ok(createdRecommendation);
     }
 
@@ -43,7 +44,7 @@ public class AdminRecommendController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @PostMapping("/admin/recommend/image")
+    @PostMapping("/recommend/image")
     public ResponseEntity<Long> setMainImageOfRecommendation(
             @Parameter(description = "이미지를 추가할 추천 장소 ID", required = true)
             @RequestParam Long recommendationId,
@@ -58,11 +59,12 @@ public class AdminRecommendController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @PatchMapping("/admin/recommend")
+    @PatchMapping("/recommend")
     public ResponseEntity<Recommendation> updatePlace(
             @Parameter(description = "추천 장소 수정 요청 정보", required = true)
-            @RequestBody @Validated AdminRecommendUpdateRecommendationDto updatePlaceRequestDto) {
-        Recommendation updatedRecommendation = service.updateRecommendation(updatePlaceRequestDto);
+            @RequestBody @Validated RecommendUpdateRecommendationDto updatePlaceRequestDto,
+            @MemberEmailAspect String email) {
+        Recommendation updatedRecommendation = service.updateRecommendation(updatePlaceRequestDto, email);
         return ResponseEntity.ok(updatedRecommendation);
     }
 
@@ -71,11 +73,12 @@ public class AdminRecommendController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @DeleteMapping("/admin/recommend")
+    @DeleteMapping("/recommend")
     public ResponseEntity<Long> deletePlace(
             @Parameter(description = "추천 장소 삭제 요청 정보", required = true)
-            @RequestParam long placeId) {
-        long deletedPlaceId = service.deleteRecommendation(placeId);
+            @RequestParam long placeId,
+            @MemberEmailAspect String email) {
+        long deletedPlaceId = service.deleteRecommendation(placeId, email);
         return ResponseEntity.ok(deletedPlaceId);
     }
 
@@ -84,15 +87,16 @@ public class AdminRecommendController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @PostMapping("/admin/recommend/{recommendationId}/blocks")
+    @PostMapping("/recommend/{recommendationId}/blocks")
     public ResponseEntity<RecommendationBlock> addBlock(
             @Parameter(description = "추천 장소 ID", required = true)
             @PathVariable Long recommendationId,
             @Parameter(description = "추가할 블록 정보 (multipart/form-data)", required = true)
-            @ModelAttribute RecommendationBlockCreateDto createDto) {
+            @ModelAttribute RecommendationBlockCreateDto createDto,
+            @MemberEmailAspect String email) {
         log.info("addBlock Controller 호출됨 - recommendationId: {}, createDto: {}", recommendationId, createDto);
         try {
-            RecommendationBlock createdBlock = service.addBlock(recommendationId, createDto);
+            RecommendationBlock createdBlock = service.addBlock(recommendationId, createDto, email);
             log.info("addBlock 성공 - blockId: {}", createdBlock.getId());
             return ResponseEntity.ok(createdBlock);
         } catch (Exception e) {
@@ -106,13 +110,14 @@ public class AdminRecommendController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @PatchMapping("/admin/recommend/blocks/{blockId}")
+    @PatchMapping("/recommend/blocks/{blockId}")
     public ResponseEntity<RecommendationBlock> updateBlock(
             @Parameter(description = "블록 ID", required = true)
             @PathVariable Long blockId,
             @Parameter(description = "수정할 블록 정보", required = true)
-            @ModelAttribute RecommendationBlockUpdateDto updateDto) {
-        RecommendationBlock block = service.updateBlock(blockId, updateDto);
+            @ModelAttribute RecommendationBlockUpdateDto updateDto,
+            @MemberEmailAspect String email) {
+        RecommendationBlock block = service.updateBlock(blockId, updateDto, email);
         return ResponseEntity.ok(block);
     }
 
@@ -121,7 +126,7 @@ public class AdminRecommendController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @DeleteMapping("/admin/recommend/blocks/{blockId}")
+    @DeleteMapping("/recommend/blocks/{blockId}")
     public ResponseEntity<Void> removeBlock(
             @Parameter(description = "블록 ID", required = true)
             @PathVariable Long blockId) {
@@ -129,9 +134,16 @@ public class AdminRecommendController {
         return ResponseEntity.ok().build();
     }
 
-    // 테스트용 엔드포인트
-    @PostMapping("/admin/test/block")
-    public ResponseEntity<String> testBlock(@ModelAttribute TestBlockDto testDto) {
-        return ResponseEntity.ok("Received: " + testDto.toString());
+    @Operation(summary = "추천 장소에 대한 좋아요", description = "기존 추천 장소에 좋아요 혹은 좋아요 취소를 합니다")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
+    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
+    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
+    @PutMapping("/recommendation/like")
+    public ResponseEntity<Long> toggleLike(
+            @Parameter(description = "추천 장소 좋아요 요청 정보", required = true)
+            @RequestParam long recommendationId, @RequestParam long memberId) {
+        service.toggleLike(recommendationId, memberId);
+        return ResponseEntity.ok(recommendationId);
     }
 }

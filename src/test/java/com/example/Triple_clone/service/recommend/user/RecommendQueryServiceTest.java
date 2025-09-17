@@ -4,7 +4,7 @@ import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadDto;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.member.infra.MemberRepository;
-import com.example.Triple_clone.domain.recommend.application.RecommendService;
+import com.example.Triple_clone.domain.recommend.application.RecommendQueryService;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RecommendServiceTest {
+class RecommendQueryServiceTest {
     @Mock
     private RecommendationRepository recommendationRepository;
 
@@ -39,7 +39,7 @@ class RecommendServiceTest {
     private Recommendation recommendation2;
 
     @InjectMocks
-    private RecommendService service;
+    private RecommendQueryService service;
 
     @Mock
     Pageable pageable;

@@ -1,11 +1,16 @@
 package com.example.Triple_clone.domain.recommend.domain;
 
+import com.example.Triple_clone.common.error.AuthErrorCode;
+import com.example.Triple_clone.common.error.RestApiException;
+import com.example.Triple_clone.common.logging.logMessage.RecommendLogMessage;
+import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.review.domain.Review;
 import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.domain.plan.domain.Location;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -42,8 +48,9 @@ public class Recommendation {
     @Column(nullable = false)
     private RecommendationType type;
 
-    @Embedded
-    private PostMeta postMeta;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private Member author;
 
     @OneToMany(mappedBy = "recommendation",
             cascade = CascadeType.ALL,
@@ -52,10 +59,12 @@ public class Recommendation {
     @JsonManagedReference
     private List<RecommendationBlock> blocks = new ArrayList<>();
 
-    // 좋아요/리뷰 (정규화)
-    @OneToMany(mappedBy = "recommendation",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @ElementCollection
+    @CollectionTable(
+            name = "recommendation_like",
+            joinColumns = @JoinColumn(name = "recommendation_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"recommendation_id", "user_id"})
+    )
     private Set<RecommendationLike> likes = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "recommendation",
@@ -79,14 +88,14 @@ public class Recommendation {
 
     @Builder
     public Recommendation(@NonNull String title, String subTitle, Location location, 
-                         String price, RecommendationType type, PostMeta postMeta,
+                         String price, RecommendationType type, Member author,
                          List<RecommendationBlock> blocks) {
         this.title = title;
         this.subTitle = subTitle;
         this.location = location;
         this.price = price;
         this.type = type;
-        this.postMeta = postMeta;
+        this.author = author;
         this.blocks = blocks != null ? blocks : new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -95,7 +104,7 @@ public class Recommendation {
         this.viewsCount = 0;
     }
 
-    public void update(String title, String subTitle, Location location, String price, PostMeta postMeta) {
+    public void update(String title, String subTitle, Location location, String price) {
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("제목은 필수입니다");
         }
@@ -103,7 +112,6 @@ public class Recommendation {
         this.subTitle = subTitle;
         this.location = location;
         this.price = price;
-        this.postMeta = postMeta;
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -117,12 +125,7 @@ public class Recommendation {
             likes.remove(existingLike);
             decreaseLikesCount();
         } else {
-            RecommendationLikeId likeId = new RecommendationLikeId(this.id, userId);
-            RecommendationLike newLike = new RecommendationLike();
-            newLike.setId(likeId);
-            newLike.setRecommendation(this);
-            newLike.setCreatedAt(LocalDateTime.now());
-            
+            RecommendationLike newLike = new RecommendationLike(userId);
             likes.add(newLike);
             increaseLikesCount();
         }
@@ -134,7 +137,7 @@ public class Recommendation {
     
     private RecommendationLike findLikeByUserId(long userId) {
         return likes.stream()
-                .filter(like -> like.getId().getUserId().equals(userId))
+                .filter(like -> like.getUserId().equals(userId))
                 .findFirst()
                 .orElse(null);
     }
@@ -191,5 +194,14 @@ public class Recommendation {
     
     public void increaseLikesCount() {
         this.likesCount++;
+    }
+
+    public boolean isMine(Member member) {
+        if (member.getId() == author.getId()) {
+            return true;
+        }
+
+        log.warn(RecommendLogMessage.RECOMMEND_AUTH_FAILED.format(author.getId()));
+        throw new RestApiException(AuthErrorCode.AUTH_ERROR_CODE);
     }
 }

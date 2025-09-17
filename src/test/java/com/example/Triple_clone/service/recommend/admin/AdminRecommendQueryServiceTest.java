@@ -1,10 +1,10 @@
 package com.example.Triple_clone.service.recommend.admin;
 
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
-import com.example.Triple_clone.domain.recommend.application.AdminRecommendService;
+import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.common.file.Image;
-import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendCreateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
 import com.example.Triple_clone.common.file.FileManager;
 import org.junit.jupiter.api.Test;
@@ -18,25 +18,25 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminRecommendServiceTest {
+public class AdminRecommendQueryServiceTest {
     @Mock
     private RecommendationRepository recommendationRepository;
     @InjectMocks
-    private AdminRecommendService service;
+    private RecommendCommandService service;
     @Mock
     Recommendation recommendation;
     @Mock
     FileManager fileManager;
     @Mock
-    AdminRecommendCreateRecommendationDto adminRecommendCreateRecommendationDto;
+    RecommendCreateRecommendationDto recommendCreateRecommendationDto;
     @Mock
-    AdminRecommendUpdateRecommendationDto adminRecommendUpdateRecommendationDto;
+    RecommendUpdateRecommendationDto recommendUpdateRecommendationDto;
 
     @Test
     void 서비스_레이어_관리자_장소_생성_테스트() {
-        when(adminRecommendCreateRecommendationDto.toEntity()).thenReturn(recommendation);
+        when(recommendCreateRecommendationDto.toEntity()).thenReturn(recommendation);
 
-        service.createRecommendation(adminRecommendCreateRecommendationDto);
+        service.createRecommendation(recommendCreateRecommendationDto);
 
         verify(recommendationRepository, times(1)).save(recommendation);
 
@@ -44,10 +44,10 @@ public class AdminRecommendServiceTest {
 
     @Test
     void 서비스_레이어_관리자_장소_수정_테스트() {
-        when(adminRecommendUpdateRecommendationDto.placeId()).thenReturn(1L);
+        when(recommendUpdateRecommendationDto.placeId()).thenReturn(1L);
         when(recommendationRepository.findById(1L)).thenReturn(Optional.ofNullable(recommendation));
 
-        service.updateRecommendation(adminRecommendUpdateRecommendationDto);
+        service.updateRecommendation(recommendUpdateRecommendationDto);
 
 
         verify(recommendation, times(1)).update(null, null, null, null);

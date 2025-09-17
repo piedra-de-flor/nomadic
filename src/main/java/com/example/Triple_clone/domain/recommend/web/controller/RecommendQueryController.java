@@ -1,11 +1,9 @@
 package com.example.Triple_clone.domain.recommend.web.controller;
 
 import com.example.Triple_clone.common.auth.MemberEmailAspect;
-import com.example.Triple_clone.domain.recommend.application.RecommendService;
+import com.example.Triple_clone.domain.recommend.application.RecommendQueryService;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
-import com.example.Triple_clone.domain.recommend.domain.RecommendationBlock;
 import com.example.Triple_clone.domain.recommend.domain.RecommendationType;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendLikeDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendReadTop10Dto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockReadDto;
@@ -25,10 +23,10 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "장소 추천(사용자) Controller", description = "RECOMMEND API")
-public class RecommendController {
+@Tag(name = "장소 추천 조회 Controller", description = "RECOMMEND SEARCH API")
+public class RecommendQueryController {
     private static final String REDIRECT_END_POINT_TO_PLANNING_SERVICE = "/detailPlan/redirect";
-    private final RecommendService service;
+    private final RecommendQueryService service;
 
     @Operation(summary = "추천 장소 전체 조회 (선택적 정렬)", description = "자신이 원하는 정렬순에 맞춰 추천 장소를 전체 조회합니다")
     @ApiResponse(responseCode = "200", description = "성공")
@@ -70,19 +68,6 @@ public class RecommendController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
                 .body(response);
-    }
-
-    @Operation(summary = "추천 장소에 대한 좋아요", description = "기존 추천 장소에 좋아요 혹은 좋아요 취소를 합니다")
-    @ApiResponse(responseCode = "200", description = "성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청 형식입니다")
-    @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
-    @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
-    @PutMapping("/recommendation/like")
-    public ResponseEntity<Long> toggleLike(
-            @Parameter(description = "추천 장소 좋아요 요청 정보", required = true)
-            @RequestParam long recommendationId, @RequestParam long memberId) {
-        service.toggleLike(recommendationId, memberId);
-        return ResponseEntity.ok(recommendationId);
     }
 
     @Operation(summary = "인기가 많은 상위 10개의 추천 장소 보기", description = "좋아요 상위 10개의 추천 장소들에 대해 조회를 합니다")
@@ -158,4 +143,5 @@ public class RecommendController {
         List<RecommendReadDto> results = service.getRandomRecommendations(type, limit);
         return ResponseEntity.ok(results);
     }
+
 }

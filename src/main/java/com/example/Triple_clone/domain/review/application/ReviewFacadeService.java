@@ -7,7 +7,7 @@ import com.example.Triple_clone.common.error.AuthErrorCode;
 import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendWriteReviewDto;
 import com.example.Triple_clone.domain.member.application.UserService;
-import com.example.Triple_clone.domain.recommend.application.RecommendService;
+import com.example.Triple_clone.domain.recommend.application.RecommendQueryService;
 import com.example.Triple_clone.common.file.FileManager;
 import com.example.Triple_clone.common.error.RestApiException;
 import com.example.Triple_clone.domain.review.web.dto.ReviewResponseDto;
@@ -28,12 +28,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReviewFacadeService {
     private final UserService userService;
     private final ReviewService reviewService;
-    private final RecommendService recommendService;
+    private final RecommendQueryService recommendQueryService;
     private final FileManager fileManager;
 
     @Transactional
     public void writeReview(RecommendWriteReviewDto writeReviewRequestDto, String email) {
-        Recommendation recommendation = recommendService.findById(writeReviewRequestDto.placeId());
+        Recommendation recommendation = recommendQueryService.findById(writeReviewRequestDto.placeId());
         Member member = userService.findByEmail(email);
 
         Review parent = null;

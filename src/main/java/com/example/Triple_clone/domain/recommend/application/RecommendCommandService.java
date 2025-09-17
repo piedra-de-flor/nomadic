@@ -3,15 +3,15 @@ package com.example.Triple_clone.domain.recommend.application;
 import com.example.Triple_clone.common.file.FileManager;
 import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.common.logging.logMessage.RecommendLogMessage;
+import com.example.Triple_clone.domain.member.application.UserService;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.member.domain.Role;
 import com.example.Triple_clone.domain.plan.domain.Location;
-import com.example.Triple_clone.domain.recommend.domain.BlockType;
-import com.example.Triple_clone.domain.recommend.domain.PostMeta;
-import com.example.Triple_clone.domain.recommend.domain.Recommendation;
-import com.example.Triple_clone.domain.recommend.domain.RecommendationBlock;
-import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
+import com.example.Triple_clone.domain.recommend.domain.*;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationBlockRepository;
-import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendCreateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockCreateDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockUpdateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,27 +29,24 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AdminRecommendService {
+public class RecommendCommandService {
     private final RecommendationRepository repository;
+    private final UserService userService;
     private final RecommendationBlockRepository blockRepository;
     private final FileManager fileManager;
     private final ObjectMapper objectMapper;
+    private final RecommendLikeMap likes;
 
     @Transactional
-    public Recommendation createRecommendation(AdminRecommendCreateRecommendationDto createRecommendationRequestDto) {
+    public Recommendation createRecommendation(RecommendCreateRecommendationDto createRecommendationRequestDto, String email) {
         try {
-            // JSON 문자열 파싱
             Location location = objectMapper.readValue(createRecommendationRequestDto.location(), Location.class);
-            
-            PostMeta postMeta = null;
-            if (createRecommendationRequestDto.postMeta() != null && !createRecommendationRequestDto.postMeta().trim().isEmpty()) {
-                postMeta = objectMapper.readValue(createRecommendationRequestDto.postMeta(), PostMeta.class);
-            } else {
-                // postMeta가 없을 때 기본값 설정
-                postMeta = PostMeta.builder()
-                        .authorName("관리자")
-                        .authorProfileUrl(null)
-                        .build();
+
+            Member author = userService.findByEmail(email);
+
+            if (createRecommendationRequestDto.type().equals(RecommendationType.PLACE) && !author.getRoles().contains(Role.ADMIN.role)) {
+                log.warn(RecommendLogMessage.RECOMMEND_PLACE_COMMAND_AUTH_FAILED.format());
+                throw new IllegalArgumentException("추천 장소 생성 권한 오류 - 관리자만 추천 장소를 포스팅할 수 있습니다.");
             }
             
             Set<String> tags = null;
@@ -58,24 +55,21 @@ public class AdminRecommendService {
                         .map(String::trim)
                         .collect(Collectors.toSet());
             }
-            
-            // Recommendation 엔티티 생성
+
             Recommendation recommendation = Recommendation.builder()
                     .title(createRecommendationRequestDto.title())
                     .subTitle(createRecommendationRequestDto.subTitle())
                     .location(location)
                     .price(createRecommendationRequestDto.price())
                     .type(createRecommendationRequestDto.type())
-                    .postMeta(postMeta)
+                    .author(author)
                     .blocks(null)
                     .build();
-            
-            // 태그 추가
+
             if (tags != null) {
                 recommendation.addTags(tags);
             }
-            
-            // 메인 이미지 업로드 처리
+
             if (createRecommendationRequestDto.mainImage() != null) {
                 Image mainImage = fileManager.uploadImage(createRecommendationRequestDto.mainImage());
                 recommendation.setImage(mainImage);
@@ -104,40 +98,52 @@ public class AdminRecommendService {
     }
 
     @Transactional
-    public Recommendation updateRecommendation(AdminRecommendUpdateRecommendationDto updateRecommendationRequestDto) {
+    public Recommendation updateRecommendation(RecommendUpdateRecommendationDto updateRecommendationRequestDto, String email) {
+        Member author = userService.findByEmail(email);
         Recommendation recommendation = repository.findById(updateRecommendationRequestDto.placeId())
                 .orElseThrow(() -> {
                     log.warn(RecommendLogMessage.RECOMMEND_SEARCH_FAILED.format("추천 장소 컨텐츠 수정 실패", updateRecommendationRequestDto.placeId()));
                     return new EntityNotFoundException("no place entity for update");
                 });
 
-        recommendation.update(updateRecommendationRequestDto.title(),
-                updateRecommendationRequestDto.subTitle(),
-                updateRecommendationRequestDto.location(),
-                updateRecommendationRequestDto.price(),
-                updateRecommendationRequestDto.postMeta());
+        if (recommendation.isMine(author)) {
+            recommendation.update(updateRecommendationRequestDto.title(),
+                    updateRecommendationRequestDto.subTitle(),
+                    updateRecommendationRequestDto.location(),
+                    updateRecommendationRequestDto.price());
 
-        return recommendation;
+            return recommendation;
+        }
+
+        throw new IllegalArgumentException("추천 포스팅 수정 실패");
     }
 
     @Transactional
-    public long deleteRecommendation(Long recommendationId) {
+    public long deleteRecommendation(Long recommendationId, String email) {
+        Member author = userService.findByEmail(email);
         Recommendation recommendation = repository.findById(recommendationId)
                 .orElseThrow(() -> {
                     log.warn(RecommendLogMessage.RECOMMEND_SEARCH_FAILED.format("추천 장소 삭제 실패", recommendationId));
                     return new EntityNotFoundException("no place entity for delete");
                 });
 
-        repository.delete(recommendation);
-        fileManager.deleteExistingImage(recommendation.getMainImage().getStoredFileName());
-        return recommendationId;
+        if (recommendation.isMine(author)) {
+            repository.delete(recommendation);
+            fileManager.deleteExistingImage(recommendation.getMainImage().getStoredFileName());
+            return recommendationId;
+        }
+
+        throw new IllegalArgumentException("추천 포스팅 삭제 실패");
     }
 
     @Transactional
-    public RecommendationBlock addBlock(Long recommendationId, RecommendationBlockCreateDto createDto) {
-        log.info("addBlock 호출됨 - recommendationId: {}, createDto: {}", recommendationId, createDto);
-        
-        // 수동 검증
+    public RecommendationBlock addBlock(Long recommendationId, RecommendationBlockCreateDto createDto, String email) {
+        Member author = userService.findByEmail(email);
+        Recommendation recommendation = repository.findById(recommendationId)
+                .orElseThrow(() -> new EntityNotFoundException("no place entity"));
+
+        if (!recommendation.isMine(author)) throw new IllegalArgumentException("추천 포스팅 컨텐츠 추가 실패");
+
         if (createDto.getType() == null || createDto.getType().trim().isEmpty()) {
             log.error("블록 타입이 null이거나 비어있음: {}", createDto.getType());
             throw new IllegalArgumentException("블록 타입은 필수입니다");
@@ -146,25 +152,19 @@ public class AdminRecommendService {
             log.error("순서 인덱스가 null이거나 비어있음: {}", createDto.getOrderIndex());
             throw new IllegalArgumentException("순서 인덱스는 필수입니다");
         }
-        
-        Recommendation recommendation = repository.findById(recommendationId)
-                .orElseThrow(() -> new EntityNotFoundException("no place entity"));
-        
-        // type 파싱
+
         BlockType blockType;
         try {
             blockType = BlockType.valueOf(createDto.getType().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("잘못된 블록 타입입니다: " + createDto.getType() + ". TEXT 또는 IMAGE를 사용하세요.");
         }
-        
-        // 이미지 업로드 처리
+
         Image image = null;
         if (blockType == BlockType.IMAGE && createDto.getImageFile() != null) {
             image = fileManager.uploadImage(createDto.getImageFile());
         }
-        
-        // orderIndex 파싱
+
         int orderIndex;
         try {
             orderIndex = Integer.parseInt(createDto.getOrderIndex());
@@ -174,8 +174,7 @@ public class AdminRecommendService {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("순서 인덱스는 숫자여야 합니다: " + createDto.getOrderIndex());
         }
-        
-        // 블록 생성
+
         RecommendationBlock block = RecommendationBlock.builder()
                 .type(blockType)
                 .text(createDto.getText())
@@ -205,30 +204,29 @@ public class AdminRecommendService {
     }
 
     @Transactional
-    public RecommendationBlock updateBlock(Long blockId, RecommendationBlockUpdateDto updateDto) {
+    public RecommendationBlock updateBlock(Long blockId, RecommendationBlockUpdateDto updateDto, String email) {
+        Member author = userService.findByEmail(email);
         RecommendationBlock block = blockRepository.findById(blockId)
                 .orElseThrow(() -> new EntityNotFoundException("no block entity"));
-        
-        // type 파싱
+
+        if (!block.getRecommendation().isMine(author)) throw new IllegalArgumentException("추천 포스팅 컨텐츠 수정 실패");
+
         BlockType blockType;
         try {
             blockType = BlockType.valueOf(updateDto.getType().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("잘못된 블록 타입입니다: " + updateDto.getType() + ". TEXT 또는 IMAGE를 사용하세요.");
         }
-        
-        // 기존 이미지 삭제 (새 이미지가 업로드되는 경우)
+
         if (updateDto.getImageFile() != null && block.getImage() != null) {
             fileManager.deleteExistingImage(block.getImage().getStoredFileName());
         }
-        
-        // 새 이미지 업로드
-        Image image = block.getImage(); // 기존 이미지 유지
+
+        Image image = block.getImage();
         if (blockType == BlockType.IMAGE && updateDto.getImageFile() != null) {
             image = fileManager.uploadImage(updateDto.getImageFile());
         }
-        
-        // orderIndex 파싱
+
         int orderIndex;
         try {
             orderIndex = Integer.parseInt(updateDto.getOrderIndex());
@@ -244,5 +242,9 @@ public class AdminRecommendService {
                     orderIndex);
         
         return blockRepository.save(block);
+    }
+
+    public void toggleLike(Long recommendationId, Long memberId) {
+        likes.insert(memberId, recommendationId);
     }
 }

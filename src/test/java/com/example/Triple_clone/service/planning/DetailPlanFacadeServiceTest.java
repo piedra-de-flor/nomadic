@@ -13,7 +13,7 @@ import com.example.Triple_clone.domain.plan.web.dto.ReservationCreateDto;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.accommodation.application.AccommodationService;
-import com.example.Triple_clone.domain.recommend.application.RecommendService;
+import com.example.Triple_clone.domain.recommend.application.RecommendQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class DetailPlanFacadeServiceTest {
 
     private PlanService planService;
     private DetailPlanService detailPlanService;
-    private RecommendService recommendService;
+    private RecommendQueryService recommendQueryService;
     private AccommodationService accommodationService;
     private DetailPlanFacadeService facadeService;
 
@@ -38,9 +38,9 @@ class DetailPlanFacadeServiceTest {
     void setUp() {
         planService = mock(PlanService.class);
         detailPlanService = mock(DetailPlanService.class);
-        recommendService = mock(RecommendService.class);
+        recommendQueryService = mock(RecommendQueryService.class);
         accommodationService = mock(AccommodationService.class);
-        facadeService = new DetailPlanFacadeService(planService, detailPlanService, recommendService, accommodationService);
+        facadeService = new DetailPlanFacadeService(planService, detailPlanService, recommendQueryService, accommodationService);
     }
 
     @Test
@@ -66,7 +66,7 @@ class DetailPlanFacadeServiceTest {
                 .build();
 
         when(planService.findById(1L)).thenReturn(plan);
-        when(recommendService.findById(2L)).thenReturn(recommendation);
+        when(recommendQueryService.findById(2L)).thenReturn(recommendation);
 
         // when
         DetailPlanDto result = facadeService.addRecommendation(2L, 1L);

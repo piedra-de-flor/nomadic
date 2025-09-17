@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class RateLimitAspect {
     private final Bucket bucket;
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping) && execution(* com.example.Triple_clone.domain.recommend.web.controller.RecommendController.like(..))")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping) && execution(* com.example.Triple_clone.domain.recommend.web.controller.RecommendCommandController.toggleLike(..))")
     public void likeMethod() {}
 
     @Around("likeMethod()")

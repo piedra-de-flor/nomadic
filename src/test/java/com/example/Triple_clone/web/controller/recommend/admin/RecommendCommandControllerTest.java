@@ -1,11 +1,11 @@
 package com.example.Triple_clone.web.controller.recommend.admin;
 
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
-import com.example.Triple_clone.domain.recommend.web.controller.AdminRecommendController;
+import com.example.Triple_clone.domain.recommend.web.controller.RecommendCommandController;
 import com.example.Triple_clone.domain.plan.domain.Location;
-import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendCreateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.web.dto.AdminRecommendUpdateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.application.AdminRecommendService;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.web.filter.JwtSecurityConfigForTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,12 +25,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AdminRecommendController.class)
+@WebMvcTest(RecommendCommandController.class)
 @Import(JwtSecurityConfigForTest.class)
-public class AdminRecommendControllerTest {
+public class RecommendCommandControllerTest {
 
     @MockBean
-    private AdminRecommendService adminRecommendService;
+    private RecommendCommandService recommendCommandService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,9 +40,9 @@ public class AdminRecommendControllerTest {
     @Test
     void 관리자_Controller_추천_장소_생성_테스트() throws Exception {
         // given
-        AdminRecommendCreateRecommendationDto request = new AdminRecommendCreateRecommendationDto("test", "test", "test",  new Location(1D, 1D, "location"));
+        RecommendCreateRecommendationDto request = new RecommendCreateRecommendationDto("test", "test", "test",  new Location(1D, 1D, "location"));
         Recommendation response = request.toEntity();
-        when(adminRecommendService.createRecommendation(any(AdminRecommendCreateRecommendationDto.class))).thenReturn(response);
+        when(recommendCommandService.createRecommendation(any(RecommendCreateRecommendationDto.class))).thenReturn(response);
 
         // when
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
@@ -98,7 +98,7 @@ public class AdminRecommendControllerTest {
                 .location( new Location(1D, 1D, "location"))
                 .build();
 
-        when(adminRecommendService.updateRecommendation(any(AdminRecommendUpdateRecommendationDto.class))).thenReturn(response);
+        when(recommendCommandService.updateRecommendation(any(RecommendUpdateRecommendationDto.class))).thenReturn(response);
 
         // when
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
@@ -119,7 +119,7 @@ public class AdminRecommendControllerTest {
     @Test
     void 관리자_Controller_추천_장소_삭제_테스트() throws Exception {
         //given
-        when(adminRecommendService.deleteRecommendation(any(Long.class))).thenReturn(1L);
+        when(recommendCommandService.deleteRecommendation(any(Long.class))).thenReturn(1L);
 
         //when && then
         mockMvc.perform(MockMvcRequestBuilders
