@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.recommend.web.dto;
 
+import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 
@@ -11,6 +12,7 @@ public record RecommendReadDto(
         String title,
         String subTitle,
         String author,
+        long authorId,
         Location location,
         LocalDateTime createdAt,
         String price,
@@ -20,11 +22,12 @@ public record RecommendReadDto(
         int viewsCount,
         boolean like) {
 
-    public RecommendReadDto(Recommendation recommendation, String author, boolean like) {
+    public RecommendReadDto(Recommendation recommendation, Member author, boolean like) {
         this(recommendation.getId(),
                 recommendation.getTitle(),
                 recommendation.getSubTitle(),
-                author,
+                author.getName(),
+                author.getId(),
                 recommendation.getLocation(),
                 recommendation.getCreatedAt(),
                 recommendation.getPrice(),

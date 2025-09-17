@@ -46,12 +46,11 @@ public class RecommendQueryService {
                     return new EntityNotFoundException("no user entity");
                 });
 
-        // 조회수 증가
         recommendation.increaseViews();
 
         boolean likeOrNot = recommendation.isLikedBy(member.getId());
 
-        return new RecommendReadDto(recommendation, member.getName(), likeOrNot);
+        return new RecommendReadDto(recommendation, member, likeOrNot);
     }
 
     public byte[] loadImageAsResource(Long recommendationId) {
@@ -98,7 +97,7 @@ public class RecommendQueryService {
         }
 
         List<RecommendReadDto> dtos = placesPage.getContent().stream()
-                .map(place -> new RecommendReadDto(place, place.getAuthor().getName(), false))
+                .map(place -> new RecommendReadDto(place, place.getAuthor(), false))
                 .toList();
 
         return new PageImpl<>(dtos, pageable, placesPage.getTotalElements());
@@ -133,7 +132,7 @@ public class RecommendQueryService {
                 .toList();
 
         return recommendations.stream()
-                .map(rec -> new RecommendReadDto(rec, rec.getAuthor().getName(),  false))
+                .map(rec -> new RecommendReadDto(rec, rec.getAuthor(),  false))
                 .toList();
     }
 
@@ -160,7 +159,7 @@ public class RecommendQueryService {
         
         return filteredRecommendations.stream()
                 .limit(limit)
-                .map(rec -> new RecommendReadDto(rec, rec.getAuthor().getName(), false))
+                .map(rec -> new RecommendReadDto(rec, rec.getAuthor(), false))
                 .toList();
     }
 }

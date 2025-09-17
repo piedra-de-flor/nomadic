@@ -57,12 +57,12 @@ public class RecommendCommandController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PatchMapping("/recommend")
-    public ResponseEntity<Recommendation> updatePlace(
+    public ResponseEntity<RecommendReadDto> updatePlace(
             @Parameter(description = "추천 장소 수정 요청 정보", required = true)
-            @RequestBody @Validated RecommendUpdateRecommendationDto updatePlaceRequestDto,
+            @RequestBody @Validated RecommendationUpdateDto updatePlaceRequestDto,
             @MemberEmailAspect String email) {
-        Recommendation updatedRecommendation = service.updateRecommendation(updatePlaceRequestDto, email);
-        return ResponseEntity.ok(updatedRecommendation);
+        RecommendReadDto response = service.updateRecommendation(updatePlaceRequestDto, email);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "추천 장소 삭제", description = "기존 추천 장소를 삭제합니다")
@@ -108,13 +108,13 @@ public class RecommendCommandController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PatchMapping("/recommend/blocks/{blockId}")
-    public ResponseEntity<RecommendationBlock> updateBlock(
+    public ResponseEntity<RecommendationBlockUpdateDto> updateBlock(
             @Parameter(description = "블록 ID", required = true)
             @PathVariable Long blockId,
             @Parameter(description = "수정할 블록 정보", required = true)
             @ModelAttribute RecommendationBlockUpdateDto updateDto,
             @MemberEmailAspect String email) {
-        RecommendationBlock block = service.updateBlock(blockId, updateDto, email);
+        RecommendationBlockUpdateDto block = service.updateBlock(blockId, updateDto, email);
         return ResponseEntity.ok(block);
     }
 
@@ -126,8 +126,9 @@ public class RecommendCommandController {
     @DeleteMapping("/recommend/blocks/{blockId}")
     public ResponseEntity<Void> removeBlock(
             @Parameter(description = "블록 ID", required = true)
-            @PathVariable Long blockId) {
-        service.removeBlock(blockId);
+            @PathVariable Long blockId,
+            @MemberEmailAspect String email) {
+        service.removeBlock(blockId, email);
         return ResponseEntity.ok().build();
     }
 

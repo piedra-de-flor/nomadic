@@ -4,7 +4,7 @@ import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.recommend.web.controller.RecommendCommandController;
 import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationCreateDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendationUpdateDto;
 import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.web.filter.JwtSecurityConfigForTest;
 import org.junit.jupiter.api.Test;
@@ -98,7 +98,7 @@ public class RecommendCommandControllerTest {
                 .location( new Location(1D, 1D, "location"))
                 .build();
 
-        when(recommendCommandService.updateRecommendation(any(RecommendUpdateRecommendationDto.class))).thenReturn(response);
+        when(recommendCommandService.updateRecommendation(any(RecommendationUpdateDto.class))).thenReturn(response);
 
         // when
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders

@@ -40,11 +40,11 @@ public class Recommendation {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String price;
+
     @ElementCollection
     @CollectionTable(name = "recommendation_tag",
             joinColumns = @JoinColumn(name = "recommendation_id"))
     @Column(name = "tag")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<String> tags = new LinkedHashSet<>();
 
     @Enumerated(EnumType.STRING)

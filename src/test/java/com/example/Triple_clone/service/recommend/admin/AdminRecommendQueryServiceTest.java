@@ -4,7 +4,7 @@ import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationCreateDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendationUpdateDto;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
 import com.example.Triple_clone.common.file.FileManager;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class AdminRecommendQueryServiceTest {
     @Mock
     RecommendationCreateDto recommendationCreateDto;
     @Mock
-    RecommendUpdateRecommendationDto recommendUpdateRecommendationDto;
+    RecommendationUpdateDto recommendationUpdateDto;
 
     @Test
     void 서비스_레이어_관리자_장소_생성_테스트() {
@@ -44,10 +44,10 @@ public class AdminRecommendQueryServiceTest {
 
     @Test
     void 서비스_레이어_관리자_장소_수정_테스트() {
-        when(recommendUpdateRecommendationDto.placeId()).thenReturn(1L);
+        when(recommendationUpdateDto.placeId()).thenReturn(1L);
         when(recommendationRepository.findById(1L)).thenReturn(Optional.ofNullable(recommendation));
 
-        service.updateRecommendation(recommendUpdateRecommendationDto);
+        service.updateRecommendation(recommendationUpdateDto);
 
 
         verify(recommendation, times(1)).update(null, null, null, null);

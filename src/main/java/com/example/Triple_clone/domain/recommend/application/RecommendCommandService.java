@@ -10,10 +10,7 @@ import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.recommend.domain.*;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationBlockRepository;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendationCreateDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockCreateDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockUpdateDto;
+import com.example.Triple_clone.domain.recommend.web.dto.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +95,7 @@ public class RecommendCommandService {
     }
 
     @Transactional
-    public Recommendation updateRecommendation(RecommendUpdateRecommendationDto updateRecommendationRequestDto, String email) {
+    public RecommendReadDto updateRecommendation(RecommendationUpdateDto updateRecommendationRequestDto, String email) {
         Member author = userService.findByEmail(email);
         Recommendation recommendation = repository.findById(updateRecommendationRequestDto.placeId())
                 .orElseThrow(() -> {
@@ -112,7 +109,7 @@ public class RecommendCommandService {
                     updateRecommendationRequestDto.location(),
                     updateRecommendationRequestDto.price());
 
-            return recommendation;
+            return new RecommendReadDto(recommendation, author, recommendation.isLikedBy(author.getId()));
         }
 
         throw new IllegalArgumentException("추천 포스팅 수정 실패");
@@ -190,11 +187,13 @@ public class RecommendCommandService {
 
 
     @Transactional
-    public void removeBlock(Long blockId) {
+    public void removeBlock(Long blockId, String email) {
+        Member author = userService.findByEmail(email);
         RecommendationBlock block = blockRepository.findById(blockId)
                 .orElseThrow(() -> new EntityNotFoundException("no block entity"));
-        
-        // 기존 이미지 삭제
+
+        if (!block.getRecommendation().isMine(author)) throw new IllegalArgumentException("추천 포스팅 컨텐츠 삭제 실패");
+
         if (block.getImage() != null) {
             fileManager.deleteExistingImage(block.getImage().getStoredFileName());
         }
@@ -204,7 +203,7 @@ public class RecommendCommandService {
     }
 
     @Transactional
-    public RecommendationBlock updateBlock(Long blockId, RecommendationBlockUpdateDto updateDto, String email) {
+    public RecommendationBlockUpdateDto updateBlock(Long blockId, RecommendationBlockUpdateDto updateDto, String email) {
         Member author = userService.findByEmail(email);
         RecommendationBlock block = blockRepository.findById(blockId)
                 .orElseThrow(() -> new EntityNotFoundException("no block entity"));
@@ -240,8 +239,9 @@ public class RecommendCommandService {
         block.update(blockType, updateDto.getText(), 
                     image, updateDto.getCaption(), 
                     orderIndex);
-        
-        return blockRepository.save(block);
+
+        blockRepository.save(block);
+        return updateDto;
     }
 
     public void toggleLike(Long recommendationId, Long memberId) {
