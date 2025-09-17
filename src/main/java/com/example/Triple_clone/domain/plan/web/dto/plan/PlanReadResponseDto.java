@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public record PlanReadResponseDto(
+        long planId,
         String place,
         Partner partner,
         List<Style> styles,
@@ -16,6 +17,7 @@ public record PlanReadResponseDto(
 ) {
     public PlanReadResponseDto(Plan plan) {
         this(
+                plan.getId(),
                 plan.getPlace(),
                 plan.getPartner(),
                 plan.getStyles(),

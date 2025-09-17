@@ -107,6 +107,7 @@ public class RecommendQueryService {
     public List<RecommendReadTop10Dto> findTop10() {
         List<RecommendReadTop10Dto> response = new ArrayList<>();
         List<Recommendation> sortedList = recommendationRepository.findAll().stream()
+                .filter(recommendation -> recommendation.getType().equals(RecommendationType.PLACE))
                 .sorted(Comparator.comparingInt(Recommendation::getLikesCount).reversed())
                 .limit(10)
                 .toList();

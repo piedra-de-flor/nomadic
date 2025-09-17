@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,11 @@ public class DetailPlanService {
                     log.warn(PlanLogMessage.DETAIL_PLAN_SEARCH_FAILED.format(detailPlanId));
                     return new EntityNotFoundException("new plan Entity");
                 });
+    }
+
+    @Transactional(readOnly = true)
+    public List<DetailPlan> findAllByPlanId(long planId) {
+        return repository.findAllByPlanId(planId);
     }
 
     public void save(DetailPlan detailPlan) {

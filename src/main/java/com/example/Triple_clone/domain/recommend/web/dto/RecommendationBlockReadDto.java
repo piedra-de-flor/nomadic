@@ -2,6 +2,7 @@ package com.example.Triple_clone.domain.recommend.web.dto;
 
 import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.domain.recommend.domain.BlockType;
+import com.example.Triple_clone.domain.recommend.domain.RecommendationBlock;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +32,7 @@ public class RecommendationBlockReadDto {
     @Schema(description = "블록 순서 인덱스", example = "0")
     private Integer orderIndex;
     
-    public static RecommendationBlockReadDto from(com.example.Triple_clone.domain.recommend.domain.RecommendationBlock block) {
+    public static RecommendationBlockReadDto from(RecommendationBlock block) {
         return new RecommendationBlockReadDto(
             block.getId(),
             block.getType(),

@@ -10,6 +10,7 @@ import com.example.Triple_clone.domain.member.domain.Member;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.plan.domain.Plan;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanReadDto;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateDto;
 import com.example.Triple_clone.domain.plan.web.dto.ReservationCreateDto;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateResultDto;
@@ -80,15 +81,22 @@ public class DetailPlanFacadeService {
         return reservationCreateDto;
     }
 
-    public List<DetailPlanDto> readAll(long planId, String email) {
+    public List<DetailPlanReadDto> readAll(long planId, String email) {
         Plan plan = planService.findById(planId);
         Member member = userService.findByEmail(email);
-        List<DetailPlanDto> response = new ArrayList<>();
+        List<DetailPlanReadDto> response = new ArrayList<>();
 
         PlanPermissionUtils.validateViewPermission(plan, member, planShareService);
 
         for (DetailPlan detailPlan : plan.getPlans()) {
-            response.add(detailPlan.toDto());
+            response.add(new DetailPlanReadDto(
+                    detailPlan.getPlan().getId(),
+                    detailPlan.getId(),
+                    detailPlan.getLocation(),
+                    detailPlan.getDate(),
+                    detailPlan.getTime(),
+                    detailPlan.getVersion()
+            ));
         }
         return response;
     }
@@ -141,6 +149,6 @@ public class DetailPlanFacadeService {
     }
 
     private boolean isContain(Plan plan, DetailPlan detailPlan) {
-        return planService.getPlans(plan.getId()).contains(detailPlan);
+        return detailPlanService.findAllByPlanId(plan.getId()).contains(detailPlan);
     }
 }

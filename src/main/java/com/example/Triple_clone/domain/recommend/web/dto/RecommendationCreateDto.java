@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 @Schema(description = "추천 장소 생성 요청 DTO (Form Data 전용)")
-public record RecommendCreateRecommendationDto(
+public record RecommendationCreateDto(
         @NotBlank(message = "제목은 필수입니다")
         @Schema(description = "추천 장소 제목", example = "제주도 한라산", required = true)
         String title,

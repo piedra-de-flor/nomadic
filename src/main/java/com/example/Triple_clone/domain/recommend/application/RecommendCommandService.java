@@ -10,7 +10,7 @@ import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.recommend.domain.*;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationBlockRepository;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendationCreateDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockCreateDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockUpdateDto;
@@ -38,7 +38,7 @@ public class RecommendCommandService {
     private final RecommendLikeMap likes;
 
     @Transactional
-    public Recommendation createRecommendation(RecommendCreateRecommendationDto createRecommendationRequestDto, String email) {
+    public Recommendation createRecommendation(RecommendationCreateDto createRecommendationRequestDto, String email) {
         try {
             Location location = objectMapper.readValue(createRecommendationRequestDto.location(), Location.class);
 

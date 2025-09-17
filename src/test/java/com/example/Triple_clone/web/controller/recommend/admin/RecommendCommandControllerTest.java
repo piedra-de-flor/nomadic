@@ -3,7 +3,7 @@ package com.example.Triple_clone.web.controller.recommend.admin;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.recommend.web.controller.RecommendCommandController;
 import com.example.Triple_clone.domain.plan.domain.Location;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendationCreateDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
 import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.web.filter.JwtSecurityConfigForTest;
@@ -40,9 +40,9 @@ public class RecommendCommandControllerTest {
     @Test
     void 관리자_Controller_추천_장소_생성_테스트() throws Exception {
         // given
-        RecommendCreateRecommendationDto request = new RecommendCreateRecommendationDto("test", "test", "test",  new Location(1D, 1D, "location"));
+        RecommendationCreateDto request = new RecommendationCreateDto("test", "test", "test",  new Location(1D, 1D, "location"));
         Recommendation response = request.toEntity();
-        when(recommendCommandService.createRecommendation(any(RecommendCreateRecommendationDto.class))).thenReturn(response);
+        when(recommendCommandService.createRecommendation(any(RecommendationCreateDto.class))).thenReturn(response);
 
         // when
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders

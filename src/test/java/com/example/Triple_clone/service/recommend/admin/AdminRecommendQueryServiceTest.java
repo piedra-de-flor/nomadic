@@ -3,7 +3,7 @@ package com.example.Triple_clone.service.recommend.admin;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.common.file.Image;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendCreateRecommendationDto;
+import com.example.Triple_clone.domain.recommend.web.dto.RecommendationCreateDto;
 import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
 import com.example.Triple_clone.common.file.FileManager;
@@ -28,15 +28,15 @@ public class AdminRecommendQueryServiceTest {
     @Mock
     FileManager fileManager;
     @Mock
-    RecommendCreateRecommendationDto recommendCreateRecommendationDto;
+    RecommendationCreateDto recommendationCreateDto;
     @Mock
     RecommendUpdateRecommendationDto recommendUpdateRecommendationDto;
 
     @Test
     void 서비스_레이어_관리자_장소_생성_테스트() {
-        when(recommendCreateRecommendationDto.toEntity()).thenReturn(recommendation);
+        when(recommendationCreateDto.toEntity()).thenReturn(recommendation);
 
-        service.createRecommendation(recommendCreateRecommendationDto);
+        service.createRecommendation(recommendationCreateDto);
 
         verify(recommendationRepository, times(1)).save(recommendation);
 

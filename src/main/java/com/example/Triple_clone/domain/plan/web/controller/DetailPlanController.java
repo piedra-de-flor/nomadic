@@ -4,6 +4,7 @@ import com.example.Triple_clone.common.auth.MemberEmailAspect;
 import com.example.Triple_clone.domain.plan.application.DetailPlanFacadeService;
 import com.example.Triple_clone.domain.plan.domain.DetailPlan;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanDto;
+import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanReadDto;
 import com.example.Triple_clone.domain.plan.web.dto.detailplan.DetailPlanUpdateDto;
 import com.example.Triple_clone.domain.plan.web.dto.ReservationCreateDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,11 +73,11 @@ public class DetailPlanController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @GetMapping("/detail-plans")
-    public ResponseEntity<List<DetailPlanDto>> readAll(
+    public ResponseEntity<List<DetailPlanReadDto>> readAll(
             @Parameter(description = "세부 계획 전체 조회 요청 정보", required = true)
             @RequestParam long planId,
             @MemberEmailAspect String email) {
-        List<DetailPlanDto> response = service.readAll(planId, email);
+        List<DetailPlanReadDto> response = service.readAll(planId, email);
         return ResponseEntity.ok(response);
     }
 

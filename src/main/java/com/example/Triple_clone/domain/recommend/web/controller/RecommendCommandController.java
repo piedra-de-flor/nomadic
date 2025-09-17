@@ -3,10 +3,7 @@ import com.example.Triple_clone.common.auth.MemberEmailAspect;
 import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.recommend.domain.RecommendationBlock;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendCreateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendUpdateRecommendationDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockCreateDto;
-import com.example.Triple_clone.domain.recommend.web.dto.RecommendationBlockUpdateDto;
+import com.example.Triple_clone.domain.recommend.web.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,12 +28,12 @@ public class RecommendCommandController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PostMapping("/recommend")
-    public ResponseEntity<Recommendation> createPlace(
+    public ResponseEntity<Long> createPlace(
             @Parameter(description = "추천 장소 생성 요청 정보 (multipart/form-data)", required = true)
-            @ModelAttribute @Validated RecommendCreateRecommendationDto createPlaceRequestDto,
+            @ModelAttribute @Validated RecommendationCreateDto createPlaceRequestDto,
             @MemberEmailAspect String email) {
         Recommendation createdRecommendation = service.createRecommendation(createPlaceRequestDto, email);
-        return ResponseEntity.ok(createdRecommendation);
+        return ResponseEntity.ok(createdRecommendation.getId());
     }
 
     @Operation(summary = "추천 장소 이미지 추가", description = "추천 장소에 이미지를 추가합니다")
@@ -88,7 +85,7 @@ public class RecommendCommandController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PostMapping("/recommend/{recommendationId}/blocks")
-    public ResponseEntity<RecommendationBlock> addBlock(
+    public ResponseEntity<RecommendationBlockReadDto> addBlock(
             @Parameter(description = "추천 장소 ID", required = true)
             @PathVariable Long recommendationId,
             @Parameter(description = "추가할 블록 정보 (multipart/form-data)", required = true)
@@ -98,7 +95,7 @@ public class RecommendCommandController {
         try {
             RecommendationBlock createdBlock = service.addBlock(recommendationId, createDto, email);
             log.info("addBlock 성공 - blockId: {}", createdBlock.getId());
-            return ResponseEntity.ok(createdBlock);
+            return ResponseEntity.ok(RecommendationBlockReadDto.from(createdBlock));
         } catch (Exception e) {
             log.error("addBlock 실패 - recommendationId: {}, error: {}", recommendationId, e.getMessage(), e);
             throw e;
