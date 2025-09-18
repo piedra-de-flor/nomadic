@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/sign-in", "/sign-up", "/accommodations", "/actuator/**").permitAll()
+                        .requestMatchers("/sign-in", "/sign-up", "/accommodations/**", "/actuator/**", "/recommendation/**", "/recommendations/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().hasRole("USER")
                 )
