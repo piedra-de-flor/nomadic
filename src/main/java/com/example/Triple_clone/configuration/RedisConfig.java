@@ -1,4 +1,3 @@
-/*
 package com.example.Triple_clone.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -39,4 +38,4 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
-}*/
+}
