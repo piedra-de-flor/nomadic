@@ -26,7 +26,7 @@ public class SlackLogbackAppender extends AppenderBase<ILoggingEvent> {
     protected void append(ILoggingEvent eventObject) {
         if (eventObject.getLevel().isGreaterOrEqual(Level.ERROR)) {
             try {
-                String logMessage = eventObject.getFormattedMessage();
+                /*String logMessage = eventObject.getFormattedMessage();
                 if (logMessage == null || logMessage.isBlank()) {
                     logMessage = "No message content.";
                 }
@@ -37,7 +37,7 @@ public class SlackLogbackAppender extends AppenderBase<ILoggingEvent> {
 
                 NotificationMessage message = buildNotificationMessage(eventObject, timestamp, logMessage);
 
-                slackSender.send(message);
+                slackSender.send(message);*/
 
             } catch (Exception e) {
                 log.warn("Slack 전송 실패 (LogbackAppender 내부): {}", e.getMessage(), e);

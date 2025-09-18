@@ -29,7 +29,7 @@ public class SlackNotificationSender implements ChannelNotificationSender {
     @Override
     public void send(NotificationMessage message) {
         try {
-            slackClient.sendMessage(message);
+            //slackClient.sendMessage(message);
         } catch (Exception e) {
             slackRetryProducer.sendSlackRetryMessage(message);
             log.warn(NotificationLogMessage.SLACK_SEND_FAILED.format(e.getMessage()));
