@@ -141,6 +141,33 @@ services:
     networks:
       - triple
 
+
+  mysql-container:
+    image: mysql:8.0.33
+    container_name: mysql-container
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "kakao4851?"
+      MYSQL_DATABASE: "triple"
+      TZ: "Asia/Seoul"
+    command: >
+      mysqld
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_0900_ai_ci
+      --default-time-zone=Asia/Seoul
+      --lower_case_table_names=1
+      --log_bin=mysql-bin
+      --binlog_format=ROW
+      --binlog_row_image=FULL
+      --server-id=1001
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - triple
+
 volumes:
   elastic_data:
   influxdb_data:
+  mysql_data:
