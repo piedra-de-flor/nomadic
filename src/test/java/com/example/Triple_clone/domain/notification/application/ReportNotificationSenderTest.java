@@ -1,0 +1,196 @@
+package com.example.Triple_clone.domain.notification.application;
+
+import com.example.Triple_clone.domain.notification.domain.AdminNotificationSetting;
+import com.example.Triple_clone.domain.member.domain.Member;
+import com.example.Triple_clone.domain.report.domain.Report;
+import com.example.Triple_clone.domain.notification.domain.NotificationChannel;
+import com.example.Triple_clone.domain.notification.domain.NotificationChannelType;
+import com.example.Triple_clone.domain.notification.domain.NotificationTarget;
+import com.example.Triple_clone.domain.notification.domain.NotificationType;
+import com.example.Triple_clone.domain.notification.application.NotificationSaveService;
+import com.example.Triple_clone.domain.notification.infra.ReportNotificationSender;
+import com.example.Triple_clone.domain.report.domain.ReportTargetType;
+import com.example.Triple_clone.domain.report.domain.ReportingReason;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationDto;
+import com.example.Triple_clone.domain.notification.web.dto.NotificationMessage;
+import com.example.Triple_clone.domain.report.web.dto.ReportCreatedEvent;
+import com.example.Triple_clone.domain.notification.infra.AdminNotificationSettingRepository;
+import com.example.Triple_clone.domain.notification.infra.EmailNotificationSender;
+import com.example.Triple_clone.common.template.HtmlTemplateRenderer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.List;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
+
+class ReportNotificationSenderTest {
+    @Mock
+    private NotificationSaveService notificationSaveService;
+    @Mock
+    private AdminNotificationSettingRepository settingRepository;
+
+    @Mock
+    private EmailNotificationSender emailSender;
+
+    @InjectMocks
+    private ReportNotificationSender reportNotificationSender;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        HtmlTemplateRenderer htmlTemplateRenderer = mock(HtmlTemplateRenderer.class);
+        reportNotificationSender = new ReportNotificationSender(
+                htmlTemplateRenderer,
+                List.of(emailSender),
+                notificationSaveService,
+                settingRepository
+        );
+    }
+
+    @Test
+    void 지원하는_알림타입이_REPORT_ALERT이면_true를_반환한다() {
+        boolean result = reportNotificationSender.supports(NotificationType.REPORT_ALERT);
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void 모든_신고에_대해_알림설정이_되어있으면_알림을_전송한다() {
+        Member admin = mock(Member.class);
+        when(admin.getEmail()).thenReturn("admin@example.com");
+
+        NotificationChannel channel = new NotificationChannel(Set.of(NotificationChannelType.EMAIL));
+
+        AdminNotificationSetting setting = mock(AdminNotificationSetting.class);
+        when(setting.isNotifyEveryReport()).thenReturn(true);
+        when(setting.getThresholdCount()).thenReturn(5);
+        when(setting.getAdmin()).thenReturn(admin);
+        when(setting.getChannel()).thenReturn(channel);
+        when(emailSender.getChannelType()).thenReturn(NotificationChannelType.EMAIL);
+
+        when(settingRepository.findAll()).thenReturn(List.of(setting));
+
+        Report report = mock(Report.class);
+        when(report.getReporter()).thenReturn(admin);
+        when(report.getTargetType()).thenReturn(ReportTargetType.REVIEW);
+        when(report.getTargetId()).thenReturn(123L);
+        when(report.getReason()).thenReturn(ReportingReason.INAPPROPRIATE);
+        when(report.getId()).thenReturn(99L);
+
+        ReportCreatedEvent event = mock(ReportCreatedEvent.class);
+        when(event.report()).thenReturn(report);
+        when(event.reportCount()).thenReturn(3L);
+
+        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
+
+        reportNotificationSender.prepareAndSend(dto);
+
+        verify(emailSender).send(any(NotificationMessage.class));
+    }
+
+    @Test
+    void 신고수_임계치를_초과하면_알림을_전송한다() {
+        Member admin = mock(Member.class);
+        when(admin.getEmail()).thenReturn("admin@example.com");
+
+        NotificationChannel channel = new NotificationChannel(Set.of(NotificationChannelType.EMAIL));
+
+        AdminNotificationSetting setting = mock(AdminNotificationSetting.class);
+        when(setting.isNotifyEveryReport()).thenReturn(false);
+        when(setting.getThresholdCount()).thenReturn(5);
+        when(setting.getAdmin()).thenReturn(admin);
+        when(setting.getChannel()).thenReturn(channel);
+        when(emailSender.getChannelType()).thenReturn(NotificationChannelType.EMAIL);
+
+        when(settingRepository.findAll()).thenReturn(List.of(setting));
+
+        Report report = mock(Report.class);
+        when(report.getReporter()).thenReturn(admin);
+        when(report.getTargetType()).thenReturn(ReportTargetType.REVIEW);
+        when(report.getTargetId()).thenReturn(123L);
+        when(report.getReason()).thenReturn(ReportingReason.INAPPROPRIATE);
+        when(report.getId()).thenReturn(99L);
+
+        ReportCreatedEvent event = mock(ReportCreatedEvent.class);
+        when(event.report()).thenReturn(report);
+        when(event.reportCount()).thenReturn(10L);
+
+        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
+
+        reportNotificationSender.prepareAndSend(dto);
+
+        verify(emailSender).send(any(NotificationMessage.class));
+    }
+
+    @Test
+    void 임계치_이하이고_모든_신고알림도_끄면_알림을_전송하지_않는다() {
+        Member admin = mock(Member.class);
+        when(admin.getEmail()).thenReturn("admin@example.com");
+
+        NotificationChannel channel = new NotificationChannel(Set.of(NotificationChannelType.EMAIL));
+
+        AdminNotificationSetting setting = mock(AdminNotificationSetting.class);
+        when(setting.isNotifyEveryReport()).thenReturn(false);
+        when(setting.getThresholdCount()).thenReturn(5);
+        when(setting.getAdmin()).thenReturn(admin);
+        when(setting.getChannel()).thenReturn(channel);
+
+        when(settingRepository.findAll()).thenReturn(List.of(setting));
+
+        Report report = mock(Report.class);
+        when(report.getTargetType()).thenReturn(ReportTargetType.REVIEW);
+        when(report.getTargetId()).thenReturn(123L);
+        when(report.getReason()).thenReturn(ReportingReason.INAPPROPRIATE);
+        when(report.getId()).thenReturn(99L);
+
+        ReportCreatedEvent event = mock(ReportCreatedEvent.class);
+        when(event.report()).thenReturn(report);
+        when(event.reportCount()).thenReturn(3L);
+
+        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
+
+        reportNotificationSender.prepareAndSend(dto);
+
+        verifyNoInteractions(emailSender);
+    }
+
+    @Test
+    void 지원하지_않는_채널타입이면_예외를_던진다() {
+        Member admin = mock(Member.class);
+        when(admin.getEmail()).thenReturn("admin@example.com");
+
+        NotificationChannel channel = new NotificationChannel(Set.of(NotificationChannelType.EMAIL));
+
+        AdminNotificationSetting setting = mock(AdminNotificationSetting.class);
+        when(setting.isNotifyEveryReport()).thenReturn(true);
+        when(setting.getThresholdCount()).thenReturn(5);
+        when(setting.getAdmin()).thenReturn(admin);
+        when(setting.getChannel()).thenReturn(channel);
+        when(emailSender.getChannelType()).thenReturn(NotificationChannelType.SLACK);
+
+        when(settingRepository.findAll()).thenReturn(List.of(setting));
+
+        Report report = mock(Report.class);
+        when(report.getReporter()).thenReturn(admin);
+        when(report.getTargetType()).thenReturn(ReportTargetType.REVIEW);
+        when(report.getTargetId()).thenReturn(123L);
+        when(report.getReason()).thenReturn(ReportingReason.INAPPROPRIATE);
+        when(report.getId()).thenReturn(99L);
+
+        ReportCreatedEvent event = mock(ReportCreatedEvent.class);
+        when(event.report()).thenReturn(report);
+        when(event.reportCount()).thenReturn(3L);
+
+        NotificationDto dto = new NotificationDto(NotificationType.REPORT_ALERT, NotificationTarget.PERSONAL, event);
+
+        assertThatThrownBy(() -> reportNotificationSender.prepareAndSend(dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("지원하지 않는 채널 타입입니다");
+    }
+}

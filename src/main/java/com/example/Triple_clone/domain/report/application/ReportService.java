@@ -36,7 +36,7 @@ public class ReportService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> {
                     log.warn(ReviewLogMessage.REVIEW_SEARCH_FAILED.format(reviewId));
-                    return new EntityNotFoundException("no user entity");
+                    return new EntityNotFoundException("리뷰가 존재하지 않습니다.");
                 });
 
         if (review.getStatus() == ReviewStatus.DELETED) {
@@ -47,7 +47,7 @@ public class ReportService {
         Member reporter = memberRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.warn(MemberLogMessage.MEMBER_SEARCH_FAILED_BY_EMAIL.format(email));
-                    return new EntityNotFoundException("no user entity");
+                    return new EntityNotFoundException("신고자가 존재하지 않습니다.");
                 });
 
         if (reportRepository.existsByTargetTypeAndTargetIdAndReporterId(ReportTargetType.REVIEW, review.getId(), reporter.getId())) {
