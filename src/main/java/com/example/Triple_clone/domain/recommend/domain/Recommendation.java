@@ -2,17 +2,15 @@ package com.example.Triple_clone.domain.recommend.domain;
 
 import com.example.Triple_clone.common.error.AuthErrorCode;
 import com.example.Triple_clone.common.error.RestApiException;
+import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.common.logging.logMessage.RecommendLogMessage;
 import com.example.Triple_clone.domain.member.domain.Member;
-import com.example.Triple_clone.domain.review.domain.Review;
-import com.example.Triple_clone.common.file.Image;
 import com.example.Triple_clone.domain.plan.domain.Location;
+import com.example.Triple_clone.domain.review.domain.Review;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,14 +60,6 @@ public class Recommendation {
     @JsonManagedReference
     private List<RecommendationBlock> blocks = new ArrayList<>();
 
-    @ElementCollection
-    @CollectionTable(
-            name = "recommendation_like",
-            joinColumns = @JoinColumn(name = "recommendation_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"recommendation_id", "user_id"})
-    )
-    private Set<RecommendationLike> likes = new LinkedHashSet<>();
-
     @OneToMany(mappedBy = "recommendation",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
@@ -118,33 +108,6 @@ public class Recommendation {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void like(long userId) {
-        if (this.id == null) {
-            throw new IllegalStateException("Recommendation must be saved before adding likes");
-        }
-        
-        RecommendationLike existingLike = findLikeByUserId(userId);
-        if (existingLike != null) {
-            likes.remove(existingLike);
-            decreaseLikesCount();
-        } else {
-            RecommendationLike newLike = new RecommendationLike(userId);
-            likes.add(newLike);
-            increaseLikesCount();
-        }
-    }
-
-    public boolean isLikedBy(long userId) {
-        return findLikeByUserId(userId) != null;
-    }
-    
-    private RecommendationLike findLikeByUserId(long userId) {
-        return likes.stream()
-                .filter(like -> like.getUserId().equals(userId))
-                .findFirst()
-                .orElse(null);
-    }
-
     public void addReview(Review review) {
         reviews.add(review);
         reviewsCount++;
@@ -164,16 +127,6 @@ public class Recommendation {
         this.viewsCount++;
     }
     
-    public void addTag(String tag) {
-        if (tag != null && !tag.trim().isEmpty()) {
-            this.tags.add(tag.trim());
-        }
-    }
-    
-    public void removeTag(String tag) {
-        this.tags.remove(tag);
-    }
-    
     public void clearTags() {
         this.tags.clear();
     }
@@ -189,14 +142,6 @@ public class Recommendation {
     public void updateTags(Set<String> newTags) {
         clearTags();
         addTags(newTags);
-    }
-    
-    public void decreaseLikesCount() {
-        this.likesCount = Math.max(0, this.likesCount - 1);
-    }
-    
-    public void increaseLikesCount() {
-        this.likesCount++;
     }
 
     public boolean isMine(Member member) {

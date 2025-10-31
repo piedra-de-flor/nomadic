@@ -12,21 +12,19 @@ import java.util.Objects;
 
 @Embeddable
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecommendationLikeId implements Serializable {
-    @Column(name = "recommendation_id")
+    @Column(name = "recommendation_id", nullable = false)
     private Long recommendationId;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RecommendationLikeId)) return false;
-        RecommendationLikeId that = (RecommendationLikeId) o;
+        if (!(o instanceof RecommendationLikeId that)) return false;
         return Objects.equals(recommendationId, that.recommendationId)
                 && Objects.equals(userId, that.userId);
     }

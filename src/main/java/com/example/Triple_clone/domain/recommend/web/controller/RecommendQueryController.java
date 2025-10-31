@@ -36,9 +36,10 @@ public class RecommendQueryController {
     @GetMapping("/recommendations")
     public ResponseEntity<Page<RecommendReadDto>> readAllOrderBy(
             @Parameter(description = "원하는 정렬순 (날짜별, 이름별)", required = true)
-            @RequestParam(required = false, defaultValue = "") String sort,
+            @RequestParam(required = false, defaultValue = "CREATED_DESC") String sort,
+            @MemberEmailAspect String email,
             Pageable pageable) {
-        return ResponseEntity.ok(service.findAll(sort, pageable));
+        return ResponseEntity.ok(service.findAll(sort, pageable, email));
     }
 
     @Operation(summary = "추천 장소 단일 조회", description = "기존 추천 장소를 단일 조회합니다")
@@ -124,8 +125,9 @@ public class RecommendQueryController {
             @Parameter(description = "검색 키워드", required = false)
             @RequestParam(required = false) String q,
             @Parameter(description = "추천 타입 (PLACE, POST)", required = false)
-            @RequestParam(required = false) RecommendationType type) {
-        List<RecommendReadDto> results = service.searchRecommendations(q, type);
+            @RequestParam(required = false) RecommendationType type,
+            @MemberEmailAspect String email) {
+        List<RecommendReadDto> results = service.searchRecommendations(q, type, email);
         return ResponseEntity.ok(results);
     }
 
@@ -139,8 +141,9 @@ public class RecommendQueryController {
             @Parameter(description = "추천 타입 (PLACE, POST)", required = false)
             @RequestParam(required = false) RecommendationType type,
             @Parameter(description = "조회할 개수", required = false)
-            @RequestParam(defaultValue = "10") int limit) {
-        List<RecommendReadDto> results = service.getRandomRecommendations(type, limit);
+            @RequestParam(defaultValue = "10") int limit,
+            @MemberEmailAspect String email) {
+        List<RecommendReadDto> results = service.getRandomRecommendations(type, limit, email);
         return ResponseEntity.ok(results);
     }
 

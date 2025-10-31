@@ -140,8 +140,8 @@ public class RecommendCommandController {
     @PutMapping("/recommendation/like")
     public ResponseEntity<Long> toggleLike(
             @Parameter(description = "추천 장소 좋아요 요청 정보", required = true)
-            @RequestParam long recommendationId, @RequestParam long memberId) {
-        service.toggleLike(recommendationId, memberId);
+            @RequestParam long recommendationId, @MemberEmailAspect String email) {
+        service.toggle(recommendationId, email);
         return ResponseEntity.ok(recommendationId);
     }
 }

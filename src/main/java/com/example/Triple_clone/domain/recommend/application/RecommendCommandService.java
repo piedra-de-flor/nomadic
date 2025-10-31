@@ -9,6 +9,7 @@ import com.example.Triple_clone.domain.member.domain.Role;
 import com.example.Triple_clone.domain.plan.domain.Location;
 import com.example.Triple_clone.domain.recommend.domain.*;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationBlockRepository;
+import com.example.Triple_clone.domain.recommend.infra.RecommendationLikeRepository;
 import com.example.Triple_clone.domain.recommend.infra.RecommendationRepository;
 import com.example.Triple_clone.domain.recommend.web.dto.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecommendCommandService {
     private final RecommendationRepository repository;
+    private final RecommendationLikeRepository likeRepository;
     private final UserService userService;
     private final RecommendationBlockRepository blockRepository;
     private final FileManager fileManager;
@@ -103,13 +105,24 @@ public class RecommendCommandService {
                     return new EntityNotFoundException("no place entity for update");
                 });
 
+        Set<String> tags = null;
+        if (updateRecommendationRequestDto.tags() != null && !updateRecommendationRequestDto.tags().trim().isEmpty()) {
+            tags = Arrays.stream(updateRecommendationRequestDto.tags().split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toSet());
+        }
+
         if (recommendation.isMine(author)) {
             recommendation.update(updateRecommendationRequestDto.title(),
                     updateRecommendationRequestDto.subTitle(),
                     updateRecommendationRequestDto.location(),
                     updateRecommendationRequestDto.price());
 
-            return new RecommendReadDto(recommendation, author, recommendation.isLikedBy(author.getId()));
+            if (tags != null) {
+                recommendation.updateTags(tags);
+            }
+
+            return new RecommendReadDto(recommendation, author, false);
         }
 
         throw new IllegalArgumentException("추천 포스팅 수정 실패");
@@ -244,7 +257,13 @@ public class RecommendCommandService {
         return updateDto;
     }
 
-    public void toggleLike(Long recommendationId, Long memberId) {
-        likes.insert(memberId, recommendationId);
+    @Transactional(readOnly = true)
+    public void toggle(long recId, String email) {
+        Member member = userService.findByEmail(email);
+        Boolean pending = likes.pendingState(member.getId(), recId);
+        boolean dbLiked = likeRepository.existsById(new RecommendationLikeId(recId, member.getId()));
+        boolean next = (pending != null) ? !pending : !dbLiked;
+
+        likes.put(member.getId(), recId, next);
     }
 }
