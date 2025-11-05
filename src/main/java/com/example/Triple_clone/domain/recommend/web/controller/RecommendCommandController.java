@@ -1,5 +1,6 @@
 package com.example.Triple_clone.domain.recommend.web.controller;
 import com.example.Triple_clone.common.auth.MemberEmailAspect;
+import com.example.Triple_clone.common.ratelimit.RateLimited;
 import com.example.Triple_clone.domain.recommend.application.RecommendCommandService;
 import com.example.Triple_clone.domain.recommend.domain.Recommendation;
 import com.example.Triple_clone.domain.recommend.domain.RecommendationBlock;
@@ -138,6 +139,7 @@ public class RecommendCommandController {
     @ApiResponse(responseCode = "500", description = "내부 서버 오류 발생")
     @ApiResponse(responseCode = "401", description = "권한 인증 오류 발생")
     @PutMapping("/recommendation/like")
+    @RateLimited(key = "#req.userId", permits = 1, retryAfterSeconds = 1)
     public ResponseEntity<Long> toggleLike(
             @Parameter(description = "추천 장소 좋아요 요청 정보", required = true)
             @RequestParam long recommendationId, @MemberEmailAspect String email) {

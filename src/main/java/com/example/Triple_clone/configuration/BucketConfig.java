@@ -1,24 +1,22 @@
 package com.example.Triple_clone.configuration;
 
-import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
+import com.example.Triple_clone.common.ratelimit.Bucket4jRateLimiter;
+import com.example.Triple_clone.common.ratelimit.InMemoryBucketRegistry;
+import com.example.Triple_clone.common.ratelimit.RateLimiter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.Duration;
 
 @Configuration
 public class BucketConfig {
     @Bean
-    public Bucket bucket() {
+    public InMemoryBucketRegistry inMemoryBucketRegistry() {
+        long capacity = 500L;
+        long refillPerSec = 500L;
+        return new InMemoryBucketRegistry(capacity, refillPerSec);
+    }
 
-        Refill refill = Refill.intervally(500, Duration.ofSeconds(1));
-
-        Bandwidth limit = Bandwidth.classic(500, refill);
-
-        return Bucket.builder()
-                .addLimit(limit)
-                .build();
+    @Bean
+    public RateLimiter rateLimiter(InMemoryBucketRegistry registry) {
+        return new Bucket4jRateLimiter(registry);
     }
 }
